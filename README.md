@@ -1,7 +1,5 @@
 # YEB - Automatização de Validadação de Banco de Dados
 
-
-
 ## license
 
-[](./LICENSE)
+[Apache-2.0](./LICENSE)
