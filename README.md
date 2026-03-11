@@ -20,6 +20,12 @@ Automatizar o processo de validação de banco de dados comercial através de pe
 
 - [ ] O processo deverá envolver a equipe de ESG para desenvolver de acordo com as normas de LGPD, principalmente a pesquisa primária."
 
+## Pessoas
+
+[Scrum Master e Product Owner - Tarsis]([#](https://github.com/tarsislimadev))
+
+[Desenvolvedor - Emmanuel](https://github.com/emannuelp-boldrin)
+
 ## Licença
 
 [Apache-2.0](./LICENSE)
