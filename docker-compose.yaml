@@ -1,5 +1,4 @@
 services:
-
   db:
     build: ./src/database
     ports:
@@ -8,6 +7,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
+    volumes:
+      - .data/postgres:/var/lib/postgresql/data
 
   crawler:
     build: ./src/crawler
@@ -25,7 +26,4 @@ services:
     ports:
       - 11434:11434
     volumes:
-      - ollama_data:/root/.ollama
-
-volumes:
-  ollama_data:
+      - .data/ollama:/root/.ollama
