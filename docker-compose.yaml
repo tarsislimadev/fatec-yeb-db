@@ -1,0 +1,31 @@
+services:
+
+  db:
+    build: ./src/database
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+
+  crawler:
+    build: ./src/crawler
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - db
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data:

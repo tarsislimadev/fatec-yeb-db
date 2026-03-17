@@ -26,6 +26,30 @@ Automatizar o processo de validação de banco de dados comercial através de pe
 
 [Desenvolvedor - Emmanuel](https://github.com/emannuelp-boldrin)
 
+## Como Rodar o Projeto
+
+Este projeto utiliza Docker para orquestrar o banco de dados, o crawler e o serviço de IA (Ollama).
+
+### Pré-requisitos
+- Docker e Docker Compose instalados.
+
+### Passos
+1. **Inicie os serviços:**
+   ```bash
+   docker compose up -d --build
+   ```
+
+2. **Acompanhe os logs do Crawler:**
+   ```bash
+   docker compose logs -f crawler
+   ```
+
+3. **Verifique os dados no Banco de Dados:**
+   O banco de dados PostgreSQL estará acessível na porta `5432`. Você pode usar ferramentas como DBeaver ou `psql` para visualizar a tabela `companies`.
+
+4. **Funcionamento da IA:**
+   O serviço `ollama` baixará automaticamente o modelo `llama3` na primeira execução. Certifique-se de ter uma conexão estável com a internet.
+
 ## Licença
 
 [Apache-2.0](./LICENSE)
