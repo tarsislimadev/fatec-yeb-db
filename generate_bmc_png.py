@@ -1,44 +1,49 @@
 import os
-from PIL import Image, ImageDraw, ImageFont
 import textwrap
+from typing import List, Tuple, Any
+
+from PIL import Image, ImageDraw, ImageFont
 import psd_tools
 
-def generate_bmc():
-    width, height = 1920, 1080
-    image = Image.new('RGB', (width, height), 'white')
-    draw = ImageDraw.Draw(image)
 
-    # Cores
-    border_color = (0, 0, 0)
-    bg_color = (250, 250, 250)
-    text_color = (30, 30, 30)
-    title_color = (0, 102, 204)
+# --- Constants & Configuration ---
+CANVAS_WIDTH = 1920
+CANVAS_HEIGHT = 1080
+DOCS_DIR = 'docs'
+PSD_FILENAME = 'business_model_canvas.psd'
+PNG_FILENAME = 'business_model_canvas.png'
 
+# Colors (R, G, B)
+BORDER_COLOR = (0, 0, 0)
+BG_COLOR = (250, 250, 250)
+TEXT_COLOR = (30, 30, 30)
+TITLE_COLOR = (0, 102, 204)
+
+
+def get_fonts() -> Tuple[Any, Any, Any]:
+    """Attempts to load fonts, falling back to default if unavailable."""
     try:
         title_font = ImageFont.truetype("arialbd.ttf", 28)
         text_font = ImageFont.truetype("arial.ttf", 22)
         main_title_font = ImageFont.truetype("arialbd.ttf", 40)
     except IOError:
-        # Fallback to default
         title_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
         main_title_font = ImageFont.load_default()
+    return title_font, text_font, main_title_font
 
-    draw.text((800, 20), "Business Model Canvas - YEB", fill=title_color, font=main_title_font)
 
-    # Geometry constants
-    pad_y_top = 80
-    pad_y_mid = 740
-    pad_y_bottom = 1060
-    pad_x_left = 20
-    pad_x_right = 1900
-
-    col_w = (pad_x_right - pad_x_left) / 5
-    mid_h1 = pad_y_top + (pad_y_mid - pad_y_top) / 2
-
-    # Blocks definition
-    # Left, Top, Right, Bottom, Title, Text
-    blocks = [
+def get_bmc_blocks(
+    pad_x_left: float,
+    pad_x_right: float,
+    pad_y_top: float,
+    pad_y_mid: float,
+    pad_y_bottom: float,
+    col_w: float,
+    mid_h1: float
+) -> List[Tuple[float, float, float, float, str, str]]:
+    """Returns the geometry and content of each BMC block."""
+    return [
         (pad_x_left, pad_y_top, pad_x_left + col_w, pad_y_mid, "8. Parcerias Principais", 
          "- Provedores de Dados (Econodata,\n  CNPJ Biz)\n- Nuvem e Telecom (AWS, Twilio)\n- Consultorias Jurídicas (LGPD)"),
         
@@ -67,33 +72,73 @@ def generate_bmc():
          "- Modelo de Assinatura Mensal/Anual (SaaS) baseado no volume\n- Pay-per-use para Pesquisa Primária (minutos de IA de voz/chat)\n- Taxas de Setup e Customização de Integrações")
     ]
 
-    for b in blocks:
-        l, t, r, bttm, title, text = b
-        draw.rectangle([l, t, r, bttm], outline=border_color, width=3, fill=bg_color)
-        draw.text((l + 20, t + 20), title, fill=title_color, font=title_font)
+
+def generate_bmc() -> Image.Image:
+    """Creates the PIL Image for the Business Model Canvas."""
+    image = Image.new('RGB', (CANVAS_WIDTH, CANVAS_HEIGHT), 'white')
+    draw = ImageDraw.Draw(image)
+
+    title_font, text_font, main_title_font = get_fonts()
+
+    draw.text(
+        (CANVAS_WIDTH // 2 - 250, 20),
+        "Business Model Canvas - YEB",
+        fill=TITLE_COLOR,
+        font=main_title_font
+    )
+
+    pad_y_top, pad_y_mid, pad_y_bottom = 80, 740, 1060
+    pad_x_left, pad_x_right = 20, CANVAS_WIDTH - 20
+    col_w = (pad_x_right - pad_x_left) / 5
+    mid_h1 = pad_y_top + (pad_y_mid - pad_y_top) / 2
+
+    blocks = get_bmc_blocks(
+        pad_x_left, pad_x_right, pad_y_top, pad_y_mid, pad_y_bottom, col_w, mid_h1
+    )
+
+    for l, t, r, bttm, title, text in blocks:
+        draw.rectangle(
+            [l, t, r, bttm],
+            outline=BORDER_COLOR,
+            width=3,
+            fill=BG_COLOR
+        )
+        draw.text((l + 20, t + 20), title, fill=TITLE_COLOR, font=title_font)
         
-        # Write lines
         y_text = t + 80
         for line in text.split('\n'):
-            wrapped = textwrap.wrap(line, width=45) if l < pad_x_left + 2.5*col_w and (r - l) < 2.5 * col_w else textwrap.wrap(line, width=100)
-            for w in wrapped:
-                draw.text((l + 20, y_text), w, fill=text_color, font=text_font)
+            # Adaptive wrapping width
+            wrap_width = 45 if (r - l) < 2.5 * col_w else 100
+            wrapped_lines = textwrap.wrap(line, width=wrap_width)
+            for w in wrapped_lines:
+                draw.text((l + 20, y_text), w, fill=TEXT_COLOR, font=text_font)
                 y_text += 35
 
-    os.makedirs('docs', exist_ok=True)
+    return image
+
+
+def save_files(image: Image.Image) -> None:
+    """Handles directory creation and saving images in PSD and PNG formats."""
+    os.makedirs(DOCS_DIR, exist_ok=True)
     
-    # 1. Generate PSD
-    psd_path = os.path.join('docs', 'business_model_canvas.psd')
+    psd_path = os.path.join(DOCS_DIR, PSD_FILENAME)
     psd_image = psd_tools.PSDImage.frompil(image)
     psd_image.save(psd_path)
     print(f"PSD file generated and saved to {psd_path}.")
     
-    # 2. Generate PNG from PSD
-    png_path = os.path.join('docs', 'business_model_canvas.png')
+    png_path = os.path.join(DOCS_DIR, PNG_FILENAME)
     loaded_psd = psd_tools.PSDImage.open(psd_path)
     png_image = loaded_psd.composite()
     png_image.save(png_path)
     print(f"PNG file generated from PSD and saved to {png_path}.")
 
+
+def main() -> None:
+    """Main script logic."""
+    print("Generating Business Model Canvas assets...")
+    bmc_image = generate_bmc()
+    save_files(bmc_image)
+
+
 if __name__ == "__main__":
-    generate_bmc()
+    main()
