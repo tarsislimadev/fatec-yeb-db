@@ -1,0 +1,214 @@
+{
+  "name": "econodata.cnpjs.2",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9bb2d865-c1b5-4c58-86e5-caf9e2df6017",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.econodata.com.br/consulta-empresa?filtro={{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "27d01b9b-ff6b-46d7-8548-0250d7b1fb0e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"query\": \"47339227000120\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "268ddcb3-6cd9-49c8-914a-b62a43b7db63",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const cnpjs = $input.first().json.data.match(/\\d\\d\\.?\\d\\d\\d\\.?\\d\\d\\d\\/\\d\\d\\d\\d[-]?\\d\\d/ig)\n\n\nreturn { cnpjs }"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "a43610d4-4a8b-4287-a59c-29b541c93a62",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "let { index, cnpjs } = $input.first().json;\nindex++;\nreturn { cnpj: cnpjs[index] };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "a1c8073b-8802-4f7a-b7af-9674411b86fd",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={  \"index\": -1, \"cnpjs\": {{ $json.cnpjs }}  }\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        0
+      ],
+      "id": "2bfa59c3-aded-4d5d-ad79-17ec01c9fa95",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "url": "=https://brasilapi.com.br/api/cnpj/v1/{{ $json.cnpj }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1472,
+        0
+      ],
+      "id": "254e6f4f-a4a2-44ac-bf48-982ec2953dc2",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return { cnpj: $input.first().json.cnpj.replaceAll(/\\D/gi, \"\") };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "e60c49c4-39ad-4461-96bb-f25f87a19a6a",
+      "name": "Code in JavaScript2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a05188bf-8fa5-4364-852d-12702a792df7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12f97c38de17020cf23a1236b00bc49fb2f4d27f641a5043ba7c79276e5a992d"
+  },
+  "id": "56TEY3gcHxu4lE7S",
+  "tags": []
+}
