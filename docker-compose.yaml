@@ -18,6 +18,8 @@ services:
       - 5678:5678
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    volumes:
+      - .data/crawler:/app
     restart: always
     depends_on:
       - db
