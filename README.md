@@ -1,4 +1,4 @@
-# YEB - Automatização de Validadação de Banco de Dados
+# FATEC Yeb Database
 
 ## Objetivo
 
