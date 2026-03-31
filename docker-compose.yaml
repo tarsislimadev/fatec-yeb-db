@@ -5,6 +5,8 @@ services:
       - 5678:5678
     volumes:
       - ./src/crawler:/app
+    depends_on:
+      - redis
 
   redis:
     build: ./src/redis
