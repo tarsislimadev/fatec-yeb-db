@@ -1,5 +1,6 @@
 services:
   crawler:
+    image: 'tmvdl/fatec_yeb_db:crawler'
     build: ./src/crawler
     ports:
       - 5678:5678
@@ -9,6 +10,7 @@ services:
       - redis
 
   redis:
+    image: 'tmvdl/fatec_yeb_db:redis'
     build: ./src/redis
     ports:
       - 6379:6379
