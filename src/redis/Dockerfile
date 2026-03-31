@@ -1,0 +1,1 @@
+FROM redis:8.4.0-alpine
