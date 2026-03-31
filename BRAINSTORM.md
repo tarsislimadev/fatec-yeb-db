@@ -53,3 +53,17 @@ sudo apt -y update && sudo apt -y install docker-compose
 
 curl -fsSL "https://raw.githubusercontent.com/tarsislimadev/debian/refs/heads/main/src/install/docker.sh" | bash
 ```
+
+##
+
+```bash
+scp -r . azureuser@20.110.17.54:~/fatec_yeb_db
+```
+
+##
+
+```bash
+ssh azureuser@20.110.17.54
+cd fatec_yeb_db
+sudo docker-compose up -d
+```
