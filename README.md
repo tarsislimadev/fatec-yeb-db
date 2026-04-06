@@ -1,59 +1,59 @@
 # FATEC Yeb Database
 
-## Objetivo
+## Objective
 
-Automatizar o processo de validação de banco de dados comercial através de pesquisa secundária e primária, a fim de otimizar o processo comercial dos MDRs e SDRs no contato com prospects, agendamento de reuniões e venda de produtos.
+Automate the commercial database validation process through secondary and primary research, in order to optimize the business process of MDRs and SDRs in prospect contact, meeting scheduling, and product sales.
 
-## Escopo
+## Scope
 
-- [ ] Sistema que valida um banco de dados contendo informações básicas de determinadas empresas, como CNPJ, razão Social, Nome fantasia e número cadastrado na Receita Federal
+- [ ] System that validates a database containing basic information of certain companies, such as CNPJ, legal name, business name, and number registered with the Federal Revenue Service
 
-- [ ] A validação terá dois formatos, a partir de fontes secundárias e primárias
+- [ ] The validation will have two formats, from secondary and primary sources
 
-- [ ] Fontes secundárias poderão ser usados sites das empresas, sites especializados em coletas de informações de contatos, associações, notícias, etc
+- [ ] Secondary sources may include company websites, websites specialized in collecting contact information, associations, news, etc.
 
-- [ ] O robô com IA fará a leitura das informações do Banco de dados, buscará as informações e preencherá com as informações dos cargos das pessoas pré-requisitadas pelo cliente no sistema. As informações serão: Nome, email, telefone e cargo. Outras informações poderão ser solicitadas pelo cliente na área de configuração.
+- [ ] The AI robot will read information from the database, search for information and fill it with information from the positions of people pre-requisitioned by the customer in the system. The information will be: Name, email, phone, and position. Other information may be requested by the customer in the configuration area.
 
-- [ ] Pesquisa secundária será necessária para as informações que não foram coletadas pela pesquisa secundária. Essa envolve uma segunda etapa do projeto, onde a pesquisa será feita por uma IA em contato telefônico ou chatbot por whatsapp. Será treinada uma entrevista com a IA que entrará em contato com os telefones encontrados pela pesquisa secundária e identificar as informações pré-selecionadas acima pelo cliente.
+- [ ] Primary research will be necessary for information that was not collected by secondary research. This involves a second stage of the project, where research will be conducted by an AI through phone contact or WhatsApp chatbot. An interview will be trained with the AI that will contact the phone numbers found during secondary research and identify the pre-selected information above by the customer.
 
-- [ ] A pesquisa preencherá os mesmos campos que a pesquisa secundária não conseguiu preencher ou conferir as informações, também de acordo com a necessidade do cliente
+- [ ] The research will fill in the same fields that secondary research could not fill or verify the information, also according to customer needs
 
-- [ ] O processo deverá envolver a equipe de ESG para desenvolver de acordo com as normas de LGPD, principalmente a pesquisa primária."
+- [ ] The process should involve the ESG team to develop in accordance with LGPD regulations, especially primary research.
 
-## Uso de APIs de CNPJ
+## Use of CNPJ APIs
 
-O sistema integra o uso de consultas automatizadas a APIs de CNPJ como método para aquisição e enriquecimento de dados. Por meio de serviços como a **Brasil API** e a **[CNPJA (Open API)](https://cnpja.com/en/api/open)**, o crawler faz a busca direta através do CNPJ da empresa, capturando dados oficiais, como a situação cadastral, contatos registrados e o Quadro de Sócios e Administradores (QSA). Essas informações fornecem uma base qualificada para que a Inteligência Artificial identifique os tomadores de decisão na etapa posterior.
+The system integrates the use of automated queries to CNPJ APIs as a method for data acquisition and enrichment. Through services such as **Brasil API** and **[CNPJA (Open API)](https://cnpja.com/en/api/open)**, the crawler performs direct searches using the company's CNPJ, capturing official data such as registration status, registered contacts, and the Board of Members and Administrators (QSA). This information provides a qualified basis for the Artificial Intelligence to identify decision-makers in the subsequent stage.
 
-## Pessoas
+## Team
 
-[Scrum Master e Product Owner - Tarsis](https://github.com/tarsislimadev)
+[Scrum Master and Product Owner - Tarsis](https://github.com/tarsislimadev)
 
-[Desenvolvedor - Emmanuel](https://github.com/emannuelp-boldrin)
+[Developer - Emmanuel](https://github.com/emannuelp-boldrin)
 
-## Como Rodar o Projeto
+## How to Run the Project
 
-Este projeto utiliza Docker para orquestrar o banco de dados, o crawler e o serviço de IA (Ollama).
+This project uses Docker to orchestrate the database, crawler, and AI service (Ollama).
 
-### Pré-requisitos
-- Docker e Docker Compose instalados.
+### Prerequisites
+- Docker and Docker Compose installed.
 
-### Passos
-1. **Inicie os serviços:**
-   ```bash
-   docker compose up -d --build
-   ```
+### Steps
+1. **Start the services:**
+```bash
+docker compose up -d --build
+```
 
-2. **Acompanhe os logs do Crawler:**
-   ```bash
-   docker compose logs -f crawler
-   ```
+2. **Follow the Crawler logs:**
+```bash
+docker compose logs -f crawler
+```
 
-3. **Verifique os dados no Banco de Dados:**
-   O banco de dados PostgreSQL estará acessível na porta `5432`. Você pode usar ferramentas como DBeaver ou `psql` para visualizar a tabela `companies`.
+3. **Check the data in the Database:**
+The PostgreSQL database will be accessible on port `5432`. You can use tools like DBeaver or `psql` to view the `companies` table.
 
-4. **Funcionamento da IA:**
-   O serviço `ollama` baixará automaticamente o modelo `llama3` na primeira execução. Certifique-se de ter uma conexão estável com a internet.
+4. **AI Functionality:**
+The `ollama` service will automatically download the `llama3` model on first execution. Make sure you have a stable internet connection.
 
-## Licença
+## License
 
 [Apache-2.0](./LICENSE)
