@@ -32,7 +32,7 @@ The system integrates the use of automated queries to CNPJ APIs as a method for 
 
 ## How to Run the Project
 
-This project uses Docker to orchestrate the database, crawler, and AI service (Ollama).
+This project uses Docker Compose to orchestrate web UI, API, PostgreSQL, and Redis cache.
 
 ### Prerequisites
 - Docker and Docker Compose installed.
@@ -43,16 +43,33 @@ This project uses Docker to orchestrate the database, crawler, and AI service (O
 docker compose up -d --build
 ```
 
-2. **Follow the Crawler logs:**
+2. **Follow the API logs:**
 ```bash
-docker compose logs -f crawler
+docker compose logs -f api
 ```
 
 3. **Check the data in the Database:**
 The PostgreSQL database will be accessible on port `5432`. You can use tools like DBeaver or `psql` to view the `companies` table.
 
-4. **AI Functionality:**
-The `ollama` service will automatically download the `llama3` model on first execution. Make sure you have a stable internet connection.
+4. **Cache Layer:**
+Redis cache is available on port `6379` and is used to reduce repeated CNPJ provider calls.
+
+## New API Capabilities
+
+- `POST /api/cnpj/lookup`: CNPJ lookup with Redis caching.
+- `POST /api/messages/queue`: queue a WhatsApp message with idempotency key protection.
+- `POST /api/messages/webhook`: register provider delivery/read/failure/opt-out events.
+- `GET /api/messages?limit=20`: list recent outbound messages.
+
+## Messaging Schema
+
+The database now includes lifecycle tables for outreach flows:
+
+- `message_templates`
+- `outbound_messages`
+- `message_events`
+- `contact_consent`
+- `suppression_list`
 
 ## License
 
