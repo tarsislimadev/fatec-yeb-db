@@ -9,6 +9,7 @@ import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from psycopg2.extras import RealDictCursor
+from rq import Queue
 
 
 app = Flask(__name__)
@@ -30,8 +31,10 @@ REDIS_DB = int(os.getenv("REDIS_DB", "0"))
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 CNPJ_CACHE_TTL_SECONDS = int(os.getenv("CNPJ_CACHE_TTL_SECONDS", "86400"))
 CNPJ_CACHE_NOT_FOUND_TTL_SECONDS = int(os.getenv("CNPJ_CACHE_NOT_FOUND_TTL_SECONDS", "10800"))
+MESSAGE_QUEUE_NAME = os.getenv("MESSAGE_QUEUE_NAME", "outbound_messages")
 
 redis_client = None
+queue_client = None
 
 
 class CnpjNotFoundError(Exception):
@@ -62,6 +65,22 @@ def get_redis_connection():
 			decode_responses=True,
 		)
 	return redis_client
+
+
+def get_queue_redis_connection():
+	global queue_client
+	if queue_client is None:
+		queue_client = redis.Redis(
+			host=REDIS_HOST,
+			port=REDIS_PORT,
+			db=REDIS_DB,
+			password=REDIS_PASSWORD,
+		)
+	return queue_client
+
+
+def get_message_queue():
+	return Queue(MESSAGE_QUEUE_NAME, connection=get_queue_redis_connection())
 
 
 def get_cached_cnpj(cnpj):
@@ -360,8 +379,13 @@ def queue_message():
 			result = cur.fetchone()
 
 	message_status = "queued" if result.get("inserted") else "duplicate"
+	job_id = None
+	if result.get("inserted"):
+		job = get_message_queue().enqueue("worker.process_outbound_message", result["id"], job_timeout=120)
+		job_id = job.id
+
 	result.pop("inserted", None)
-	return jsonify({"status": message_status, "message": result})
+	return jsonify({"status": message_status, "message": result, "jobId": job_id})
 
 
 @app.post("/api/messages/webhook")

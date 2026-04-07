@@ -92,6 +92,12 @@
       grid-template-columns: 1fr auto;
     }
 
+    .campaign-form {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr 1fr auto;
+    }
+
     input,
     button {
       font: inherit;
@@ -184,6 +190,10 @@
       .lookup-form {
         grid-template-columns: 1fr;
       }
+
+      .campaign-form {
+        grid-template-columns: 1fr;
+      }
     }
 
     @keyframes slideIn {
@@ -225,11 +235,36 @@
             <tr>
               <th>CNPJ</th>
               <th>Legal Name</th>
+              <th>Phone</th>
               <th>Status</th>
               <th>Source</th>
             </tr>
           </thead>
           <tbody id="companiesBody"></tbody>
+        </table>
+      </article>
+
+      <article class="panel">
+        <h2>Campaign Queue</h2>
+        <form id="campaignForm" class="campaign-form">
+          <input id="campaignPhoneInput" type="text" placeholder="Contact phone (e.g. 5511999999999)" required>
+          <input id="campaignTemplateInput" type="text" placeholder="Template name" value="default_template" required>
+          <input id="campaignTextInput" type="text" placeholder="Fallback message text" value="Ola! Somos da equipe Yeb.">
+          <button type="submit">Queue Message</button>
+        </form>
+        <p id="campaignStatus" class="status"></p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Phone</th>
+              <th>Template</th>
+              <th>Status</th>
+              <th>Provider</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="messagesBody"></tbody>
         </table>
       </article>
     </section>
@@ -239,7 +274,10 @@
     const statusEl = document.getElementById("status");
     const resultEl = document.getElementById("result");
     const companiesBodyEl = document.getElementById("companiesBody");
+    const messagesBodyEl = document.getElementById("messagesBody");
     const formEl = document.getElementById("lookupForm");
+    const campaignFormEl = document.getElementById("campaignForm");
+    const campaignStatusEl = document.getElementById("campaignStatus");
 
     function maskCnpj(value) {
       const digits = value.replace(/\D/g, "").slice(0, 14);
@@ -277,6 +315,11 @@
       }
     }
 
+    function setCampaignStatus(text, tone) {
+      campaignStatusEl.textContent = text;
+      campaignStatusEl.className = "status " + (tone || "");
+    }
+
     async function loadCompanies() {
       try {
         const response = await fetch("/api/companies?limit=20");
@@ -288,6 +331,7 @@
           row.innerHTML = `
             <td>${company.cnpj}</td>
             <td>${company.legal_name || "-"}</td>
+            <td>${company.phone || "-"}</td>
             <td>${company.status || "-"}</td>
             <td>${company.source || "-"}</td>
           `;
@@ -295,6 +339,29 @@
         }
       } catch (error) {
         setStatus("Could not load companies list.", "warn");
+      }
+    }
+
+    async function loadMessages() {
+      try {
+        const response = await fetch("/api/messages?limit=20");
+        const messages = await response.json();
+
+        messagesBodyEl.innerHTML = "";
+        for (const message of messages) {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${message.id}</td>
+            <td>${message.contact_phone || "-"}</td>
+            <td>${message.template_name || "-"}</td>
+            <td>${message.status || "-"}</td>
+            <td>${message.provider || "-"}</td>
+            <td>${new Date(message.updated_at).toLocaleString()}</td>
+          `;
+          messagesBodyEl.appendChild(row);
+        }
+      } catch (error) {
+        setCampaignStatus("Could not load messages.", "warn");
       }
     }
 
@@ -329,7 +396,42 @@
       }
     });
 
+    campaignFormEl.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const contact_phone = document.getElementById("campaignPhoneInput").value;
+      const template_name = document.getElementById("campaignTemplateInput").value;
+      const text = document.getElementById("campaignTextInput").value;
+      setCampaignStatus("Queueing message...", "warn");
+
+      try {
+        const response = await fetch("/api/messages/queue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contact_phone,
+            template_name,
+            payload: { text },
+            provider: "meta",
+          }),
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+          setCampaignStatus(payload.error || "Failed to queue message.", "danger");
+          return;
+        }
+
+        const tone = payload.status === "duplicate" ? "warn" : "ok";
+        setCampaignStatus(`Message ${payload.status}.`, tone);
+        loadMessages();
+      } catch (error) {
+        setCampaignStatus("Messaging API is unavailable.", "danger");
+      }
+    });
+
     loadCompanies();
+    loadMessages();
+    setInterval(loadMessages, 8000);
   </script>
 
 </body>
