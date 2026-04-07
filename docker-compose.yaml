@@ -1,9 +1,23 @@
 services:
-
-  crawler:
-    image: 'tmvdl/fatec_yeb_db:crawler'
-    build: ./src/crawler
+  www:
+    build: './src/www'
     ports:
-      - 5678:5678
+      - "8000:80"
+    depends_on:
+      - api
+
+  api:
+    build: './src/api'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    build: './src/database'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     volumes:
-      - ./src/crawler:/app
+      - db_data:/var/lib/postgresql/data
