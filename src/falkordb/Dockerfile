@@ -1,3 +1,0 @@
-FROM falkordb/falkordb:edge
-
-
