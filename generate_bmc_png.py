@@ -44,32 +44,32 @@ def get_bmc_blocks(
 ) -> List[Tuple[float, float, float, float, str, str]]:
     """Returns the geometry and content of each BMC block."""
     return [
-        (pad_x_left, pad_y_top, pad_x_left + col_w, pad_y_mid, "8. Parcerias Principais", 
-         "- Provedores de Dados (Econodata,\n  CNPJ Biz)\n- Nuvem e Telecom (AWS, Twilio)\n- Consultorias Jurídicas (LGPD)"),
-        
-        (pad_x_left + col_w, pad_y_top, pad_x_left + 2*col_w, mid_h1, "7. Atividades Principais", 
-         "- Desenvolvimento Multi-Fases\n- Treinamento de IA (Llama3)\n- Gestão de Infraestrutura e BD\n- Auditoria de Conformidade (LGPD)"),
-        
-        (pad_x_left + col_w, mid_h1, pad_x_left + 2*col_w, pad_y_mid, "6. Recursos Principais", 
-         "- Tecnológicos: Crawlers, Llama3, BD\n- Intelectuais: Arquitetura, Prompts\n- Humanos: Devs, PO, SM, ESG/Jurídico"),
+        (pad_x_left, pad_y_top, pad_x_left + col_w, pad_y_mid, "8. Parcerias Principais",
+         "- Provedores de dados CNPJ\n  (BrasilAPI, CNPJA)\n- Provedores WhatsApp oficiais\n  (Meta, Twilio, Gupshup)\n- Cloud e observabilidade\n- Apoio juridico LGPD"),
 
-        (pad_x_left + 2*col_w, pad_y_top, pad_x_left + 3*col_w, pad_y_mid, "2. Proposta de Valor", 
-         "- Aumento de Produtividade Comercial\n- Enriquecimento Secundário via IA\n  (nome, e-mail, telefone, cargo)\n- Pesquisa Primária e Validação\n  (Robôs de Voz/WhatsApp)\n- Conformidade rígida com a LGPD"),
+        (pad_x_left + col_w, pad_y_top, pad_x_left + 2*col_w, mid_h1, "7. Atividades Principais",
+         "- Lookup e enriquecimento CNPJ\n- Cache Redis por TTL\n- Fila + worker assinc.\n- Webhook de status e opt-out\n- KPIs de entrega e conversao"),
 
-        (pad_x_left + 3*col_w, pad_y_top, pad_x_left + 4*col_w, mid_h1, "4. Relacionamento", 
-         "- Onboarding e Setup Personalizado\n- Plataforma Self-Service SaaS\n- Suporte Técnico Dedicado"),
+        (pad_x_left + col_w, mid_h1, pad_x_left + 2*col_w, pad_y_mid, "6. Recursos Principais",
+         "- Flask API + RQ worker\n- PostgreSQL + Redis\n- Regras de idempotencia\n  e supressao\n- Time de eng/produto/compliance"),
 
-        (pad_x_left + 3*col_w, mid_h1, pad_x_left + 4*col_w, pad_y_mid, "3. Canais", 
-         "- Vendas Diretas (B2B)\n- Plataforma Web SaaS\n- Integrações de API / Plugins com\n  CRMs (HubSpot, Salesforce)"),
+        (pad_x_left + 2*col_w, pad_y_top, pad_x_left + 3*col_w, pad_y_mid, "2. Proposta de Valor",
+         "- Valida e enriquece base B2B\n  com menos custo operacional\n- Separa lookup sincrono\n  de campanhas assincronas\n- Mensageria rastreavel\n  (queued->delivered/read)\n- Compliance e auditoria LGPD"),
 
-        (pad_x_left + 4*col_w, pad_y_top, pad_x_right, pad_y_mid, "1. Segmentos de Clientes", 
-         "- Equipes de Vendas B2B: SDRs e MDRs\n- Gestores de Inteligência Comercial\n- Empresas B2B de médio a grande\n  porte (Outbound Marketing)"),
+        (pad_x_left + 3*col_w, pad_y_top, pad_x_left + 4*col_w, mid_h1, "4. Relacionamento",
+         "- Onboarding por playbook\n- Operacao assistida\n- Suporte tecnico\n- Evolucao por KPI"),
 
-        (pad_x_left, pad_y_mid, pad_x_left + 2.5*col_w, pad_y_bottom, "9. Estrutura de Custos", 
-         "- Infraestrutura na Nuvem (Servers, GPUs p/ IA)\n- Licenças e APIs (WhatsApp API, Busca de Dados)\n- Custos de Pessoal (Dev, Produto, Comercial)\n- Custos Operacionais e Marketing (CAC)"),
+        (pad_x_left + 3*col_w, mid_h1, pad_x_left + 4*col_w, pad_y_mid, "3. Canais",
+         "- Vendas B2B diretas\n- Plataforma web\n- API para CRM\n- Parcerias de integracao"),
 
-        (pad_x_left + 2.5*col_w, pad_y_mid, pad_x_right, pad_y_bottom, "5. Fontes de Receita", 
-         "- Modelo de Assinatura Mensal/Anual (SaaS) baseado no volume\n- Pay-per-use para Pesquisa Primária (minutos de IA de voz/chat)\n- Taxas de Setup e Customização de Integrações")
+        (pad_x_left + 4*col_w, pad_y_top, pad_x_right, pad_y_mid, "1. Segmentos de Clientes",
+         "- SDR/MDR com alto volume\n- RevOps e Intel. comercial\n- Empresas B2B medias\n  e grandes\n- Operacoes com metas\n  de compliance"),
+
+        (pad_x_left, pad_y_mid, pad_x_left + 2.5*col_w, pad_y_bottom, "9. Estrutura de Custos",
+         "- Infra de containers, BD\n  e cache\n- Custos de API CNPJ\n  e mensageria\n- Engenharia e suporte\n- Compliance e seguranca"),
+
+        (pad_x_left + 2.5*col_w, pad_y_mid, pad_x_right, pad_y_bottom, "5. Fontes de Receita",
+         "- Assinatura SaaS por volume\n  de processamento\n- Uso de mensageria\n  por mensagem/processamento\n- Implementacao e integracao\n  customizada")
     ]
 
 
@@ -82,7 +82,7 @@ def generate_bmc() -> Image.Image:
 
     draw.text(
         (CANVAS_WIDTH // 2 - 250, 20),
-        "Business Model Canvas - YEB",
+        "Business Model Canvas - YEB (v2)",
         fill=TITLE_COLOR,
         font=main_title_font
     )
