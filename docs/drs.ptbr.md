@@ -32,6 +32,9 @@ Objetivo central:
 - Pipeline de enriquecimento por CNPJ (adaptador de provedor, fallback, deduplicacao)
 - Busca, filtros e linha do tempo de tentativas de contato
 - Controles de conformidade (consentimento e supressao)
+- Regras de gestao de contato de prospects e cadencia
+- Ciclo de agendamento de reunioes e controle de status
+- Pipeline de vendas por produto e registro de pedidos
 
 ### Fora do escopo para DRS v1
 
@@ -98,6 +101,15 @@ Saidas por tecnica:
 - RF-006: Sistema usa provedor fallback quando o provedor primario de CNPJ falha
 - RF-007: Usuario pode registrar tentativas de outreach e resultados
 - RF-008: Sistema bloqueia outreach quando o consentimento e revogado ou suprimido
+- RF-009: Usuario pode criar e gerenciar prospects vinculados a telefone/pessoa/empresa
+- RF-010: Sistema aplica regras de cadencia por status do prospect
+- RF-011: Usuario pode criar, confirmar, reagendar e cancelar reunioes
+- RF-012: Reuniao confirmada remove prospect da fila de outreach frio
+- RF-013: Usuario pode criar e gerenciar catalogo de produtos
+- RF-014: Usuario pode criar oportunidades e mover entre estagios de venda
+- RF-015: Usuario pode adicionar produtos na oportunidade com quantidade, preco e desconto
+- RF-016: Sistema pode emitir pedido de venda a partir de oportunidade ganha
+- RF-017: Sistema registra toda transicao de estagio com ator, data/hora e motivo
 
 ### Requisitos nao funcionais (RNF)
 
@@ -117,6 +129,70 @@ Exemplo (RF-006):
 - Dado que o provedor primario esta indisponivel
 - Quando uma consulta de CNPJ e solicitada
 - Entao o provedor fallback e executado automaticamente e o resultado e persistido com metadados de origem
+
+Exemplos adicionais de aceitacao:
+
+- RF-010:
+	- Dado que o status do prospect e meeting_scheduled
+	- Quando o usuario tenta registrar nova tentativa de outreach frio
+	- Entao o sistema rejeita a acao por regra de negocio e registra evento
+
+- RF-011:
+	- Dado que os campos obrigatorios da reuniao estao validos
+	- Quando o usuario cria uma reuniao
+	- Entao o sistema persiste a reuniao com status pending e cria evento de timeline
+
+- RF-015:
+	- Dado que a oportunidade esta aberta
+	- Quando o usuario adiciona produtos com quantidade e desconto
+	- Entao o total estimado e recalculado de forma deterministica
+
+## 14. Artefatos Planejados para Rastrear no DRS
+
+Paginas frontend para rastreabilidade:
+
+- /prospects
+- /prospects/{id}
+- /meetings/calendar
+- /meetings/{id}
+- /opportunities
+- /opportunities/{id}
+- /sales/orders
+- /sales/reports
+
+Endpoints backend para rastreabilidade:
+
+- GET /api/v1/prospects
+- POST /api/v1/prospects
+- GET /api/v1/prospects/{prospectId}
+- PATCH /api/v1/prospects/{prospectId}
+- POST /api/v1/prospects/{prospectId}/contact-attempts
+- GET /api/v1/meetings
+- POST /api/v1/meetings
+- PATCH /api/v1/meetings/{meetingId}
+- POST /api/v1/meetings/{meetingId}/confirm
+- POST /api/v1/meetings/{meetingId}/cancel
+- GET /api/v1/opportunities
+- POST /api/v1/opportunities
+- PATCH /api/v1/opportunities/{opportunityId}
+- POST /api/v1/opportunities/{opportunityId}/products
+- POST /api/v1/opportunities/{opportunityId}/stage-transition
+- POST /api/v1/sales/orders
+- GET /api/v1/sales/orders/{orderId}
+- GET /api/v1/sales/reports/funnel
+
+Tabelas de banco para rastreabilidade:
+
+- prospects
+- prospect_status_history
+- meetings
+- meeting_events
+- products
+- opportunities
+- opportunity_products
+- sales_orders
+- sales_order_items
+- stage_transitions
 
 ## 9. Metodo de Priorizacao
 

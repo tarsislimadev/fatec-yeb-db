@@ -96,6 +96,102 @@
 4. Store source metadata for every enrichment write.
 5. Define duplicate resolution policy by deterministic precedence.
 
+## Prospect Contact, Meeting, and Sales Rules
+
+1. Prospect contact cadence must be rule-driven by status:
+	- new prospect: up to 2 attempts in 48 hours
+	- contacted no answer: wait at least 24 hours before next attempt
+	- meeting scheduled: no additional cold outreach attempts
+	- closed won or closed lost: outreach blocked except allowed follow-up policy
+2. Respect suppression and consent before any outreach action (call, WhatsApp, SMS, email).
+3. Meeting scheduling must require:
+	- linked prospect and owner
+	- date/time and timezone
+	- channel (phone, video, in-person)
+	- confirmation state (pending, confirmed, canceled, no_show)
+4. Product sales registration must require:
+	- linked opportunity and product
+	- quantity, unit price, discount, and final amount
+	- stage transitions with audit trail (proposal, negotiation, won, lost)
+5. Every state change in contact, meeting, or sales flow must create a timeline event.
+
+## Planned Frontend Pages
+
+1. Prospect contact queue page with priority and next-action date.
+2. Prospect detail page with timeline, consent state, and relationship map.
+3. Meeting calendar page with create/edit/cancel actions and status filters.
+4. Opportunity pipeline page by stage and owner.
+5. Opportunity detail page with products, pricing, discount, and close reason.
+6. Sales reports page with conversion, revenue, and funnel metrics.
+
+## Frontend Page Specification by Route
+
+1. Route: /prospects
+	- fields: search, owner, status, consent, next_action_date, last_contact_at, priority
+	- actions: create prospect, assign owner, update status, register contact attempt, open details
+	- states: loading list, empty list, filtered results, pagination loading, validation error, permission denied
+2. Route: /prospects/{id}
+	- fields: basic profile, linked phone/person/business, status, consent, suppression, next_action_at, timeline
+	- actions: edit profile, change status, update consent, schedule meeting, create opportunity, log contact attempt
+	- states: loading detail, not found, read-only mode, edit mode, save success, save error, conflict on stale update
+3. Route: /meetings/calendar
+	- fields: date range, timezone, channel, owner, status, prospect name
+	- actions: create meeting, reschedule, cancel, confirm, open meeting detail
+	- states: loading calendar, no meetings, day/week/month view, reminder pending, sync error
+4. Route: /meetings/{id}
+	- fields: prospect, owner, datetime, timezone, channel, status, notes, event history
+	- actions: confirm, reschedule, cancel, mark no_show, mark completed
+	- states: loading detail, pending, confirmed, canceled, no_show, completed, invalid transition error
+5. Route: /opportunities
+	- fields: stage, owner, expected_close_date, estimated_total, last_stage_change, win_probability
+	- actions: create opportunity, move stage, assign owner, open detail, filter by stage
+	- states: loading board, empty board, drag-drop updating, stage update success, stage update failure
+6. Route: /opportunities/{id}
+	- fields: stage, products, quantities, prices, discounts, totals, close reason, transition history
+	- actions: add product, remove product, edit line item, transition stage, close won, close lost
+	- states: loading detail, draft changes, recalculating totals, unsaved changes warning, save error, closed-readonly
+7. Route: /sales/orders
+	- fields: order number, opportunity, status, issued_at, paid_at, gross_total, net_total
+	- actions: create order from won opportunity, issue order, register payment, cancel order, open order detail
+	- states: loading list, empty list, draft, issued, paid, canceled, transition blocked
+8. Route: /sales/reports
+	- fields: date range, owner, stage funnel counts, conversion rate, revenue totals, average ticket
+	- actions: apply filters, refresh metrics, export report
+	- states: loading metrics, no data in period, partial data warning, export in progress, export complete, query timeout
+
+## Planned Backend Endpoints
+
+1. GET /api/v1/prospects
+2. POST /api/v1/prospects
+3. GET /api/v1/prospects/{prospectId}
+4. PATCH /api/v1/prospects/{prospectId}
+5. POST /api/v1/prospects/{prospectId}/contact-attempts
+6. GET /api/v1/meetings
+7. POST /api/v1/meetings
+8. PATCH /api/v1/meetings/{meetingId}
+9. POST /api/v1/meetings/{meetingId}/confirm
+10. POST /api/v1/meetings/{meetingId}/cancel
+11. GET /api/v1/opportunities
+12. POST /api/v1/opportunities
+13. PATCH /api/v1/opportunities/{opportunityId}
+14. POST /api/v1/opportunities/{opportunityId}/products
+15. POST /api/v1/opportunities/{opportunityId}/stage-transition
+16. GET /api/v1/sales/reports/funnel
+
+## Planned Database Tables
+
+1. prospects
+2. prospect_status_history
+3. meeting_events
+4. meetings
+5. products
+6. opportunities
+7. opportunity_products
+8. sales_orders
+9. sales_order_items
+10. stage_transitions
+11. activity_timeline
+
 ## Testing Plan
 
 1. Unit tests for normalization, dedup, and auth flows.

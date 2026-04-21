@@ -32,6 +32,9 @@ Core goal:
 - CNPJ enrichment pipeline (provider adapter, fallback, deduplication)
 - Search, filters, and timeline of contact attempts
 - Compliance controls (consent and suppression)
+- Prospect contact management rules and cadence
+- Meeting scheduling lifecycle and status controls
+- Productized sales pipeline and order registration
 
 ### Out of scope for DRS v1
 
@@ -98,6 +101,15 @@ Outputs per technique:
 - RF-006: System uses fallback provider when primary CNPJ provider fails
 - RF-007: User can record outreach attempts and outcomes
 - RF-008: System blocks outreach when consent is revoked or suppressed
+- RF-009: User can create and manage prospect records linked to phone/person/business
+- RF-010: System enforces contact cadence rules by prospect status
+- RF-011: User can create, confirm, reschedule, and cancel meetings
+- RF-012: Confirmed meeting removes prospect from cold outreach queue
+- RF-013: User can create and manage product catalog records
+- RF-014: User can create opportunities and move across sales stages
+- RF-015: User can add products to an opportunity with quantity, price, and discount
+- RF-016: System can issue sales orders from won opportunities
+- RF-017: System stores every stage transition with actor, timestamp, and reason
 
 ### Non-functional requirements (RNF)
 
@@ -117,6 +129,70 @@ Example (RF-006):
 - Given primary provider is unavailable
 - When a CNPJ lookup is requested
 - Then the fallback provider is executed automatically and result is persisted with source metadata
+
+Additional acceptance examples:
+
+- RF-010:
+	- Given prospect status is meeting_scheduled
+	- When user tries to register a cold outreach attempt
+	- Then system rejects action with business-rule violation and logs event
+
+- RF-011:
+	- Given required meeting fields are valid
+	- When user creates a meeting
+	- Then system persists meeting with pending status and creates timeline event
+
+- RF-015:
+	- Given an open opportunity
+	- When user adds products with quantity and discounts
+	- Then estimated total is recalculated deterministically
+
+## 14. Planned Implementation Artifacts to Trace in DRS
+
+Frontend pages to trace in requirement mapping:
+
+- /prospects
+- /prospects/{id}
+- /meetings/calendar
+- /meetings/{id}
+- /opportunities
+- /opportunities/{id}
+- /sales/orders
+- /sales/reports
+
+Backend endpoints to trace in requirement mapping:
+
+- GET /api/v1/prospects
+- POST /api/v1/prospects
+- GET /api/v1/prospects/{prospectId}
+- PATCH /api/v1/prospects/{prospectId}
+- POST /api/v1/prospects/{prospectId}/contact-attempts
+- GET /api/v1/meetings
+- POST /api/v1/meetings
+- PATCH /api/v1/meetings/{meetingId}
+- POST /api/v1/meetings/{meetingId}/confirm
+- POST /api/v1/meetings/{meetingId}/cancel
+- GET /api/v1/opportunities
+- POST /api/v1/opportunities
+- PATCH /api/v1/opportunities/{opportunityId}
+- POST /api/v1/opportunities/{opportunityId}/products
+- POST /api/v1/opportunities/{opportunityId}/stage-transition
+- POST /api/v1/sales/orders
+- GET /api/v1/sales/orders/{orderId}
+- GET /api/v1/sales/reports/funnel
+
+Database tables to trace in requirement mapping:
+
+- prospects
+- prospect_status_history
+- meetings
+- meeting_events
+- products
+- opportunities
+- opportunity_products
+- sales_orders
+- sales_order_items
+- stage_transitions
 
 ## 9. Prioritization Method
 

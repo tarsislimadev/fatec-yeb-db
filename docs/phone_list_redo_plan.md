@@ -299,6 +299,342 @@ Acceptance checks for automated calling:
 - Opt-out spoken in call blocks future outreach in less than 1 minute.
 - Manual review queue receives low-confidence identity claims.
 
+## 7. Prospect Contact Management, Meeting Scheduling, and Product Sales (MVP+)
+
+Goal:
+- Extend the phone-first product into a complete prospecting and sales execution flow with clear ownership, meeting orchestration, and product-level sales registration.
+
+Business rules:
+- Contact attempts must follow cadence by prospect status and stop automatically when meeting is confirmed.
+- Suppressed or consent-revoked prospects cannot enter active outreach queues.
+- Meeting records require owner, timezone-aware datetime, channel, and status lifecycle.
+- Opportunity stage changes must be explicit and auditable.
+- Revenue calculation must be deterministic: final_amount = sum(quantity * unit_price) - discount_total + tax_total.
+
+Data model additions:
+- prospects
+  - id (uuid)
+  - phone_id (fk)
+  - person_id (fk, nullable)
+  - business_id (fk, nullable)
+  - owner_user_id (fk)
+  - status (new, contacted, qualified, meeting_scheduled, proposal, negotiation, won, lost)
+  - lead_source
+  - next_action_at (timestamp, nullable)
+  - created_at, updated_at
+
+- prospect_status_history
+  - id (uuid)
+  - prospect_id (fk)
+  - from_status
+  - to_status
+  - changed_by_user_id (fk)
+  - changed_at
+  - reason
+
+- meetings
+  - id (uuid)
+  - prospect_id (fk)
+  - owner_user_id (fk)
+  - scheduled_at (timestamp)
+  - timezone
+  - channel_type (phone, video, in_person)
+  - status (pending, confirmed, canceled, no_show, completed)
+  - notes
+  - created_at, updated_at
+
+- meeting_events
+  - id (uuid)
+  - meeting_id (fk)
+  - event_type (created, confirmed, rescheduled, canceled, reminder_sent, completed)
+  - event_at
+  - payload_json
+
+- products
+  - id (uuid)
+  - sku (unique)
+  - name
+  - base_price
+  - active
+  - created_at, updated_at
+
+- opportunities
+  - id (uuid)
+  - prospect_id (fk)
+  - owner_user_id (fk)
+  - stage (qualified, proposal, negotiation, won, lost)
+  - expected_close_date
+  - currency_code
+  - estimated_total
+  - closed_total (nullable)
+  - lost_reason (nullable)
+  - created_at, updated_at
+
+- opportunity_products
+  - id (uuid)
+  - opportunity_id (fk)
+  - product_id (fk)
+  - quantity
+  - unit_price
+  - discount_amount
+  - line_total
+
+- sales_orders
+  - id (uuid)
+  - opportunity_id (fk)
+  - order_number (unique)
+  - status (draft, issued, paid, canceled)
+  - issued_at
+  - paid_at (nullable)
+  - gross_total
+  - discount_total
+  - tax_total
+  - net_total
+
+- sales_order_items
+  - id (uuid)
+  - sales_order_id (fk)
+  - product_id (fk)
+  - quantity
+  - unit_price
+  - discount_amount
+  - net_amount
+
+- stage_transitions
+  - id (uuid)
+  - opportunity_id (fk)
+  - from_stage
+  - to_stage
+  - transitioned_by_user_id (fk)
+  - transitioned_at
+  - reason
+
+Planned frontend pages:
+- /prospects
+- /prospects/{id}
+- /meetings/calendar
+- /meetings/{id}
+- /opportunities
+- /opportunities/{id}
+- /sales/orders
+- /sales/reports
+
+Frontend page specification (fields, actions, states) per route:
+
+- /prospects
+  - fields:
+    - search_text
+    - owner_user_id
+    - status
+    - consent_status
+    - suppression_state
+    - next_action_at
+    - last_contact_at
+    - priority_score
+  - actions:
+    - create prospect
+    - update status
+    - reassign owner
+    - log contact attempt
+    - open prospect detail
+  - states:
+    - loading
+    - list_empty
+    - data_loaded
+    - filter_applied
+    - pagination_loading
+    - forbidden
+    - request_error
+
+- /prospects/{id}
+  - fields:
+    - prospect identity and linked phone/person/business
+    - owner and current status
+    - consent and suppression indicators
+    - next_action_at
+    - timeline events
+  - actions:
+    - edit prospect profile
+    - change status with reason
+    - update consent record
+    - schedule meeting
+    - create opportunity
+    - log contact attempt
+  - states:
+    - loading
+    - not_found
+    - readonly
+    - editing
+    - saving
+    - saved
+    - validation_error
+    - conflict_error
+
+- /meetings/calendar
+  - fields:
+    - date_range
+    - timezone
+    - owner_user_id
+    - meeting_status
+    - channel_type
+    - prospect_reference
+  - actions:
+    - create meeting
+    - open meeting detail
+    - confirm meeting
+    - reschedule meeting
+    - cancel meeting
+  - states:
+    - loading
+    - no_meetings
+    - calendar_ready
+    - reminder_pending
+    - sync_error
+
+- /meetings/{id}
+  - fields:
+    - prospect
+    - owner
+    - scheduled_at
+    - timezone
+    - channel_type
+    - status
+    - notes
+    - meeting_events timeline
+  - actions:
+    - confirm
+    - reschedule
+    - cancel
+    - mark no_show
+    - mark completed
+  - states:
+    - loading
+    - pending
+    - confirmed
+    - canceled
+    - no_show
+    - completed
+    - invalid_transition
+
+- /opportunities
+  - fields:
+    - stage columns
+    - owner
+    - expected_close_date
+    - estimated_total
+    - last_stage_change
+    - win_probability
+  - actions:
+    - create opportunity
+    - move stage
+    - reassign owner
+    - open detail
+    - filter by stage and owner
+  - states:
+    - loading
+    - board_empty
+    - board_ready
+    - stage_updating
+    - stage_updated
+    - stage_update_error
+
+- /opportunities/{id}
+  - fields:
+    - opportunity header (prospect, owner, stage)
+    - product line items
+    - quantity
+    - unit_price
+    - discount_amount
+    - gross_total/discount_total/net_total
+    - close reason
+    - stage transition history
+  - actions:
+    - add/remove product line
+    - edit quantity and pricing
+    - apply discount
+    - transition stage
+    - close won
+    - close lost
+  - states:
+    - loading
+    - editing
+    - totals_recalculating
+    - unsaved_changes
+    - saving
+    - save_error
+    - closed_readonly
+
+- /sales/orders
+  - fields:
+    - order_number
+    - linked opportunity
+    - status
+    - issued_at
+    - paid_at
+    - gross_total
+    - net_total
+  - actions:
+    - create order from won opportunity
+    - issue order
+    - register payment
+    - cancel order
+    - open order detail
+  - states:
+    - loading
+    - empty
+    - draft
+    - issued
+    - paid
+    - canceled
+    - transition_blocked
+
+- /sales/reports
+  - fields:
+    - date_range
+    - owner filter
+    - funnel counts by stage
+    - conversion rate
+    - revenue total
+    - average ticket
+  - actions:
+    - apply filters
+    - refresh report
+    - export csv
+  - states:
+    - loading
+    - no_data
+    - report_ready
+    - export_running
+    - export_done
+    - query_timeout
+
+Planned backend endpoints:
+- GET /api/v1/prospects
+- POST /api/v1/prospects
+- GET /api/v1/prospects/{prospectId}
+- PATCH /api/v1/prospects/{prospectId}
+- POST /api/v1/prospects/{prospectId}/contact-attempts
+- GET /api/v1/meetings
+- POST /api/v1/meetings
+- PATCH /api/v1/meetings/{meetingId}
+- POST /api/v1/meetings/{meetingId}/confirm
+- POST /api/v1/meetings/{meetingId}/cancel
+- GET /api/v1/opportunities
+- POST /api/v1/opportunities
+- PATCH /api/v1/opportunities/{opportunityId}
+- POST /api/v1/opportunities/{opportunityId}/products
+- POST /api/v1/opportunities/{opportunityId}/stage-transition
+- POST /api/v1/sales/orders
+- GET /api/v1/sales/orders/{orderId}
+- GET /api/v1/sales/reports/funnel
+
+Acceptance checks:
+- Prospect with revoked consent cannot receive new contact attempts.
+- Confirmed meeting removes prospect from cold outreach queue.
+- Opportunity total equals sum of product lines and discounts.
+- Every stage transition is visible in timeline and audit data.
+- Sales order net total is reproducible from line items and totals.
+
 ## 7. Frontend Redesign
 
 Pages:
