@@ -48,7 +48,7 @@ export function LoginPage() {
 
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid="login-form">
           <Input
             label="Email"
             type="email"
@@ -56,6 +56,7 @@ export function LoginPage() {
             onChange={setEmail}
             placeholder="you@example.com"
             error={errors.email}
+            data-testid="login-email"
           />
 
           <Input
@@ -65,9 +66,10 @@ export function LoginPage() {
             onChange={setPassword}
             placeholder="••••••••"
             error={errors.password}
+            data-testid="login-password"
           />
 
-          <Button disabled={loading} className="w-full mb-4">
+          <Button disabled={loading} className="w-full mb-4" data-testid="login-submit">
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>

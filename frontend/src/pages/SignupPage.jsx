@@ -66,7 +66,7 @@ export function SignupPage() {
 
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid="signup-form">
           <Input
             label="Display Name"
             type="text"
@@ -74,6 +74,7 @@ export function SignupPage() {
             onChange={setDisplayName}
             placeholder="John Doe"
             error={errors.displayName}
+            data-testid="signup-display-name"
           />
 
           <Input
@@ -83,6 +84,7 @@ export function SignupPage() {
             onChange={setEmail}
             placeholder="you@example.com"
             error={errors.email}
+            data-testid="signup-email"
           />
 
           <Input
@@ -92,6 +94,7 @@ export function SignupPage() {
             onChange={setPassword}
             placeholder="••••••••"
             error={errors.password}
+            data-testid="signup-password"
           />
 
           <Input
@@ -101,13 +104,14 @@ export function SignupPage() {
             onChange={setConfirmPassword}
             placeholder="••••••••"
             error={errors.confirmPassword}
+            data-testid="signup-confirm-password"
           />
 
           <p className="text-xs text-gray-600 mb-4">
             Password must contain: at least 8 characters, uppercase, number, and special character (!@#$%^&*)
           </p>
 
-          <Button disabled={loading} className="w-full mb-4">
+          <Button disabled={loading} className="w-full mb-4" data-testid="signup-submit">
             {loading ? 'Creating account...' : 'Sign Up'}
           </Button>
         </form>

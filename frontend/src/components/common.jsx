@@ -1,4 +1,4 @@
-export function Button({ children, onClick, disabled, className = '', variant = 'primary' }) {
+export function Button({ children, onClick, disabled, className = '', variant = 'primary', ...props }) {
   const baseStyles = 'px-4 py-2 rounded font-medium transition disabled:opacity-50 disabled:cursor-not-allowed';
   const variants = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700',
@@ -11,13 +11,14 @@ export function Button({ children, onClick, disabled, className = '', variant = 
       onClick={onClick}
       disabled={disabled}
       className={`${baseStyles} ${variants[variant]} ${className}`}
+      {...props}
     >
       {children}
     </button>
   );
 }
 
-export function Input({ label, type = 'text', value, onChange, placeholder, error, className = '' }) {
+export function Input({ label, type = 'text', value, onChange, placeholder, error, className = '', ...props }) {
   return (
     <div className="mb-4">
       {label && <label className="block text-sm font-medium mb-1">{label}</label>}
@@ -27,6 +28,7 @@ export function Input({ label, type = 'text', value, onChange, placeholder, erro
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={`w-full px-3 py-2 border rounded ${error ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring ${className}`}
+        {...props}
       />
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
