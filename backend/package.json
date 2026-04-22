@@ -1,0 +1,42 @@
+{
+  "name": "phone-list-api",
+  "version": "1.0.0",
+  "description": "Phone List System API - MVP",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "node src/db/migrate.js",
+    "seed": "node src/db/seed.js",
+    "test": "jest --watch",
+    "test:ci": "jest --coverage",
+    "lint": "eslint src/"
+  },
+  "keywords": ["phone", "list", "api"],
+  "author": "Fatec YEB",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.10.0",
+    "redis": "^4.6.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "libphonenumber-js": "^1.10.24",
+    "dotenv": "^16.0.3",
+    "cors": "^2.8.5",
+    "express-validator": "^7.0.0",
+    "uuid": "^9.0.0",
+    "nodemailer": "^6.9.1",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.40.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
