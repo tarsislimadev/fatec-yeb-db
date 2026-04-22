@@ -74,3 +74,6 @@ The database now includes lifecycle tables for outreach flows:
 ## License
 
 [Apache-2.0](./LICENSE)
+
+
+<!-- Fix #8 -->
