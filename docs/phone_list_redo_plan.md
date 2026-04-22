@@ -1,5 +1,19 @@
 # Phone List Project Redo Plan
 
+**Status:** Phases 0 & 1 Planning Complete ✅  
+**Last Updated:** April 22, 2026
+
+> **📋 Documentation Guide:**  
+> - [Phase Summary & Roadmap](phase-summary-roadmap.md) - Quick reference
+> - [Phase 0: Discovery & Contracts](phase-0-discovery-contracts.md) - Scope freeze, data model
+> - [Database Schema Draft](schema-draft.md) - PostgreSQL schema (12 tables)
+> - [API Specification](api-spec.md) - Complete endpoint contracts
+> - [Acceptance Tests](acceptance-tests.md) - UAT scenarios (60+)
+> - [Phase 1: Implementation](phase-1-implementation.md) - Week-by-week tasks
+> - [Phase 2: Enrichment Planning](phase-2-planning.md) - CNPJ enrichment roadmap
+
+---
+
 ## 1. Product Definition
 
 Rebuild the project as a phone list system where each phone is a first-class record and is linked to detailed context.
