@@ -1,0 +1,337 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .table-box { fill: #F3E5F5; stroke: #7B1FA2; stroke-width: 2; }
+      .table-header { fill: #7B1FA2; stroke: #7B1FA2; stroke-width: 2; }
+      .column-pk { fill: #FFC107; }
+      .column-fk { fill: #2196F3; }
+      .column-regular { fill: #E8F5E9; }
+      .text-white { font-family: Arial, sans-serif; font-size: 11px; text-anchor: center; fill: white; font-weight: bold; }
+      .text { font-family: Arial, sans-serif; font-size: 10px; text-anchor: start; fill: #333; }
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
+      .relation-line { stroke: #E91E63; stroke-width: 2; fill: none; marker-end: url(#arrowhead-pink); }
+      .label { font-family: Arial, sans-serif; font-size: 9px; fill: #E91E63; }
+    </style>
+    <marker id="arrowhead-pink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#E91E63" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="800" y="30" class="title">Database Tables and Schema</text>
+
+  <!-- TABLE 1: Users (app_users) -->
+  <g>
+    <rect x="50" y="80" width="240" height="280" class="table-box" rx="3"/>
+    <rect x="50" y="80" width="240" height="25" class="table-header" rx="3"/>
+    <text x="170" y="100" class="text-white">APP_USERS</text>
+    
+    <!-- Columns -->
+    <rect x="60" y="115" width="220" height="20" class="column-pk"/>
+    <text x="70" y="128" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="60" y="135" width="220" height="20" class="column-regular"/>
+    <text x="70" y="148" class="text">email VARCHAR UNIQUE</text>
+    
+    <rect x="60" y="155" width="220" height="20" class="column-regular"/>
+    <text x="70" y="168" class="text">password_hash VARCHAR</text>
+    
+    <rect x="60" y="175" width="220" height="20" class="column-regular"/>
+    <text x="70" y="188" class="text">display_name VARCHAR</text>
+    
+    <rect x="60" y="195" width="220" height="20" class="column-regular"/>
+    <text x="70" y="208" class="text">status VARCHAR (active...)</text>
+    
+    <rect x="60" y="215" width="220" height="20" class="column-regular"/>
+    <text x="70" y="228" class="text">email_verified BOOLEAN</text>
+    
+    <rect x="60" y="235" width="220" height="20" class="column-regular"/>
+    <text x="70" y="248" class="text">verified_email_at TIMESTAMP</text>
+    
+    <rect x="60" y="255" width="220" height="20" class="column-regular"/>
+    <text x="70" y="268" class="text">last_login_at TIMESTAMP</text>
+    
+    <rect x="60" y="275" width="220" height="20" class="column-regular"/>
+    <text x="70" y="288" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="60" y="295" width="220" height="20" class="column-regular"/>
+    <text x="70" y="308" class="text">updated_at TIMESTAMP</text>
+    
+    <rect x="60" y="315" width="220" height="20" class="column-regular"/>
+    <text x="70" y="328" class="text">deleted_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 2: Phones -->
+  <g>
+    <rect x="370" y="80" width="260" height="280" class="table-box" rx="3"/>
+    <rect x="370" y="80" width="260" height="25" class="table-header" rx="3"/>
+    <text x="500" y="100" class="text-white">PHONES</text>
+    
+    <rect x="380" y="115" width="240" height="20" class="column-pk"/>
+    <text x="390" y="128" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="380" y="135" width="240" height="20" class="column-regular"/>
+    <text x="390" y="148" class="text">e164_number VARCHAR UNIQUE</text>
+    
+    <rect x="380" y="155" width="240" height="20" class="column-regular"/>
+    <text x="390" y="168" class="text">raw_number VARCHAR</text>
+    
+    <rect x="380" y="175" width="240" height="20" class="column-regular"/>
+    <text x="390" y="188" class="text">country_code VARCHAR(2)</text>
+    
+    <rect x="380" y="195" width="240" height="20" class="column-regular"/>
+    <text x="390" y="208" class="text">national_number VARCHAR</text>
+    
+    <rect x="380" y="215" width="240" height="20" class="column-regular"/>
+    <text x="390" y="228" class="text">type VARCHAR (mobile...)</text>
+    
+    <rect x="380" y="235" width="240" height="20" class="column-regular"/>
+    <text x="390" y="248" class="text">status VARCHAR (active...)</text>
+    
+    <rect x="380" y="255" width="240" height="20" class="column-regular"/>
+    <text x="390" y="268" class="text">is_primary BOOLEAN</text>
+    
+    <rect x="380" y="275" width="240" height="20" class="column-regular"/>
+    <text x="390" y="288" class="text">verified_at TIMESTAMP</text>
+    
+    <rect x="380" y="295" width="240" height="20" class="column-regular"/>
+    <text x="390" y="308" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="380" y="315" width="240" height="20" class="column-regular"/>
+    <text x="390" y="328" class="text">updated_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 3: People -->
+  <g>
+    <rect x="750" y="80" width="240" height="200" class="table-box" rx="3"/>
+    <rect x="750" y="80" width="240" height="25" class="table-header" rx="3"/>
+    <text x="870" y="100" class="text-white">PEOPLE</text>
+    
+    <rect x="760" y="115" width="220" height="20" class="column-pk"/>
+    <text x="770" y="128" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="760" y="135" width="220" height="20" class="column-fk"/>
+    <text x="770" y="148" class="text">user_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="760" y="155" width="220" height="20" class="column-regular"/>
+    <text x="770" y="168" class="text">full_name VARCHAR</text>
+    
+    <rect x="760" y="175" width="220" height="20" class="column-regular"/>
+    <text x="770" y="188" class="text">role_title VARCHAR</text>
+    
+    <rect x="760" y="195" width="220" height="20" class="column-regular"/>
+    <text x="770" y="208" class="text">email VARCHAR</text>
+    
+    <rect x="760" y="215" width="220" height="20" class="column-regular"/>
+    <text x="770" y="228" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="760" y="235" width="220" height="20" class="column-regular"/>
+    <text x="770" y="248" class="text">updated_at TIMESTAMP</text>
+    
+    <rect x="760" y="255" width="220" height="20" class="column-regular"/>
+    <text x="770" y="268" class="text">deleted_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 4: Businesses -->
+  <g>
+    <rect x="1120" y="80" width="260" height="200" class="table-box" rx="3"/>
+    <rect x="1120" y="80" width="260" height="25" class="table-header" rx="3"/>
+    <text x="1250" y="100" class="text-white">BUSINESSES</text>
+    
+    <rect x="1130" y="115" width="240" height="20" class="column-pk"/>
+    <text x="1140" y="128" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="1130" y="135" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="148" class="text">cnpj VARCHAR</text>
+    
+    <rect x="1130" y="155" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="168" class="text">legal_name VARCHAR</text>
+    
+    <rect x="1130" y="175" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="188" class="text">trade_name VARCHAR</text>
+    
+    <rect x="1130" y="195" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="208" class="text">status VARCHAR</text>
+    
+    <rect x="1130" y="215" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="228" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="1130" y="235" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="248" class="text">updated_at TIMESTAMP</text>
+    
+    <rect x="1130" y="255" width="240" height="20" class="column-regular"/>
+    <text x="1140" y="268" class="text">deleted_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 5: Phone_Owner -->
+  <g>
+    <rect x="50" y="420" width="280" height="200" class="table-box" rx="3"/>
+    <rect x="50" y="420" width="280" height="25" class="table-header" rx="3"/>
+    <text x="190" y="440" class="text-white">PHONE_OWNER (Junction)</text>
+    
+    <rect x="60" y="455" width="260" height="20" class="column-pk"/>
+    <text x="70" y="468" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="60" y="475" width="260" height="20" class="column-fk"/>
+    <text x="70" y="488" class="text">phone_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="60" y="495" width="260" height="20" class="column-fk"/>
+    <text x="70" y="508" class="text">owner_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="60" y="515" width="260" height="20" class="column-regular"/>
+    <text x="70" y="528" class="text">owner_type ENUM (user...)</text>
+    
+    <rect x="60" y="535" width="260" height="20" class="column-regular"/>
+    <text x="70" y="548" class="text">relationship VARCHAR</text>
+    
+    <rect x="60" y="555" width="260" height="20" class="column-regular"/>
+    <text x="70" y="568" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="60" y="575" width="260" height="20" class="column-regular"/>
+    <text x="70" y="588" class="text">updated_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 6: Phone_Person -->
+  <g>
+    <rect x="410" y="420" width="280" height="200" class="table-box" rx="3"/>
+    <rect x="410" y="420" width="280" height="25" class="table-header" rx="3"/>
+    <text x="550" y="440" class="text-white">PHONE_PERSON (Junction)</text>
+    
+    <rect x="420" y="455" width="260" height="20" class="column-pk"/>
+    <text x="430" y="468" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="420" y="475" width="260" height="20" class="column-fk"/>
+    <text x="430" y="488" class="text">phone_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="420" y="495" width="260" height="20" class="column-fk"/>
+    <text x="430" y="508" class="text">person_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="420" y="515" width="260" height="20" class="column-regular"/>
+    <text x="430" y="528" class="text">relationship VARCHAR</text>
+    
+    <rect x="420" y="535" width="260" height="20" class="column-regular"/>
+    <text x="430" y="548" class="text">is_primary BOOLEAN</text>
+    
+    <rect x="420" y="555" width="260" height="20" class="column-regular"/>
+    <text x="430" y="568" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="420" y="575" width="260" height="20" class="column-regular"/>
+    <text x="430" y="588" class="text">updated_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 7: Phone_Business -->
+  <g>
+    <rect x="770" y="420" width="280" height="200" class="table-box" rx="3"/>
+    <rect x="770" y="420" width="280" height="25" class="table-header" rx="3"/>
+    <text x="910" y="440" class="text-white">PHONE_BUSINESS (Junction)</text>
+    
+    <rect x="780" y="455" width="260" height="20" class="column-pk"/>
+    <text x="790" y="468" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="780" y="475" width="260" height="20" class="column-fk"/>
+    <text x="790" y="488" class="text">phone_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="780" y="495" width="260" height="20" class="column-fk"/>
+    <text x="790" y="508" class="text">business_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="780" y="515" width="260" height="20" class="column-regular"/>
+    <text x="790" y="528" class="text">relationship VARCHAR</text>
+    
+    <rect x="780" y="535" width="260" height="20" class="column-regular"/>
+    <text x="790" y="548" class="text">is_primary BOOLEAN</text>
+    
+    <rect x="780" y="555" width="260" height="20" class="column-regular"/>
+    <text x="790" y="568" class="text">created_at TIMESTAMP</text>
+    
+    <rect x="780" y="575" width="260" height="20" class="column-regular"/>
+    <text x="790" y="588" class="text">updated_at TIMESTAMP</text>
+  </g>
+
+  <!-- TABLE 8: Audit_Log -->
+  <g>
+    <rect x="1130" y="420" width="280" height="200" class="table-box" rx="3"/>
+    <rect x="1130" y="420" width="280" height="25" class="table-header" rx="3"/>
+    <text x="1270" y="440" class="text-white">AUDIT_LOG</text>
+    
+    <rect x="1140" y="455" width="260" height="20" class="column-pk"/>
+    <text x="1150" y="468" class="text">id (UUID, PRIMARY KEY)</text>
+    
+    <rect x="1140" y="475" width="260" height="20" class="column-fk"/>
+    <text x="1150" y="488" class="text">user_id UUID (FOREIGN KEY)</text>
+    
+    <rect x="1140" y="495" width="260" height="20" class="column-regular"/>
+    <text x="1150" y="508" class="text">action VARCHAR (CREATE...)</text>
+    
+    <rect x="1140" y="515" width="260" height="20" class="column-regular"/>
+    <text x="1150" y="528" class="text">table_name VARCHAR</text>
+    
+    <rect x="1140" y="535" width="260" height="20" class="column-regular"/>
+    <text x="1150" y="548" class="text">record_id UUID</text>
+    
+    <rect x="1140" y="555" width="260" height="20" class="column-regular"/>
+    <text x="1150" y="568" class="text">old_values JSONB</text>
+    
+    <rect x="1140" y="575" width="260" height="20" class="column-regular"/>
+    <text x="1150" y="588" class="text">created_at TIMESTAMP</text>
+  </g>
+
+  <!-- RELATIONSHIPS -->
+  <!-- Users to People -->
+  <path d="M 290 240 Q 550 300 750 190" class="relation-line"/>
+  <text x="500" y="290" class="label">1:N hasMany</text>
+
+  <!-- Phones to Phone_Owner -->
+  <path d="M 500 360 L 350 420" class="relation-line"/>
+  <text x="410" y="390" class="label">1:N</text>
+
+  <!-- Phones to Phone_Person -->
+  <path d="M 500 360 L 710 420" class="relation-line"/>
+  <text x="600" y="390" class="label">1:N</text>
+
+  <!-- Phones to Phone_Business -->
+  <path d="M 600 360 L 950 420" class="relation-line"/>
+  <text x="750" y="390" class="label">1:N</text>
+
+  <!-- People to Phone_Person -->
+  <path d="M 870 280 L 770 420" class="relation-line"/>
+  <text x="890" y="350" class="label">1:N</text>
+
+  <!-- Businesses to Phone_Business -->
+  <path d="M 1250 280 L 1100 420" class="relation-line"/>
+  <text x="1220" y="350" class="label">1:N</text>
+
+  <!-- Users to Audit_Log -->
+  <path d="M 170 360 L 1250 420" class="relation-line"/>
+  <text x="650" y="380" class="label">1:N logs</text>
+
+  <!-- === STATISTICS === -->
+  <text x="800" y="700" class="subtitle">Database Statistics and Constraints</text>
+
+  <!-- Stats Box -->
+  <rect x="100" y="750" width="700" height="200" fill="none" stroke="#999" stroke-width="1" rx="3"/>
+  <text x="120" y="775" class="text" style="font-weight: bold;">Total Tables: 8</text>
+  <text x="120" y="795" class="text">• app_users: Stores user account information</text>
+  <text x="120" y="815" class="text">• phones: Canonical phone registry (normalized)</text>
+  <text x="120" y="835" class="text">• people: Contact individuals (optional)</text>
+  <text x="120" y="855" class="text">• businesses: Business entities (optional)</text>
+  <text x="120" y="875" class="text">• phone_owner: Maps phones to owners (junction)</text>
+  <text x="120" y="895" class="text">• phone_person: Maps phones to people (junction)</text>
+  <text x="120" y="915" class="text">• phone_business: Maps phones to businesses (junction)</text>
+  <text x="120" y="935" class="text">• audit_log: Tracks changes to all tables</text>
+
+  <!-- Indexes Box -->
+  <rect x="900" y="750" width="600" height="200" fill="none" stroke="#999" stroke-width="1" rx="3"/>
+  <text x="920" y="775" class="text" style="font-weight: bold;">Key Constraints and Indexes</text>
+  <text x="920" y="795" class="text">• Unique: phones.e164_number (prevents duplicates)</text>
+  <text x="920" y="815" class="text">• Unique: app_users.email (prevents duplicate accounts)</text>
+  <text x="920" y="835" class="text">• Index: phones(status) - for filtering</text>
+  <text x="920" y="855" class="text">• Index: phones(created_at DESC) - for sorting</text>
+  <text x="920" y="875" class="text">• Index: app_users(email) - for login lookups</text>
+  <text x="920" y="895" class="text">• Foreign Keys enforce referential integrity</text>
+  <text x="920" y="915" class="text">• All timestamps use UTC (TIMESTAMP WITH TZ)</text>
+
+  <!-- Legend -->
+  <rect x="50" y="990" width="1500" height="1" fill="none" stroke="#ccc" stroke-width="1"/>
+</svg>

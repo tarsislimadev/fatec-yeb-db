@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .endpoint { fill: #E3F2FD; stroke: #1976D2; stroke-width: 2; }
+      .endpoint-public { fill: #FFF3E0; stroke: #F57C00; stroke-width: 2; }
+      .endpoint-protected { fill: #E8F5E9; stroke: #388E3C; stroke-width: 2; }
+      .text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; text-anchor: middle; }
+      .label { font-family: Arial, sans-serif; font-size: 10px; text-anchor: start; fill: #333; }
+      .code { font-family: 'Courier New', monospace; font-size: 10px; text-anchor: start; fill: #333; }
+      .method-get { fill: #4CAF50; }
+      .method-post { fill: #2196F3; }
+      .method-patch { fill: #FF9800; }
+      .method-delete { fill: #F44336; }
+      .arrow { stroke: #666; stroke-width: 1; fill: none; marker-end: url(#arrowhead-small); }
+    </style>
+    <marker id="arrowhead-small" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="800" y="30" class="title">Backend API Endpoints</text>
+
+  <!-- === AUTH ENDPOINTS === -->
+  <text x="400" y="70" class="subtitle">Authentication Endpoints (/api/v1/auth)</text>
+
+  <!-- POST /signup -->
+  <rect x="50" y="110" width="200" height="100" class="endpoint-public" rx="5"/>
+  <circle cx="75" cy="130" r="12" class="method-post"/>
+  <text x="75" y="135" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="120" y="130" class="code">/signup</text>
+  <line x1="60" y1="150" x2="240" y2="150" stroke="#F57C00" stroke-width="1"/>
+  <text x="60" y="168" class="label">Request: {email, password,</text>
+  <text x="60" y="180" class="label">  display_name}</text>
+  <text x="60" y="192" class="label">Response: {token, user_id}</text>
+  <text x="60" y="204" class="label">Status: 201 Created</text>
+
+  <!-- POST /signin -->
+  <rect x="330" y="110" width="200" height="100" class="endpoint-public" rx="5"/>
+  <circle cx="355" cy="130" r="12" class="method-post"/>
+  <text x="355" y="135" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="400" y="130" class="code">/signin</text>
+  <line x1="340" y1="150" x2="520" y2="150" stroke="#F57C00" stroke-width="1"/>
+  <text x="340" y="168" class="label">Request: {email, password}</text>
+  <text x="340" y="180" class="label">Response: {token, user_id}</text>
+  <text x="340" y="192" class="label">Status: 200 OK</text>
+  <text x="340" y="204" class="label">Error: 401 Unauthorized</text>
+
+  <!-- POST /signout -->
+  <rect x="610" y="110" width="200" height="100" class="endpoint-protected" rx="5"/>
+  <circle cx="635" cy="130" r="12" class="method-post"/>
+  <text x="635" y="135" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="680" y="130" class="code">/signout</text>
+  <line x1="620" y1="150" x2="800" y2="150" stroke="#388E3C" stroke-width="1"/>
+  <text x="620" y="168" class="label">Request: {}</text>
+  <text x="620" y="180" class="label">Auth: Required (Bearer token)</text>
+  <text x="620" y="192" class="label">Response: {message}</text>
+  <text x="620" y="204" class="label">Status: 200 OK</text>
+
+  <!-- POST /password/forgot -->
+  <rect x="890" y="110" width="220" height="100" class="endpoint-public" rx="5"/>
+  <circle cx="915" cy="130" r="12" class="method-post"/>
+  <text x="915" y="135" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="965" y="130" class="code">/password/forgot</text>
+  <line x1="900" y1="150" x2="1100" y2="150" stroke="#F57C00" stroke-width="1"/>
+  <text x="900" y="168" class="label">Request: {email}</text>
+  <text x="900" y="180" class="label">Response: {message}</text>
+  <text x="900" y="192" class="label">Sends reset email</text>
+  <text x="900" y="204" class="label">Status: 200 OK</text>
+
+  <!-- POST /password/reset -->
+  <rect x="1180" y="110" width="220" height="100" class="endpoint-public" rx="5"/>
+  <circle cx="1205" cy="130" r="12" class="method-post"/>
+  <text x="1205" y="135" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="1255" y="130" class="code">/password/reset</text>
+  <line x1="1190" y1="150" x2="1390" y2="150" stroke="#F57C00" stroke-width="1"/>
+  <text x="1190" y="168" class="label">Request: {token, password}</text>
+  <text x="1190" y="180" class="label">Response: {message}</text>
+  <text x="1190" y="192" class="label">Validates reset token</text>
+  <text x="1190" y="204" class="label">Status: 200 OK</text>
+
+  <!-- === PHONE ENDPOINTS === -->
+  <text x="800" y="280" class="subtitle">Phone Endpoints (/api/v1/phones) - All Protected</text>
+
+  <!-- GET /phones -->
+  <rect x="50" y="320" width="200" height="140" class="endpoint-protected" rx="5"/>
+  <circle cx="75" cy="340" r="12" class="method-get"/>
+  <text x="75" y="345" class="text" fill="white" font-weight="bold">GET</text>
+  <text x="120" y="340" class="code">/phones</text>
+  <line x1="60" y1="360" x2="240" y2="360" stroke="#388E3C" stroke-width="1"/>
+  <text x="60" y="378" class="label">Query params:</text>
+  <text x="60" y="390" class="label">  page, page_size, status,</text>
+  <text x="60" y="402" class="label">  type, search, sort, order</text>
+  <text x="60" y="414" class="label">Response: {data[], meta}</text>
+  <text x="60" y="426" class="label">Status: 200 OK</text>
+  <text x="60" y="438" class="label">Auth: Bearer token</text>
+
+  <!-- POST /phones -->
+  <rect x="330" y="320" width="200" height="140" class="endpoint-protected" rx="5"/>
+  <circle cx="355" cy="340" r="12" class="method-post"/>
+  <text x="355" y="345" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="400" y="340" class="code">/phones</text>
+  <line x1="340" y1="360" x2="520" y2="360" stroke="#388E3C" stroke-width="1"/>
+  <text x="340" y="378" class="label">Request: {e164_number,</text>
+  <text x="340" y="390" class="label">  raw_number, type}</text>
+  <text x="340" y="402" class="label">Response: {phone}</text>
+  <text x="340" y="414" class="label">Status: 201 Created</text>
+  <text x="340" y="426" class="label">Validates phone format</text>
+  <text x="340" y="438" class="label">Auth: Bearer token</text>
+
+  <!-- GET /phones/:id -->
+  <rect x="610" y="320" width="200" height="140" class="endpoint-protected" rx="5"/>
+  <circle cx="635" cy="340" r="12" class="method-get"/>
+  <text x="635" y="345" class="text" fill="white" font-weight="bold">GET</text>
+  <text x="680" y="340" class="code">/phones/{id}</text>
+  <line x1="620" y1="360" x2="800" y2="360" stroke="#388E3C" stroke-width="1"/>
+  <text x="620" y="378" class="label">Path: phone_id (UUID)</text>
+  <text x="620" y="390" class="label">Response: {phone}</text>
+  <text x="620" y="402" class="label">Includes owner relations</text>
+  <text x="620" y="414" class="label">Status: 200 OK</text>
+  <text x="620" y="426" class="label">Error: 404 Not Found</text>
+  <text x="620" y="438" class="label">Auth: Bearer token</text>
+
+  <!-- PATCH /phones/:id -->
+  <rect x="890" y="320" width="200" height="140" class="endpoint-protected" rx="5"/>
+  <circle cx="915" cy="340" r="12" class="method-patch"/>
+  <text x="915" y="345" class="text" fill="white" font-weight="bold">PATCH</text>
+  <text x="965" y="340" class="code">/phones/{id}</text>
+  <line x1="900" y1="360" x2="1080" y2="360" stroke="#388E3C" stroke-width="1"/>
+  <text x="900" y="378" class="label">Request: {status, type,</text>
+  <text x="900" y="390" class="label">  is_primary, ...}</text>
+  <text x="900" y="402" class="label">Response: {phone}</text>
+  <text x="900" y="414" class="label">Updates specified fields</text>
+  <text x="900" y="426" class="label">Status: 200 OK</text>
+  <text x="900" y="438" class="label">Auth: Bearer token</text>
+
+  <!-- DELETE /phones/:id -->
+  <rect x="1170" y="320" width="200" height="140" class="endpoint-protected" rx="5"/>
+  <circle cx="1195" cy="340" r="12" class="method-delete"/>
+  <text x="1195" y="345" class="text" fill="white" font-weight="bold">DELETE</text>
+  <text x="1245" y="340" class="code">/phones/{id}</text>
+  <line x1="1180" y1="360" x2="1360" y2="360" stroke="#388E3C" stroke-width="1"/>
+  <text x="1180" y="378" class="label">Path: phone_id (UUID)</text>
+  <text x="1180" y="390" class="label">Soft delete (sets timestamp)</text>
+  <text x="1180" y="402" class="label">Response: {message}</text>
+  <text x="1180" y="414" class="label">Status: 204 No Content</text>
+  <text x="1180" y="426" class="label">Error: 404 Not Found</text>
+  <text x="1180" y="438" class="label">Auth: Bearer token</text>
+
+  <!-- === PHONE OWNER ENDPOINTS === -->
+  <text x="800" y="550" class="subtitle">Phone-Owner Relations (/api/v1/phones/:id/owners) - Protected</text>
+
+  <!-- POST /phones/:id/owners -->
+  <rect x="200" y="610" width="280" height="130" class="endpoint-protected" rx="5"/>
+  <circle cx="230" cy="630" r="12" class="method-post"/>
+  <text x="230" y="635" class="text" fill="white" font-weight="bold">POST</text>
+  <text x="290" y="630" class="code">/owners</text>
+  <line x1="210" y1="650" x2="470" y2="650" stroke="#388E3C" stroke-width="1"/>
+  <text x="210" y="668" class="label">Request: {owner_id, owner_type,</text>
+  <text x="210" y="680" class="label">  relationship}</text>
+  <text x="210" y="692" class="label">Response: {relation}</text>
+  <text x="210" y="704" class="label">Creates owner relationship</text>
+  <text x="210" y="716" class="label">Status: 201 Created</text>
+  <text x="210" y="728" class="label">Auth: Bearer token</text>
+
+  <!-- DELETE /phones/:id/owners/:relId -->
+  <rect x="620" y="610" width="280" height="130" class="endpoint-protected" rx="5"/>
+  <circle cx="650" cy="630" r="12" class="method-delete"/>
+  <text x="650" y="635" class="text" fill="white" font-weight="bold">DELETE</text>
+  <text x="720" y="630" class="code">/owners/{relId}</text>
+  <line x1="630" y1="650" x2="890" y2="650" stroke="#388E3C" stroke-width="1"/>
+  <text x="630" y="668" class="label">Path: relation_id (UUID)</text>
+  <text x="630" y="680" class="label">Response: {message}</text>
+  <text x="630" y="692" class="label">Removes relationship</text>
+  <text x="630" y="704" class="label">Status: 204 No Content</text>
+  <text x="630" y="716" class="label">Error: 404 Not Found</text>
+  <text x="630" y="728" class="label">Auth: Bearer token</text>
+
+  <!-- === RESPONSE FORMATS === -->
+  <text x="800" y="820" class="subtitle">Standard Response Formats</text>
+
+  <!-- Success Response -->
+  <rect x="100" y="860" width="350" height="120" fill="none" stroke="#999" stroke-width="1" rx="3"/>
+  <text x="275" y="880" style="font-family: Arial; font-size: 12px; font-weight: bold; text-anchor: middle;">Success Response</text>
+  <text x="115" y="905" class="code">{</text>
+  <text x="115" y="920" class="code">  "success": true,</text>
+  <text x="115" y="935" class="code">  "data": {...},</text>
+  <text x="115" y="950" class="code">  "meta": {...pagination...}</text>
+  <text x="115" y="965" class="code">}</text>
+
+  <!-- Error Response -->
+  <rect x="550" y="860" width="350" height="120" fill="none" stroke="#999" stroke-width="1" rx="3"/>
+  <text x="725" y="880" style="font-family: Arial; font-size: 12px; font-weight: bold; text-anchor: middle;">Error Response</text>
+  <text x="565" y="905" class="code">{</text>
+  <text x="565" y="920" class="code">  "success": false,</text>
+  <text x="565" y="935" class="code">  "error_code": "ERROR_TYPE",</text>
+  <text x="565" y="950" class="code">  "message": "...",</text>
+  <text x="565" y="965" class="code">}</text>
+
+  <!-- Legend -->
+  <rect x="50" y="1020" width="1500" height="60" fill="none" stroke="#ccc" stroke-width="1"/>
+  <text x="60" y="1040" style="font-family: Arial; font-size: 12px; font-weight: bold;">Method Legend:</text>
+  
+  <circle cx="150" cy="1040" r="8" class="method-get"/>
+  <text x="165" y="1045" class="label" style="text-anchor: start;">GET - Retrieve data</text>
+  
+  <circle cx="350" cy="1040" r="8" class="method-post"/>
+  <text x="365" y="1045" class="label" style="text-anchor: start;">POST - Create data</text>
+  
+  <circle cx="550" cy="1040" r="8" class="method-patch"/>
+  <text x="565" y="1045" class="label" style="text-anchor: start;">PATCH - Update data</text>
+  
+  <circle cx="770" cy="1040" r="8" class="method-delete"/>
+  <text x="785" y="1045" class="label" style="text-anchor: start;">DELETE - Remove data</text>
+  
+  <rect x="1050" y="1032" width="20" height="20" class="endpoint-public"/>
+  <text x="1080" y="1047" class="label" style="text-anchor: start;">Public endpoint</text>
+  
+  <rect x="1280" y="1032" width="20" height="20" class="endpoint-protected"/>
+  <text x="1310" y="1047" class="label" style="text-anchor: start;">Protected (Auth required)</text>
+</svg>
