@@ -33,11 +33,11 @@
 
 ## Phase 0, Discovery and Contracts
 
-1. Freeze product scope for MVP and Phase 2.
-2. Define final entities and relation rules.
-3. Define API contracts and error model.
-4. Define legal and compliance constraints for outreach.
-5. Exit criteria: approved API spec, schema draft, and acceptance tests.
+1. Freeze MVP scope to the phone-first system only: phones, people, businesses, departments, auth, relation tables, search, and filters.
+2. Confirm the core MVP entities and relation rules, including ownership, channels, consent, sources, and contact attempts.
+3. Define the API contract and error model for all MVP endpoints.
+4. Define legal and compliance constraints for outreach, but keep outreach features out of MVP delivery.
+5. Exit criteria: approved scope freeze, API spec, schema draft, and acceptance tests.
 
 ## Phase 1, MVP Foundation
 

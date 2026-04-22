@@ -32,6 +32,12 @@ Out of scope (Phase 2+):
 - Advanced lead scoring.
 - Note: automated phone-call acquisition is specified in Section 6 as a Phase 2 track.
 
+MVP freeze rules:
+- No additional business entities are introduced before Phase 1 planning is complete.
+- No enrichment provider integration is part of the frozen MVP.
+- No sales pipeline, meetings, or automated calling are part of the frozen MVP.
+- Any new feature request must be captured as Phase 2+ unless it directly supports phone registry, ownership, consent, or search.
+
 ## 3. Core Data Model
 
 Main entities:
@@ -144,6 +150,36 @@ Indexes and constraints:
 
 Namespace:
 - /api/v1
+
+API contract:
+- Success responses use a JSON object with either `data` for a single record or `data` plus `meta` for lists.
+- List endpoints return pagination metadata: `page`, `page_size`, `total_items`, and `total_pages`.
+- Create endpoints return `201 Created`; delete endpoints return `204 No Content` when successful.
+- Mutable requests that can be retried safely should accept an `Idempotency-Key` header.
+- All timestamps use ISO 8601 UTC.
+
+Standard error contract:
+- All errors return a JSON object shaped as `error` with `code`, `message`, `details`, `request_id`, and `timestamp`.
+- Error codes are stable and machine-readable.
+- Recommended HTTP mappings:
+  - `400 Bad Request` for malformed payloads
+  - `401 Unauthorized` for missing or invalid authentication
+  - `403 Forbidden` for permission or suppression violations
+  - `404 Not Found` for missing resources
+  - `409 Conflict` for duplicate keys or stale updates
+  - `422 Unprocessable Entity` for validation or business-rule failures
+  - `429 Too Many Requests` for throttling
+  - `500 Internal Server Error` for unexpected failures
+
+Canonical error codes:
+- `VALIDATION_ERROR`
+- `UNAUTHORIZED`
+- `FORBIDDEN`
+- `NOT_FOUND`
+- `CONFLICT`
+- `BUSINESS_RULE_VIOLATION`
+- `RATE_LIMITED`
+- `INTERNAL_ERROR`
 
 Endpoints (MVP):
 - POST /auth/signin
