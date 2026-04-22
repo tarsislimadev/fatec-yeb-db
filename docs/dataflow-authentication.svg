@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .box { fill: #E3F2FD; stroke: #1976D2; stroke-width: 2; }
+      .database { fill: #F3E5F5; stroke: #7B1FA2; stroke-width: 2; }
+      .process { fill: #E8F5E9; stroke: #388E3C; stroke-width: 2; }
+      .client { fill: #FFF3E0; stroke: #F57C00; stroke-width: 2; }
+      .text { font-family: Arial, sans-serif; font-size: 14px; text-anchor: middle; }
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .label { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+      .step { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; fill: #d32f2f; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="30" class="title">Authentication Data Flow</text>
+
+  <!-- === SIGNUP FLOW === -->
+  <text x="600" y="70" style="font-size: 16px; font-weight: bold; text-anchor: middle;">Sign Up Flow</text>
+
+  <!-- Step 1: Frontend -->
+  <rect x="80" y="100" width="140" height="80" class="client" rx="5"/>
+  <text x="150" y="120" class="text">Frontend</text>
+  <text x="150" y="140" class="text">Signup Form</text>
+  <text x="150" y="160" class="text">(React)</text>
+
+  <!-- Step 2: Email & Password -->
+  <rect x="280" y="100" width="140" height="80" class="process" rx="5"/>
+  <text x="350" y="125" class="text">User Input</text>
+  <text x="350" y="145" class="text">• email</text>
+  <text x="350" y="165" class="text">• password</text>
+
+  <!-- Step 3: API Request -->
+  <rect x="480" y="100" width="140" height="80" class="box" rx="5"/>
+  <text x="550" y="125" class="text">POST</text>
+  <text x="550" y="145" class="text">/api/v1/auth</text>
+  <text x="550" y="165" class="text">/signup</text>
+
+  <!-- Step 4: Auth Controller -->
+  <rect x="680" y="100" width="140" height="80" class="box" rx="5"/>
+  <text x="750" y="125" class="text">authController</text>
+  <text x="750" y="145" class="text">.signup()</text>
+  <text x="750" y="165" class="text">Handler</text>
+
+  <!-- Step 5: Validation -->
+  <rect x="880" y="100" width="140" height="80" class="process" rx="5"/>
+  <text x="950" y="125" class="text">Validation</text>
+  <text x="950" y="145" class="text">• Email format</text>
+  <text x="950" y="165" class="text">• Password strength</text>
+
+  <!-- Step 6: Hash Password -->
+  <rect x="880" y="220" width="140" height="80" class="process" rx="5"/>
+  <text x="950" y="245" class="text">Hash Password</text>
+  <text x="950" y="265" class="text">bcryptjs</text>
+  <text x="950" y="285" class="text">or crypto</text>
+
+  <!-- Step 7: Insert User -->
+  <rect x="680" y="220" width="140" height="80" class="database" rx="5"/>
+  <text x="750" y="245" class="text">INSERT INTO</text>
+  <text x="750" y="265" class="text">users</text>
+  <text x="750" y="285" class="text">(PostgreSQL)</text>
+
+  <!-- Step 8: Generate Token -->
+  <rect x="480" y="220" width="140" height="80" class="process" rx="5"/>
+  <text x="550" y="245" class="text">Generate JWT</text>
+  <text x="550" y="265" class="text">Token</text>
+  <text x="550" y="285" class="text">(Signed)</text>
+
+  <!-- Step 9: Return Response -->
+  <rect x="280" y="220" width="140" height="80" class="box" rx="5"/>
+  <text x="350" y="245" class="text">JSON Response</text>
+  <text x="350" y="265" class="text">{token,</text>
+  <text x="350" y="285" class="text">user_id}</text>
+
+  <!-- Step 10: Store Token -->
+  <rect x="80" y="220" width="140" height="80" class="client" rx="5"/>
+  <text x="150" y="245" class="text">localStorage</text>
+  <text x="150" y="265" class="text">Store Token</text>
+  <text x="150" y="285" class="text">Redirect to</text>
+
+  <!-- === SIGNIN FLOW === -->
+  <text x="600" y="380" style="font-size: 16px; font-weight: bold; text-anchor: middle;">Sign In Flow</text>
+
+  <!-- Signin Step 1: Login Form -->
+  <rect x="80" y="410" width="140" height="80" class="client" rx="5"/>
+  <text x="150" y="430" class="text">Frontend</text>
+  <text x="150" y="450" class="text">Login Form</text>
+  <text x="150" y="470" class="text">(React)</text>
+
+  <!-- Signin Step 2: Credentials -->
+  <rect x="280" y="410" width="140" height="80" class="process" rx="5"/>
+  <text x="350" y="435" class="text">User Credentials</text>
+  <text x="350" y="455" class="text">• email</text>
+  <text x="350" y="475" class="text">• password</text>
+
+  <!-- Signin Step 3: API Request -->
+  <rect x="480" y="410" width="140" height="80" class="box" rx="5"/>
+  <text x="550" y="435" class="text">POST</text>
+  <text x="550" y="455" class="text">/api/v1/auth</text>
+  <text x="550" y="475" class="text">/signin</text>
+
+  <!-- Signin Step 4: Query User -->
+  <rect x="680" y="410" width="140" height="80" class="database" rx="5"/>
+  <text x="750" y="435" class="text">SELECT FROM</text>
+  <text x="750" y="455" class="text">users</text>
+  <text x="750" y="475" class="text">WHERE email</text>
+
+  <!-- Signin Step 5: Verify Password -->
+  <rect x="880" y="410" width="140" height="80" class="process" rx="5"/>
+  <text x="950" y="435" class="text">Password</text>
+  <text x="950" y="455" class="text">Verification</text>
+  <text x="950" y="475" class="text">bcryptjs.compare</text>
+
+  <!-- Signin Step 6: Invalid? -->
+  <rect x="880" y="540" width="140" height="80" class="process" rx="5"/>
+  <text x="950" y="565" class="text">Match?</text>
+  <text x="950" y="585" class="text">✓ Yes → Generate</text>
+  <text x="950" y="605" class="text">✗ No → Error 401</text>
+
+  <!-- Signin Step 7: Generate Token -->
+  <rect x="680" y="540" width="140" height="80" class="process" rx="5"/>
+  <text x="750" y="565" class="text">Generate JWT</text>
+  <text x="750" y="585" class="text">Token</text>
+  <text x="750" y="605" class="text">(user_id)</text>
+
+  <!-- Signin Step 8: Return -->
+  <rect x="480" y="540" width="140" height="80" class="box" rx="5"/>
+  <text x="550" y="565" class="text">JSON Response</text>
+  <text x="550" y="585" class="text">{token,</text>
+  <text x="550" y="605" class="text">user_id}</text>
+
+  <!-- Signin Step 9: Store -->
+  <rect x="280" y="540" width="140" height="80" class="client" rx="5"/>
+  <text x="350" y="565" class="text">localStorage</text>
+  <text x="350" y="585" class="text">Store Token</text>
+  <text x="350" y="605" class="text">Redirect</text>
+
+  <!-- === REQUEST FLOW WITH AUTH === -->
+  <text x="600" y="700" style="font-size: 16px; font-weight: bold; text-anchor: middle;">Authenticated Request Flow</text>
+
+  <!-- Request Step 1: App with Token -->
+  <rect x="150" y="730" width="140" height="80" class="client" rx="5"/>
+  <text x="220" y="755" class="text">Frontend</text>
+  <text x="220" y="775" class="text">With Token</text>
+  <text x="220" y="795" class="text">from localStorage</text>
+
+  <!-- Request Step 2: Add Auth Header -->
+  <rect x="380" y="730" width="140" height="80" class="process" rx="5"/>
+  <text x="450" y="755" class="text">Add Header</text>
+  <text x="450" y="775" class="text">Authorization:</text>
+  <text x="450" y="795" class="text">Bearer {token}</text>
+
+  <!-- Request Step 3: Send Request -->
+  <rect x="610" y="730" width="140" height="80" class="box" rx="5"/>
+  <text x="680" y="755" class="text">API Request</text>
+  <text x="680" y="775" class="text">Protected Route</text>
+  <text x="680" y="795" class="text">(e.g., /phones)</text>
+
+  <!-- Request Step 4: Auth Middleware -->
+  <rect x="840" y="730" width="140" height="80" class="process" rx="5"/>
+  <text x="910" y="755" class="text">authMiddleware</text>
+  <text x="910" y="775" class="text">Verify Token</text>
+  <text x="910" y="795" class="text">& User ID</text>
+
+  <!-- Arrows for Signup Flow -->
+  <path d="M 220 140 L 280 140" class="arrow"/>
+  <text x="245" y="130" class="step">1</text>
+  
+  <path d="M 420 140 L 480 140" class="arrow"/>
+  <text x="445" y="130" class="step">2</text>
+  
+  <path d="M 620 140 L 680 140" class="arrow"/>
+  <text x="645" y="130" class="step">3</text>
+  
+  <path d="M 820 140 L 880 140" class="arrow"/>
+  <text x="845" y="130" class="step">4</text>
+  
+  <path d="M 950 180 L 950 220" class="arrow"/>
+  <text x="970" y="200" class="step">5</text>
+  
+  <path d="M 880 260 L 820 260" class="arrow"/>
+  <text x="845" y="250" class="step">6</text>
+  
+  <path d="M 680 260 L 620 260" class="arrow"/>
+  <text x="645" y="250" class="step">7</text>
+  
+  <path d="M 480 260 L 420 260" class="arrow"/>
+  <text x="445" y="250" class="step">8</text>
+  
+  <path d="M 280 260 L 220 260" class="arrow"/>
+  <text x="245" y="250" class="step">9</text>
+
+  <!-- Arrows for Signin Flow -->
+  <path d="M 220 450 L 280 450" class="arrow"/>
+  <text x="245" y="440" class="step">1</text>
+  
+  <path d="M 420 450 L 480 450" class="arrow"/>
+  <text x="445" y="440" class="step">2</text>
+  
+  <path d="M 620 450 L 680 450" class="arrow"/>
+  <text x="645" y="440" class="step">3</text>
+  
+  <path d="M 820 450 L 880 450" class="arrow"/>
+  <text x="845" y="440" class="step">4</text>
+  
+  <path d="M 950 490 L 950 540" class="arrow"/>
+  <text x="970" y="515" class="step">5</text>
+  
+  <path d="M 880 580 L 820 580" class="arrow"/>
+  <text x="845" y="570" class="step">6</text>
+  
+  <path d="M 680 580 L 620 580" class="arrow"/>
+  <text x="645" y="570" class="step">7</text>
+  
+  <path d="M 480 580 L 420 580" class="arrow"/>
+  <text x="445" y="570" class="step">8</text>
+
+  <!-- Arrows for Auth Request Flow -->
+  <path d="M 290 770 L 380 770" class="arrow"/>
+  <path d="M 520 770 L 610 770" class="arrow"/>
+  <path d="M 750 770 L 840 770" class="arrow"/>
+</svg>

@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .box { fill: #E3F2FD; stroke: #1976D2; stroke-width: 2; }
+      .database { fill: #F3E5F5; stroke: #7B1FA2; stroke-width: 2; }
+      .process { fill: #E8F5E9; stroke: #388E3C; stroke-width: 2; }
+      .client { fill: #FFF3E0; stroke: #F57C00; stroke-width: 2; }
+      .text { font-family: Arial, sans-serif; font-size: 13px; text-anchor: middle; }
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-response { stroke: #4CAF50; stroke-width: 2; fill: none; marker-end: url(#arrowhead-green); }
+      .label { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+      .step { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: #d32f2f; }
+      .code { font-family: 'Courier New', monospace; font-size: 10px; fill: #333; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333" />
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#4CAF50" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="30" class="title">HTTP Request/Response Cycle</text>
+
+  <!-- === LEFT SIDE: REQUEST === -->
+  <text x="300" y="70" style="font-size: 14px; font-weight: bold;">REQUEST FLOW (Blue)</text>
+
+  <!-- Browser -->
+  <rect x="100" y="120" width="140" height="80" class="client" rx="5"/>
+  <text x="170" y="145" class="text">Browser</text>
+  <text x="170" y="165" class="text">Client</text>
+  <text x="170" y="185" class="text">(React)</text>
+
+  <!-- Request Creation -->
+  <rect x="100" y="240" width="140" height="100" class="process" rx="5"/>
+  <text x="170" y="265" class="text">Build HTTP</text>
+  <text x="170" y="285" class="text">Request</text>
+  <text x="170" y="305" class="code">Method: POST</text>
+  <text x="170" y="320" class="code">Path: /api/v1/...</text>
+  <text x="170" y="335" class="code">Headers: {...}</text>
+  <text x="170" y="350" class="code">Body: JSON</text>
+
+  <!-- Network -->
+  <rect x="100" y="380" width="140" height="70" class="process" rx="5"/>
+  <text x="170" y="405" class="text">Network</text>
+  <text x="170" y="425" class="text">Transmission</text>
+
+  <!-- Server Receive -->
+  <rect x="100" y="490" width="140" height="80" class="box" rx="5"/>
+  <text x="170" y="515" class="text">Express.js</text>
+  <text x="170" y="535" class="text">Server</text>
+  <text x="170" y="555" class="text">Receives</text>
+
+  <!-- Parse Request -->
+  <rect x="100" y="610" width="140" height="90" class="process" rx="5"/>
+  <text x="170" y="635" class="text">Parse Request</text>
+  <text x="170" y="655" class="code">• Body (JSON)</text>
+  <text x="170" y="670" class="code">• Headers</text>
+  <text x="170" y="685" class="code">• Query params</text>
+  <text x="170" y="700" class="code">• Path params</text>
+
+  <!-- === MIDDLE: PROCESSING === -->
+  <text x="600" y="70" style="font-size: 14px; font-weight: bold;">PROCESSING FLOW</text>
+
+  <!-- Routing -->
+  <rect x="450" y="120" width="140" height="80" class="box" rx="5"/>
+  <text x="520" y="145" class="text">Route</text>
+  <text x="520" y="165" class="text">Matching</text>
+  <text x="520" y="185" class="text">(Express Router)</text>
+
+  <!-- Middleware -->
+  <rect x="450" y="240" width="140" height="100" class="process" rx="5"/>
+  <text x="520" y="260" class="text">Middleware</text>
+  <text x="520" y="280" class="code">1. CORS check</text>
+  <text x="520" y="295" class="code">2. Auth verify</text>
+  <text x="520" y="310" class="code">3. Rate limit?</text>
+  <text x="520" y="325" class="code">4. Validation</text>
+  <text x="520" y="340" class="code">5. next()</text>
+
+  <!-- Controller -->
+  <rect x="450" y="380" width="140" height="80" class="box" rx="5"/>
+  <text x="520" y="405" class="text">Controller</text>
+  <text x="520" y="425" class="text">Handler</text>
+  <text x="520" y="445" class="text">Logic</text>
+
+  <!-- Database -->
+  <rect x="450" y="490" width="140" height="100" class="database" rx="5"/>
+  <text x="520" y="510" class="text">Database</text>
+  <text x="520" y="530" class="text">Query</text>
+  <text x="520" y="550" class="code">SELECT/INSERT</text>
+  <text x="520" y="565" class="code">UPDATE/DELETE</text>
+  <text x="520" y="580" class="code">Execute</text>
+
+  <!-- Database Result -->
+  <rect x="450" y="630" width="140" height="80" class="database" rx="5"/>
+  <text x="520" y="655" class="text">Database</text>
+  <text x="520" y="675" class="text">Returns</text>
+  <text x="520" y="695" class="text">Result Set</text>
+
+  <!-- === RIGHT SIDE: RESPONSE === -->
+  <text x="900" y="70" style="font-size: 14px; font-weight: bold;">RESPONSE FLOW (Green)</text>
+
+  <!-- Build Response -->
+  <rect x="800" y="120" width="140" height="100" class="process" rx="5"/>
+  <text x="870" y="140" class="text">Build Response</text>
+  <text x="870" y="160" class="code">Status: 200/201</text>
+  <text x="870" y="175" class="code">Headers: JSON</text>
+  <text x="870" y="190" class="code">Body: {</text>
+  <text x="870" y="205" class="code">data: {...}</text>
+
+  <!-- Error Handling -->
+  <rect x="800" y="240" width="140" height="100" class="process" rx="5"/>
+  <text x="870" y="260" class="text">Error Check</text>
+  <text x="870" y="280" class="code">• Validation?</text>
+  <text x="870" y="295" class="code">• Database?</text>
+  <text x="870" y="310" class="code">• Server?</text>
+  <text x="870" y="325" class="code">Status: 4xx/5xx</text>
+
+  <!-- Serialize -->
+  <rect x="800" y="380" width="140" height="70" class="process" rx="5"/>
+  <text x="870" y="405" class="text">Serialize to</text>
+  <text x="870" y="425" class="text">JSON</text>
+
+  <!-- Send Response -->
+  <rect x="800" y="490" width="140" height="80" class="box" rx="5"/>
+  <text x="870" y="515" class="text">Send HTTP</text>
+  <text x="870" y="535" class="text">Response</text>
+  <text x="870" y="555" class="text">To Client</text>
+
+  <!-- Network Response -->
+  <rect x="800" y="610" width="140" height="70" class="process" rx="5"/>
+  <text x="870" y="635" class="text">Network</text>
+  <text x="870" y="655" class="text">Transmission</text>
+
+  <!-- Browser Receive -->
+  <rect x="800" y="720" width="140" height="80" class="client" rx="5"/>
+  <text x="870" y="745" class="text">Browser</text>
+  <text x="870" y="765" class="text">Receives</text>
+  <text x="870" y="785" class="text">Response</text>
+
+  <!-- Update UI -->
+  <rect x="800" y="830" width="140" height="80" class="client" rx="5"/>
+  <text x="870" y="855" class="text">Update UI</text>
+  <text x="870" y="875" class="text">Re-render</text>
+  <text x="870" y="895" class="text">Display Data</text>
+
+  <!-- ARROWS - REQUEST SIDE -->
+  <path d="M 170 200 L 170 240" class="arrow"/>
+  <path d="M 170 340 L 170 380" class="arrow"/>
+  <path d="M 170 450 L 170 490" class="arrow"/>
+  <path d="M 170 570 L 170 610" class="arrow"/>
+
+  <!-- ARROWS - MIDDLE -->
+  <path d="M 240 160 L 450 160" class="arrow"/>
+  <path d="M 520 200 L 520 240" class="arrow"/>
+  <path d="M 520 340 L 520 380" class="arrow"/>
+  <path d="M 520 460 L 520 490" class="arrow"/>
+  <path d="M 520 590 L 520 630" class="arrow"/>
+
+  <!-- ARROWS - RESPONSE SIDE -->
+  <path d="M 520 710 L 800 200" class="arrow-response"/>
+  <path d="M 870 220 L 870 240" class="arrow-response"/>
+  <path d="M 870 340 L 870 380" class="arrow-response"/>
+  <path d="M 870 450 L 870 490" class="arrow-response"/>
+  <path d="M 870 570 L 870 610" class="arrow-response"/>
+  <path d="M 870 680 L 870 720" class="arrow-response"/>
+  <path d="M 870 800 L 870 830" class="arrow-response"/>
+
+  <!-- Step numbers -->
+  <text x="190" y="235" class="step">1</text>
+  <text x="190" y="375" class="step">2</text>
+  <text x="190" y="605" class="step">3</text>
+  
+  <text x="540" y="235" class="step">4</text>
+  <text x="540" y="485" class="step">5</text>
+  <text x="540" y="625" class="step">6</text>
+
+  <text x="820" y="375" class="step">7</text>
+  <text x="820" y="605" class="step">8</text>
+  <text x="820" y="825" class="step">9</text>
+</svg>

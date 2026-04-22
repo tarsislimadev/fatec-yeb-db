@@ -1,0 +1,207 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .box { fill: #E3F2FD; stroke: #1976D2; stroke-width: 2; }
+      .database { fill: #F3E5F5; stroke: #7B1FA2; stroke-width: 2; }
+      .process { fill: #E8F5E9; stroke: #388E3C; stroke-width: 2; }
+      .client { fill: #FFF3E0; stroke: #F57C00; stroke-width: 2; }
+      .text { font-family: Arial, sans-serif; font-size: 13px; text-anchor: middle; }
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .label { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+      .operation { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="30" class="title">Phone Management Data Flow</text>
+
+  <!-- === LIST PHONES === -->
+  <text x="200" y="70" style="font-size: 14px; font-weight: bold;">GET /api/v1/phones - List All Phones</text>
+
+  <rect x="50" y="100" width="130" height="70" class="client" rx="5"/>
+  <text x="115" y="125" class="text">Frontend</text>
+  <text x="115" y="145" class="text">Request List</text>
+
+  <rect x="250" y="100" width="130" height="70" class="box" rx="5"/>
+  <text x="315" y="125" class="text">GET /phones</text>
+  <text x="315" y="145" class="text">with token</text>
+
+  <rect x="450" y="100" width="130" height="70" class="process" rx="5"/>
+  <text x="515" y="125" class="text">Auth</text>
+  <text x="515" y="145" class="text">Verify Token</text>
+
+  <rect x="650" y="100" width="130" height="70" class="box" rx="5"/>
+  <text x="715" y="125" class="text">listPhones</text>
+  <text x="715" y="145" class="text">Controller</text>
+
+  <rect x="850" y="100" width="130" height="70" class="database" rx="5"/>
+  <text x="915" y="115" class="text">SELECT *</text>
+  <text x="915" y="135" class="text">FROM phones</text>
+  <text x="915" y="155" class="text">WHERE deleted_at</text>
+
+  <path d="M 180 135 L 250 135" class="arrow"/>
+  <path d="M 380 135 L 450 135" class="arrow"/>
+  <path d="M 580 135 L 650 135" class="arrow"/>
+  <path d="M 780 135 L 850 135" class="arrow"/>
+
+  <!-- === CREATE PHONE === -->
+  <text x="200" y="240" style="font-size: 14px; font-weight: bold;">POST /api/v1/phones - Create Phone</text>
+
+  <rect x="50" y="270" width="130" height="70" class="client" rx="5"/>
+  <text x="115" y="295" class="text">Frontend</text>
+  <text x="115" y="315" class="text">Submit Form</text>
+
+  <rect x="250" y="270" width="130" height="70" class="process" rx="5"/>
+  <text x="315" y="290" class="text">Parse Input</text>
+  <text x="315" y="310" class="text">phone_number</text>
+  <text x="315" y="330" class="text">type</text>
+
+  <rect x="450" y="270" width="130" height="70" class="process" rx="5"/>
+  <text x="515" y="295" class="text">Validate Phone</text>
+  <text x="515" y="315" class="text">Format (libphonenumber)</text>
+
+  <rect x="650" y="270" width="130" height="70" class="process" rx="5"/>
+  <text x="715" y="295" class="text">Check</text>
+  <text x="715" y="315" class="text">Duplicate</text>
+  <text x="715" y="335" class="text">E.164</text>
+
+  <rect x="850" y="270" width="130" height="70" class="box" rx="5"/>
+  <text x="915" y="295" class="text">createPhone</text>
+  <text x="915" y="315" class="text">Controller</text>
+
+  <rect x="1050" y="270" width="130" height="70" class="database" rx="5"/>
+  <text x="1115" y="295" class="text">INSERT INTO</text>
+  <text x="1115" y="315" class="text">phones</text>
+  <text x="1115" y="335" class="text">(values)</text>
+
+  <path d="M 180 305 L 250 305" class="arrow"/>
+  <path d="M 380 305 L 450 305" class="arrow"/>
+  <path d="M 580 305 L 650 305" class="arrow"/>
+  <path d="M 780 305 L 850 305" class="arrow"/>
+  <path d="M 980 305 L 1050 305" class="arrow"/>
+
+  <!-- === GET PHONE DETAIL === -->
+  <text x="200" y="410" style="font-size: 14px; font-weight: bold;">GET /api/v1/phones/:id - Get Phone Detail</text>
+
+  <rect x="50" y="440" width="130" height="70" class="client" rx="5"/>
+  <text x="115" y="465" class="text">Frontend</text>
+  <text x="115" y="485" class="text">Click Detail</text>
+
+  <rect x="250" y="440" width="130" height="70" class="box" rx="5"/>
+  <text x="315" y="465" class="text">GET /phones/{id}</text>
+  <text x="315" y="485" class="text">+ Auth Token</text>
+
+  <rect x="450" y="440" width="130" height="70" class="process" rx="5"/>
+  <text x="515" y="465" class="text">Validate</text>
+  <text x="515" y="485" class="text">Phone ID</text>
+
+  <rect x="650" y="440" width="130" height="70" class="box" rx="5"/>
+  <text x="715" y="465" class="text">getPhone</text>
+  <text x="715" y="485" class="text">Controller</text>
+
+  <rect x="850" y="440" width="130" height="70" class="database" rx="5"/>
+  <text x="915" y="460" class="text">SELECT * FROM</text>
+  <text x="915" y="480" class="text">phones WHERE id</text>
+  <text x="915" y="500" class="text">= ? AND deleted_at IS NULL</text>
+
+  <rect x="1050" y="440" width="130" height="90" class="database" rx="5"/>
+  <text x="1115" y="465" class="text">JOIN to get</text>
+  <text x="1115" y="485" class="text">phone_owner</text>
+  <text x="1115" y="505" class="text">relations</text>
+  <text x="1115" y="525" class="text">(OPTIONAL)</text>
+
+  <path d="M 180 475 L 250 475" class="arrow"/>
+  <path d="M 380 475 L 450 475" class="arrow"/>
+  <path d="M 580 475 L 650 475" class="arrow"/>
+  <path d="M 780 475 L 850 475" class="arrow"/>
+  <path d="M 980 480 L 1050 480" class="arrow" stroke-dasharray="5,5"/>
+
+  <!-- === UPDATE PHONE === -->
+  <text x="200" y="600" style="font-size: 14px; font-weight: bold;">PATCH /api/v1/phones/:id - Update Phone</text>
+
+  <rect x="50" y="630" width="130" height="70" class="client" rx="5"/>
+  <text x="115" y="655" class="text">Frontend</text>
+  <text x="115" y="675" class="text">Edit Form</text>
+
+  <rect x="250" y="630" width="130" height="70" class="process" rx="5"/>
+  <text x="315" y="655" class="text">Parse Changes</text>
+  <text x="315" y="675" class="text">(e.g., status)</text>
+
+  <rect x="450" y="630" width="130" height="70" class="box" rx="5"/>
+  <text x="515" y="655" class="text">PATCH /phones/{id}</text>
+  <text x="515" y="675" class="text">+ Auth Token</text>
+
+  <rect x="650" y="630" width="130" height="70" class="box" rx="5"/>
+  <text x="715" y="655" class="text">updatePhone</text>
+  <text x="715" y="675" class="text">Controller</text>
+
+  <rect x="850" y="630" width="130" height="70" class="database" rx="5"/>
+  <text x="915" y="650" class="text">UPDATE phones</text>
+  <text x="915" y="670" class="text">SET {fields}</text>
+  <text x="915" y="690" class="text">WHERE id = ?</text>
+
+  <path d="M 180 665 L 250 665" class="arrow"/>
+  <path d="M 380 665 L 450 665" class="arrow"/>
+  <path d="M 580 665 L 650 665" class="arrow"/>
+  <path d="M 780 665 L 850 665" class="arrow"/>
+
+  <!-- === DELETE PHONE === -->
+  <text x="200" y="790" style="font-size: 14px; font-weight: bold;">DELETE /api/v1/phones/:id - Delete Phone (Soft Delete)</text>
+
+  <rect x="50" y="820" width="130" height="70" class="client" rx="5"/>
+  <text x="115" y="845" class="text">Frontend</text>
+  <text x="115" y="865" class="text">Confirm Delete</text>
+
+  <rect x="250" y="820" width="130" height="70" class="box" rx="5"/>
+  <text x="315" y="845" class="text">DELETE</text>
+  <text x="315" y="865" class="text">/phones/{id}</text>
+
+  <rect x="450" y="820" width="130" height="70" class="box" rx="5"/>
+  <text x="515" y="845" class="text">deletePhone</text>
+  <text x="515" y="865" class="text">Controller</text>
+
+  <rect x="650" y="820" width="130" height="70" class="database" rx="5"/>
+  <text x="715" y="840" class="text">UPDATE phones</text>
+  <text x="715" y="860" class="text">SET deleted_at =</text>
+  <text x="715" y="880" class="text">NOW() WHERE id=?</text>
+
+  <path d="M 180 855 L 250 855" class="arrow"/>
+  <path d="M 380 855 L 450 855" class="arrow"/>
+  <path d="M 580 855 L 650 855" class="arrow"/>
+
+  <!-- === PHONE-OWNER RELATIONS === -->
+  <text x="950" y="790" style="font-size: 14px; font-weight: bold;">Phone-Owner Relations</text>
+
+  <rect x="800" y="820" width="150" height="80" class="box" rx="5"/>
+  <text x="875" y="835" class="text">POST /phones/{id}</text>
+  <text x="875" y="855" class="text">/owners</text>
+  <text x="875" y="875" class="text">(Add Owner)</text>
+
+  <rect x="1050" y="820" width="150" height="80" class="database" rx="5"/>
+  <text x="1125" y="840" class="text">INSERT INTO</text>
+  <text x="1125" y="860" class="text">phone_owner</text>
+  <text x="1125" y="880" class="text">relations</text>
+
+  <rect x="800" y="920" width="150" height="80" class="box" rx="5"/>
+  <text x="875" y="935" class="text">DELETE /phones/{id}</text>
+  <text x="875" y="955" class="text">/owners/{relId}</text>
+  <text x="875" y="975" class="text">(Remove Owner)</text>
+
+  <rect x="1050" y="920" width="150" height="80" class="database" rx="5"/>
+  <text x="1125" y="940" class="text">DELETE FROM</text>
+  <text x="1125" y="960" class="text">phone_owner</text>
+  <text x="1125" y="980" class="text">relations</text>
+
+  <path d="M 950 860 L 1050 860" class="arrow"/>
+  <path d="M 950 960 L 1050 960" class="arrow"/>
+
+  <!-- Legend -->
+  <rect x="50" y="1020" width="1300" height="50" fill="none" stroke="#ccc" stroke-width="1"/>
+  <text x="60" y="1040" class="text" style="text-anchor: start; font-weight: bold;">CRUD Operations: </text>
+  <text x="300" y="1040" class="text" style="text-anchor: start;">LIST (GET) - Retrieve all records | CREATE (POST) - New record | READ (GET :id) - Single record | UPDATE (PATCH) - Modify fields | DELETE - Soft delete via updated_at</text>
+</svg>
