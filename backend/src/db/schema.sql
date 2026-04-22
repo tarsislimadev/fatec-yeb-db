@@ -3,6 +3,7 @@
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ============ CORE TABLES ============
 
@@ -22,10 +23,10 @@ CREATE TABLE IF NOT EXISTS phones (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX idx_phones_e164_number ON phones(e164_number);
-CREATE INDEX idx_phones_status ON phones(status);
-CREATE INDEX idx_phones_created_at ON phones(created_at DESC);
-CREATE INDEX idx_phones_last_seen_at ON phones(last_seen_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_phones_e164_number ON phones(e164_number);
+CREATE INDEX IF NOT EXISTS idx_phones_status ON phones(status);
+CREATE INDEX IF NOT EXISTS idx_phones_created_at ON phones(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_phones_last_seen_at ON phones(last_seen_at DESC);
 
 -- people
 CREATE TABLE IF NOT EXISTS people (
@@ -37,8 +38,8 @@ CREATE TABLE IF NOT EXISTS people (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_people_email ON people(email);
-CREATE INDEX idx_people_full_name ON people(full_name);
+CREATE INDEX IF NOT EXISTS idx_people_email ON people(email);
+CREATE INDEX IF NOT EXISTS idx_people_full_name ON people(full_name);
 
 -- businesses
 CREATE TABLE IF NOT EXISTS businesses (
@@ -50,8 +51,8 @@ CREATE TABLE IF NOT EXISTS businesses (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_businesses_cnpj ON businesses(cnpj);
-CREATE INDEX idx_businesses_legal_name ON businesses(legal_name);
+CREATE INDEX IF NOT EXISTS idx_businesses_cnpj ON businesses(cnpj);
+CREATE INDEX IF NOT EXISTS idx_businesses_legal_name ON businesses(legal_name);
 
 -- departments
 CREATE TABLE IF NOT EXISTS departments (
@@ -62,9 +63,9 @@ CREATE TABLE IF NOT EXISTS departments (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_departments_business_id ON departments(business_id);
-CREATE INDEX idx_departments_name ON departments(name);
-CREATE UNIQUE INDEX idx_departments_business_name ON departments(business_id, name);
+CREATE INDEX IF NOT EXISTS idx_departments_business_id ON departments(business_id);
+CREATE INDEX IF NOT EXISTS idx_departments_name ON departments(name);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_departments_business_name ON departments(business_id, name);
 
 -- ============ AUTHENTICATION TABLES ============
 
@@ -82,8 +83,8 @@ CREATE TABLE IF NOT EXISTS app_users (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX idx_app_users_email ON app_users(email);
-CREATE INDEX idx_app_users_status ON app_users(status);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_app_users_email ON app_users(email);
+CREATE INDEX IF NOT EXISTS idx_app_users_status ON app_users(status);
 
 -- auth_identities
 CREATE TABLE IF NOT EXISTS auth_identities (
@@ -95,8 +96,8 @@ CREATE TABLE IF NOT EXISTS auth_identities (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX idx_auth_identities_provider_subject ON auth_identities(provider, provider_subject);
-CREATE INDEX idx_auth_identities_user_id ON auth_identities(user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_identities_provider_subject ON auth_identities(provider, provider_subject);
+CREATE INDEX IF NOT EXISTS idx_auth_identities_user_id ON auth_identities(user_id);
 
 -- password_reset_tokens
 CREATE TABLE IF NOT EXISTS password_reset_tokens (
@@ -108,8 +109,8 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
-CREATE INDEX idx_password_reset_tokens_expires_at ON password_reset_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_expires_at ON password_reset_tokens(expires_at);
 
 -- ============ RELATION TABLES ============
 
@@ -127,9 +128,9 @@ CREATE TABLE IF NOT EXISTS phone_owners (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_phone_owners_phone_id ON phone_owners(phone_id);
-CREATE INDEX idx_phone_owners_owner_type_id ON phone_owners(owner_type, owner_id);
-CREATE UNIQUE INDEX idx_phone_owners_composite ON phone_owners(phone_id, owner_type, owner_id) WHERE end_date IS NULL;
+CREATE INDEX IF NOT EXISTS idx_phone_owners_phone_id ON phone_owners(phone_id);
+CREATE INDEX IF NOT EXISTS idx_phone_owners_owner_type_id ON phone_owners(owner_type, owner_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_owners_composite ON phone_owners(phone_id, owner_type, owner_id) WHERE end_date IS NULL;
 
 -- phone_channels
 CREATE TABLE IF NOT EXISTS phone_channels (
@@ -141,8 +142,8 @@ CREATE TABLE IF NOT EXISTS phone_channels (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_phone_channels_phone_id ON phone_channels(phone_id);
-CREATE UNIQUE INDEX idx_phone_channels_phone_type ON phone_channels(phone_id, channel_type);
+CREATE INDEX IF NOT EXISTS idx_phone_channels_phone_id ON phone_channels(phone_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_channels_phone_type ON phone_channels(phone_id, channel_type);
 
 -- phone_sources
 CREATE TABLE IF NOT EXISTS phone_sources (
@@ -155,8 +156,8 @@ CREATE TABLE IF NOT EXISTS phone_sources (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_phone_sources_phone_id ON phone_sources(phone_id);
-CREATE INDEX idx_phone_sources_collector ON phone_sources(collector);
+CREATE INDEX IF NOT EXISTS idx_phone_sources_phone_id ON phone_sources(phone_id);
+CREATE INDEX IF NOT EXISTS idx_phone_sources_collector ON phone_sources(collector);
 
 -- phone_consents
 CREATE TABLE IF NOT EXISTS phone_consents (
@@ -169,8 +170,8 @@ CREATE TABLE IF NOT EXISTS phone_consents (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_phone_consents_phone_id ON phone_consents(phone_id);
-CREATE UNIQUE INDEX idx_phone_consents_phone_type ON phone_consents(phone_id, consent_type);
+CREATE INDEX IF NOT EXISTS idx_phone_consents_phone_id ON phone_consents(phone_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_consents_phone_type ON phone_consents(phone_id, consent_type);
 
 -- contact_attempts
 CREATE TABLE IF NOT EXISTS contact_attempts (
@@ -183,6 +184,6 @@ CREATE TABLE IF NOT EXISTS contact_attempts (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_contact_attempts_phone_id ON contact_attempts(phone_id);
-CREATE INDEX idx_contact_attempts_attempted_at ON contact_attempts(phone_id, attempted_at DESC);
-CREATE INDEX idx_contact_attempts_outcome ON contact_attempts(outcome);
+CREATE INDEX IF NOT EXISTS idx_contact_attempts_phone_id ON contact_attempts(phone_id);
+CREATE INDEX IF NOT EXISTS idx_contact_attempts_attempted_at ON contact_attempts(phone_id, attempted_at DESC);
+CREATE INDEX IF NOT EXISTS idx_contact_attempts_outcome ON contact_attempts(outcome);

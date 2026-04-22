@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { db, initRedis, testConnection } from './db/index.js';
+import { migrate } from './db/migrate.js';
 import { errorHandlingMiddleware, notFoundHandler } from './middleware/index.js';
 import authRoutes from './routes/auth.js';
 import phoneRoutes from './routes/phones.js';
@@ -54,6 +55,10 @@ async function startServer() {
     // Test database connection
     await testConnection();
     console.log('✓ Database connected');
+
+    // Ensure schema exists before serving requests
+    await migrate();
+    console.log('✓ Database migrated');
 
     // Initialize Redis
     await initRedis();

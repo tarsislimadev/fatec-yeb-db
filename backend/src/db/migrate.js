@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import db from './index.js';
+import { db } from './index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function migrate() {
+export async function migrate() {
   try {
     console.log('Starting database migration...');
 
@@ -17,11 +17,14 @@ async function migrate() {
     await db.query(schema);
 
     console.log('✅ Database migration completed successfully!');
-    process.exit(0);
   } catch (error) {
     console.error('❌ Migration failed:', error.message);
-    process.exit(1);
+    throw error;
   }
 }
 
-migrate();
+if (process.argv[1] && process.argv[1].endsWith('migrate.js')) {
+  migrate()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}

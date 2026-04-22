@@ -1,4 +1,4 @@
-import db from './index.js';
+import { db } from './index.js';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 
@@ -54,7 +54,7 @@ async function seed() {
       );
 
       // Create default channels
-      const channels = ['sms', 'whatsapp', 'telegram', 'signal'];
+      const channels = ['sms', 'whatsapp', 'telegram', 'call'];
       for (const channel of channels) {
         await db.query(
           `INSERT INTO phone_channels (id, phone_id, channel_type, is_enabled, created_at)
@@ -64,7 +64,7 @@ async function seed() {
       }
 
       // Create default consents
-      const consents = ['marketing', 'sms', 'call'];
+      const consents = ['marketing', 'transactional'];
       for (const consent of consents) {
         await db.query(
           `INSERT INTO phone_consents (id, phone_id, consent_type, status, created_at)
