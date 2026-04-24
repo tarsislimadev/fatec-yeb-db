@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPhoneDetail, updatePhone, deletePhone, addPhoneOwner, removePhoneOwner } from '../services/api';
 import { Button, Card, Loading, Alert, Input } from '../components/common';
+import { Header } from '../components/Header'
 
 export function PhoneDetailPage() {
   const { id } = useParams();
@@ -77,22 +78,7 @@ export function PhoneDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <button onClick={() => navigate('/phones')} className="text-blue-600 hover:underline mb-2">
-                ← Back to Phones
-              </button>
-              <h1 className="text-3xl font-bold font-mono">{phone.e164_number}</h1>
-              <p className="text-gray-600">{phone.raw_number}</p>
-            </div>
-            <Button onClick={handleDeletePhone} variant="danger">
-              Delete Phone
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header items={[['Yeb', '/'], ['Phones', '/phones'], [phone.e164_number]]} />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
@@ -107,7 +93,7 @@ export function PhoneDetailPage() {
                 activeTab === tab
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-600 hover:text-gray-900'
-              }`}
+                }`}
             >
               {tab}
             </button>

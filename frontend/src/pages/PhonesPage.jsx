@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePhoneStore } from '../store';
 import { getPhones, createPhone } from '../services/api';
 import { Button, Card, Loading, Alert } from '../components/common';
+import { Header } from '../components/Header';
 
 export function PhonesPage() {
   const navigate = useNavigate();
@@ -62,14 +63,7 @@ export function PhonesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Phone List</h1>
-          <Button onClick={() => navigate('/logout')} variant="secondary">
-            Sign Out
-          </Button>
-        </div>
-      </header>
+      <Header items={[['Yeb', '/'], ['Phones', '/phones']]} />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
@@ -162,8 +156,8 @@ export function PhonesPage() {
                             {phone.type}
                           </span>
                           <span className={`px-2 py-1 text-xs rounded ${phone.status === 'active'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
                             }`}>
                             {phone.status}
                           </span>
