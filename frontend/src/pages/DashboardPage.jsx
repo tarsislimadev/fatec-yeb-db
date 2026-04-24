@@ -8,8 +8,15 @@ export function DashboardPage() {
 
       <main>
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-          <p>Welcome to the dashboard! Here you can see an overview of your phone catalog.</p>
+          <a className="text-blue-600 hover:text-blue-800" href={'/phones'}>
+            View Phone List
+          </a><br />
+          <a className="text-blue-600 hover:text-blue-800" href={'/people'}>
+            View People List
+          </a><br />
+          <a className="text-blue-600 hover:text-blue-800" href={'/businesses'}>
+            View Business List
+          </a>
         </div>
       </main>
     </div>
