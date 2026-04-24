@@ -150,30 +150,30 @@ export function PhonesPage() {
               {phones.map((phone) => (
                 <Card
                   key={phone.id}
-                  onClick={() => navigate(`/phones/${phone.id}`)}
                   className="cursor-pointer hover:shadow-lg transition"
                 >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-mono font-bold text-lg">{phone.e164_number}</p>
-                      <p className="text-gray-600">{phone.raw_number}</p>
-                      <div className="flex gap-2 mt-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                          {phone.type}
-                        </span>
-                        <span className={`px-2 py-1 text-xs rounded ${
-                          phone.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {phone.status}
-                        </span>
+                  <a href={`/phones/${phone.id}`}>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-mono font-bold text-lg">{phone.e164_number}</p>
+                        <p className="text-gray-600">{phone.raw_number}</p>
+                        <div className="flex gap-2 mt-2">
+                          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                            {phone.type}
+                          </span>
+                          <span className={`px-2 py-1 text-xs rounded ${phone.status === 'active'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
+                            }`}>
+                            {phone.status}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right text-sm text-gray-500">
+                        <p>Created: {new Date(phone.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
-                    <div className="text-right text-sm text-gray-500">
-                      <p>Created: {new Date(phone.created_at).toLocaleDateString()}</p>
-                    </div>
-                  </div>
+                  </a>
                 </Card>
               ))}
             </div>
