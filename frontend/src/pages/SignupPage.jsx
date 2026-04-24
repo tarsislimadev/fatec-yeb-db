@@ -50,7 +50,7 @@ export function SignupPage() {
     try {
       const data = await signup(email, password, displayName);
       signupSuccess(data.user, data.access_token);
-      navigate('/phones');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Signup failed. Please try again.');
     } finally {

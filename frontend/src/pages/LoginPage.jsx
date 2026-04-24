@@ -32,7 +32,7 @@ export function LoginPage() {
     try {
       const data = await signin(email, password);
       signinSuccess(data.user, data.access_token);
-      navigate('/phones');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Login failed. Please try again.');
     } finally {
