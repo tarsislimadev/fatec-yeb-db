@@ -109,10 +109,12 @@ export async function getPeople(page = 1, pageSize = 20, filters = {}) {
     ...filters,
   });
   const response = await api.get(`/people?${params}`);
-  return {
-    people: response.data.data,
-    meta: response.data.meta,
-  };
+  return response.data;
+}
+
+export async function createPerson(personData) {
+  const response = await api.post('/people', personData);
+  return response.data.data;
 }
 
 export async function getPersonDetail(personId) {
