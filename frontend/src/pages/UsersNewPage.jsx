@@ -5,7 +5,7 @@ import { signup } from '../services/api';
 import { Input, Button, Card, Alert } from '../components/common';
 import { Header } from '../components/Header';
 
-export function SignupPage() {
+export function UsersNewPage() {
   const navigate = useNavigate();
   const { signupSuccess } = useAuthStore();
   const [displayName, setDisplayName] = useState('');
@@ -61,7 +61,7 @@ export function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header items={[['Yeb', '/'], ['Signup', '/signup']]} />
+      <Header items={[['Yeb', '/'], ['Signup', '/users/new']]} />
       <Card className="w-full max-w-md mx-auto mt-10 p-6">
         <h1 className="text-3xl font-bold text-center mb-2">Phone List</h1>
         <p className="text-gray-600 text-center mb-6">Create a new account</p>
@@ -121,7 +121,7 @@ export function SignupPage() {
         <div className="border-t pt-4 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">
+            <Link to="/sessions/new" className="text-blue-600 hover:underline font-medium">
               Sign in
             </Link>
           </p>

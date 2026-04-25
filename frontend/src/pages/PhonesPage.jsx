@@ -28,6 +28,7 @@ export function PhonesPage() {
       if (status) filters.status = status;
 
       const data = await getPhones(currentPage, 20, filters);
+      alert(data != null ? 'Phones loaded successfully!' : 'No data received');
       setPhones(data.phones);
       setTotalPages(data.meta.total_pages);
       setError(null);
@@ -146,7 +147,7 @@ export function PhonesPage() {
                   key={phone.id}
                   className="cursor-pointer hover:shadow-lg transition"
                 >
-                  <a href={`/phones/${phone.id}`}>
+                  <a href={`/phones/detail?id=${phone.id}`}>
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-mono font-bold text-lg">{phone.e164_number}</p>

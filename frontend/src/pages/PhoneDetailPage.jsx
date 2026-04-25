@@ -3,9 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getPhoneDetail, updatePhone, deletePhone, addPhoneOwner, removePhoneOwner } from '../services/api';
 import { Button, Card, Loading, Alert, Input } from '../components/common';
 import { Header } from '../components/Header'
+import { getQueryParam } from '../services/window';
 
 export function PhoneDetailPage() {
-  const { id } = useParams();
+  const id = getQueryParam('id');
   const navigate = useNavigate();
   const [phone, setPhone] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -78,7 +79,7 @@ export function PhoneDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header items={[['Yeb', '/'], ['Phones', '/phones'], [phone.e164_number, `/phones/${phone.id}`]]} />
+      <Header items={[['Yeb', '/'], ['Phones', '/phones'], [phone.e164_number, `/phones/detail?id=${phone.id}`]]} />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
@@ -89,8 +90,7 @@ export function PhoneDetailPage() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 font-medium capitalize ${
-                activeTab === tab
+              className={`px-4 py-2 font-medium capitalize ${activeTab === tab
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-600 hover:text-gray-900'
                 }`}

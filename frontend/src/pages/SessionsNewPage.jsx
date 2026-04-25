@@ -5,7 +5,7 @@ import { signin } from '../services/api';
 import { Input, Button, Card, Alert, Loading } from '../components/common';
 import { Header } from '../components/Header';
 
-export function LoginPage() {
+export function SessionsNewPage() {
   const navigate = useNavigate();
   const { signinSuccess } = useAuthStore();
   const [email, setEmail] = useState('');
@@ -43,7 +43,7 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header items={[['Yeb', '/'], ['Login', '/login']]} />
+      <Header items={[['Yeb', '/'], ['Login', '/sessions/new']]} />
       <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <h1 className="text-3xl font-bold text-center mb-2">Phone List</h1>
@@ -80,13 +80,13 @@ export function LoginPage() {
           <div className="border-t pt-4">
             <p className="text-center text-sm text-gray-600 mb-3">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-600 hover:underline font-medium">
+              <Link to="/users/new" className="text-blue-600 hover:underline font-medium">
                 Sign up
               </Link>
             </p>
 
             <p className="text-center text-sm">
-              <Link to="/forgot-password" className="text-blue-600 hover:underline">
+              <Link to="/users/password" className="text-blue-600 hover:underline">
                 Forgot password?
               </Link>
             </p>

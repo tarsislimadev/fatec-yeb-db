@@ -4,7 +4,7 @@ import { forgotPassword } from '../services/api';
 import { Input, Button, Card, Alert } from '../components/common';
 import { Header } from '../components/Header';
 
-export function ForgotPasswordPage() {
+export function UsersPasswordPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -64,7 +64,7 @@ export function ForgotPasswordPage() {
               </Button>
             </form>
           ) : (
-            <Button onClick={() => navigate('/login')} className="w-full">
+            <Button onClick={() => navigate('/sessions/new')} className="w-full">
               Back to Login
             </Button>
           )}
@@ -72,7 +72,7 @@ export function ForgotPasswordPage() {
           <div className="border-t pt-4 text-center text-sm">
             <p className="text-gray-600">
               Remember your password?{' '}
-              <Link to="/login" className="text-blue-600 hover:underline font-medium">
+              <Link to="/sessions/new" className="text-blue-600 hover:underline font-medium">
                 Sign in
               </Link>
             </p>

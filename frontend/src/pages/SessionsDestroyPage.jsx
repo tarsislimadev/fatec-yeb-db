@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store';
 import { signout } from '../services/api';
 
-export function LogoutPage() {
+export function SessionsDestroyPage() {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
 
@@ -15,7 +15,7 @@ export function LogoutPage() {
         console.error('Logout error:', err);
       } finally {
         logout();
-        navigate('/login');
+        navigate('/sessions/new');
       }
     })();
   }, [navigate, logout]);

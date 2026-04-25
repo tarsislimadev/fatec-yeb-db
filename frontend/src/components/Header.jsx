@@ -30,7 +30,7 @@ export function Header({ items = [] } = { items: [] }) {
                 </button>
               </div>
             ) : (
-              <a href="/login" className="text-blue-600 hover:underline">
+              <a href="/sessions/new" className="text-blue-600 hover:underline">
                 Login
               </a>
             )}
