@@ -6,18 +6,18 @@ export function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['Dashboard', '/dashboard']]} />
 
-      <main>
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <a className="text-blue-600 hover:text-blue-800" href={'/phones'}>
-            View Phone List
-          </a><br />
-          <a className="text-blue-600 hover:text-blue-800" href={'/people'}>
-            View People List
-          </a><br />
-          <a className="text-blue-600 hover:text-blue-800" href={'/businesses'}>
-            View Business List
-          </a>
-        </div>
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <a className="text-blue-600 hover:text-blue-800" href={'/phones'}>
+          View Phone List
+        </a>
+        <br />
+        <a className="text-blue-600 hover:text-blue-800" href={'/people'}>
+          View People List
+        </a>
+        <br />
+        <a className="text-blue-600 hover:text-blue-800" href={'/businesses'}>
+          View Business List
+        </a>
       </main>
     </div>
   );
