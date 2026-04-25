@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function listPeople(req, res) {
   try {
     const result = await db.query('SELECT id, full_name, role_title, email FROM people WHERE deleted_at IS NULL');
-    return successResponse(res, 'People retrieved successfully', { people: result.rows });
+    return successResponse(res, { people: result.rows });
   } catch (error) {
     console.error('Error listing People:', error);
     return sendError(res, 'INTERNAL_SERVER_ERROR', 'An error occurred while retrieving People');
@@ -36,7 +36,7 @@ export async function createPerson(req, res) {
       [personId, full_name, role_title, email]
     );
 
-    return successResponse(res, 'Person created successfully', { person: result.rows[0] }, 201);
+    return successResponse(res, { person: result.rows[0] }, 201);
   } catch (error) {
     console.error('Error creating Person:', error);
     return sendError(res, 'INTERNAL_SERVER_ERROR', 'An error occurred while creating the Person');
@@ -56,7 +56,7 @@ export async function getPerson(req, res) {
       return sendError(res, 'NOT_FOUND', 'Person not found', {}, 404);
     }
 
-    return successResponse(res, 'Person retrieved successfully', { person: result.rows[0] });
+    return successResponse(res, { person: result.rows[0] });
   } catch (error) {
     console.error('Error retrieving Person:', error);
     return sendError(res, 'INTERNAL_SERVER_ERROR', 'An error occurred while retrieving the Person');
@@ -110,7 +110,7 @@ export async function updatePerson(req, res) {
     const query = `UPDATE people SET ${fields.join(', ')} WHERE id = $${idx} AND deleted_at IS NULL RETURNING id, full_name, role_title, email`;
     const result = await db.query(query, values);
 
-    return successResponse(res, 'Person updated successfully', { person: result.rows[0] });
+    return successResponse(res, { person: result.rows[0] });
   } catch (error) {
     console.error('Error updating Person:', error);
     return sendError(res, 'INTERNAL_SERVER_ERROR', 'An error occurred while updating the Person');
@@ -131,7 +131,7 @@ export async function deletePerson(req, res) {
     // Soft delete by setting deleted_at
     await db.query('UPDATE people SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1', [id]);
 
-    return successResponse(res, 'Person deleted successfully');
+    return successResponse(res, {});
   } catch (error) {
     console.error('Error deleting Person:', error);
     return sendError(res, 'INTERNAL_SERVER_ERROR', 'An error occurred while deleting the Person');
