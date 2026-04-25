@@ -11,6 +11,7 @@ export const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   min: parseInt(process.env.DATABASE_POOL_MIN || 2),
   max: parseInt(process.env.DATABASE_POOL_MAX || 10),
+  log: process.env.NODE_ENV === 'development',
 });
 
 db.on('error', (err) => {
