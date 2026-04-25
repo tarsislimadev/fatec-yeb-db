@@ -6,17 +6,39 @@ async function seed() {
   try {
     console.log('Starting database seeding...');
 
-    // Create test user
-    const userId = uuidv4();
-    const hashedPassword = await bcrypt.hash(process.env.TEST_USER_PASSWORD, 10);
+    const people = [
+      {
+        name: 'admin',
+        email: process.env.ADMIN_EMAIL || 'admin@example.com',
+        password: process.env.ADMIN_PASSWORD || 'Admin123!',
+      },
+      {
+        name: 'Alice Johnson',
+        email: process.env.TEST_USER_EMAIL || 'test@example.com',
+        password: process.env.TEST_USER_PASSWORD || 'Password123!',
+      },
+      {
+        name: 'Bob Smith',
+        email: 'bob.smith@example.com',
+        password: 'Password456!',
+      }
+    ];
 
-    await db.query(
-      `INSERT INTO app_users (id, email, display_name, password_hash, status, created_at, updated_at)
+    let userId = null;
+
+    // Create test users
+    for (const person of people) {
+      userId = uuidv4();
+      const hashedPassword = await bcrypt.hash(person.password, 10);
+
+      await db.query(
+        `INSERT INTO app_users (id, email, display_name, password_hash, status, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, NOW(), NOW())`,
-      [userId, process.env.TEST_USER_EMAIL, 'Test User', hashedPassword, 'active']
-    );
+        [userId, person.email, person.name, hashedPassword, 'active']
+      );
 
-    console.log(`✅ Created test user (${process.env.TEST_USER_EMAIL} / ${process.env.TEST_USER_PASSWORD})`);
+      console.log(`✅ Created test user (${person.email} / ${person.password})`);
+    }
 
     // Create test phones
     const phones = [
