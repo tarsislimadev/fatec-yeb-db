@@ -4,7 +4,7 @@ Mermaid source for [dataflow-overall-architecture.svg](dataflow-overall-architec
 
 ```mermaid
 flowchart LR
-  frontend["React Frontend\n(Vite)\nPort 5173"]
+  frontend["React Frontend\nVite\nPort 5173"]
   api["Express.js API Server\nPort 3000"]
   middleware["Middleware\nAuth, CORS, Error Handling"]
   postgres["PostgreSQL Database\nPort 5432"]
