@@ -75,7 +75,7 @@ async function runLoginTest(browser) {
   const baseUrl = globalThis.__E2E_BASE_URL__;
   const page = await createPage(browser);
 
-  await page.goto(`${baseUrl}/login`, { waitUntil: 'networkidle2' });
+  await page.goto(`${baseUrl}/sessions/new`, { waitUntil: 'networkidle2' });
   await page.waitForSelector('[data-testid="login-form"]');
   await page.waitForSelector('[data-testid="login-email"]');
   await page.waitForSelector('[data-testid="login-password"]');
@@ -86,8 +86,8 @@ async function runLoginTest(browser) {
     throw new Error('Login subtitle text was not rendered as expected');
   }
 
-  await page.click('a[href="/signup"]');
-  await page.waitForFunction(() => window.location.pathname === '/signup');
+  await page.click('a[href="/users/new"]');
+  await page.waitForFunction(() => window.location.pathname === '/users/new');
 
   await page.close();
 }
@@ -96,7 +96,7 @@ async function runSignupTest(browser) {
   const baseUrl = globalThis.__E2E_BASE_URL__;
   const page = await createPage(browser);
 
-  await page.goto(`${baseUrl}/signup`, { waitUntil: 'networkidle2' });
+  await page.goto(`${baseUrl}/users/new`, { waitUntil: 'networkidle2' });
   await page.waitForSelector('[data-testid="signup-form"]');
   await page.waitForSelector('[data-testid="signup-display-name"]');
   await page.waitForSelector('[data-testid="signup-email"]');
@@ -109,8 +109,8 @@ async function runSignupTest(browser) {
     throw new Error('Signup password hint was not rendered as expected');
   }
 
-  await page.click('a[href="/login"]');
-  await page.waitForFunction(() => window.location.pathname === '/login');
+  await page.click('a[href="/sessions/new"]');
+  await page.waitForFunction(() => window.location.pathname === '/sessions/new');
 
   await page.close();
 }
