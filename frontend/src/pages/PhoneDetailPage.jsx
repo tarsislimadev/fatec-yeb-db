@@ -78,7 +78,7 @@ export function PhoneDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header items={[['Yeb', '/'], ['Phones', '/phones'], [phone.e164_number]]} />
+      <Header items={[['Yeb', '/'], ['Phones', '/phones'], [phone.e164_number, `/phones/${phone.id}`]]} />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
