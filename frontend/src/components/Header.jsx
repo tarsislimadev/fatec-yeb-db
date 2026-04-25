@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuthStore } from '../store';
 
-export function Header({ items }) {
+export function Header({ items = [] } = { items: [] }) {
   const auth = {
     isAuthenticated: useAuthStore((state) => state.isAuthenticated),
     user: useAuthStore((state) => state.user),
@@ -17,7 +17,7 @@ export function Header({ items }) {
               <a href={item[1] || '#'} className="text-blue-600 hover:underline">
                 {item[0]}
               </a>
-            )).reduce((prev, curr) => [prev, ' / ', curr])}
+            )).reduce((prev, curr) => [...prev, ' / ', curr], [''])}
           </div>
           <div>
             {auth.isAuthenticated ? (
