@@ -100,6 +100,35 @@ export async function deletePhone(phoneId) {
   return await api.delete(`/phones/${phoneId}`);
 }
 
+// ============ PERSON ENDPOINTS ============
+
+export async function getPeople(page = 1, pageSize = 20, filters = {}) {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    ...filters,
+  });
+  const response = await api.get(`/people?${params}`);
+  return {
+    people: response.data.data,
+    meta: response.data.meta,
+  };
+}
+
+export async function getPersonDetail(personId) {
+  const response = await api.get(`/people/${personId}`);
+  return response.data.data;
+}
+
+export async function updatePerson(personId, updates) {
+  const response = await api.patch(`/people/${personId}`, updates);
+  return response.data.data;
+}
+
+export async function deletePerson(personId) {
+  return await api.delete(`/people/${personId}`);
+}
+
 // ============ OWNER ENDPOINTS ============
 
 export async function addPhoneOwner(phoneId, ownerData) {
@@ -114,4 +143,62 @@ export async function removePhoneOwner(phoneId, ownerRelationId) {
 export async function updatePhoneOwner(phoneId, ownerRelationId, updates) {
   const response = await api.patch(`/phones/${phoneId}/owners/${ownerRelationId}`, updates);
   return response.data.data;
+}
+
+// ============ BUSINESS ENDPOINTS ============
+
+export async function getBusinesses(page = 1, pageSize = 20, filters = {}) {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    ...filters,
+  });
+  const response = await api.get(`/businesses?${params}`);
+  return {
+    businesses: response.data.data,
+    meta: response.data.meta,
+  };
+}
+
+export async function getBusinessDetail(businessId) {
+  const response = await api.get(`/businesses/${businessId}`);
+  return response.data.data;
+}
+
+export async function updateBusiness(businessId, updates) {
+  const response = await api.patch(`/businesses/${businessId}`, updates);
+  return response.data.data;
+}
+
+export async function deleteBusiness(businessId) {
+  return await api.delete(`/businesses/${businessId}`);
+}
+
+// ============ DEPARTMENT ENDPOINTS ============
+
+export async function getDepartments(page = 1, pageSize = 20, filters = {}) {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    ...filters,
+  });
+  const response = await api.get(`/departments?${params}`);
+  return {
+    departments: response.data.data,
+    meta: response.data.meta,
+  };
+}
+
+export async function getDepartmentDetail(departmentId) {
+  const response = await api.get(`/departments/${departmentId}`);
+  return response.data.data;
+}
+
+export async function updateDepartment(departmentId, updates) {
+  const response = await api.patch(`/departments/${departmentId}`, updates);
+  return response.data.data;
+}
+
+export async function deleteDepartment(departmentId) {
+  return await api.delete(`/departments/${departmentId}`);
 }
