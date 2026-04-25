@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store';
 import { signup } from '../services/api';
 import { Input, Button, Card, Alert } from '../components/common';
+import { Header } from '../components/Header';
 
 export function SignupPage() {
   const navigate = useNavigate();
@@ -59,8 +60,9 @@ export function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-gray-50">
+      <Header items={[['Yeb', '/'], ['Signup', '/signup']]} />
+      <Card className="w-full max-w-md mx-auto mt-10 p-6">
         <h1 className="text-3xl font-bold text-center mb-2">Phone List</h1>
         <p className="text-gray-600 text-center mb-6">Create a new account</p>
 

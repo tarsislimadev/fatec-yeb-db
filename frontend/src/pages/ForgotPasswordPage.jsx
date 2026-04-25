@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { forgotPassword } from '../services/api';
 import { Input, Button, Card, Alert } from '../components/common';
+import { Header } from '../components/Header';
 
 export function ForgotPasswordPage() {
   const navigate = useNavigate();
@@ -32,49 +33,52 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-2">Reset Password</h1>
-        <p className="text-gray-600 text-center mb-6">Enter your email to receive a password reset link</p>
+    <div className="min-h-screen bg-gray-50">
+      <Header items={[['Yeb', '/'], ['Forgot Password', '/forgot-password']]} />
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <h1 className="text-3xl font-bold text-center mb-2">Reset Password</h1>
+          <p className="text-gray-600 text-center mb-6">Enter your email to receive a password reset link</p>
 
-        {error && <Alert type="error" message={error} onClose={() => setError('')} />}
-        {success && (
-          <Alert
-            type="success"
-            message="Password reset email sent! Check your inbox."
-            onClose={() => setSuccess(false)}
-          />
-        )}
-
-        {!success ? (
-          <form onSubmit={handleSubmit}>
-            <Input
-              label="Email"
-              type="email"
-              value={email}
-              onChange={setEmail}
-              placeholder="you@example.com"
+          {error && <Alert type="error" message={error} onClose={() => setError('')} />}
+          {success && (
+            <Alert
+              type="success"
+              message="Password reset email sent! Check your inbox."
+              onClose={() => setSuccess(false)}
             />
+          )}
 
-            <Button disabled={loading} className="w-full mb-4">
-              {loading ? 'Sending...' : 'Send Reset Email'}
+          {!success ? (
+            <form onSubmit={handleSubmit}>
+              <Input
+                label="Email"
+                type="email"
+                value={email}
+                onChange={setEmail}
+                placeholder="you@example.com"
+              />
+
+              <Button disabled={loading} className="w-full mb-4">
+                {loading ? 'Sending...' : 'Send Reset Email'}
+              </Button>
+            </form>
+          ) : (
+            <Button onClick={() => navigate('/login')} className="w-full">
+              Back to Login
             </Button>
-          </form>
-        ) : (
-          <Button onClick={() => navigate('/login')} className="w-full">
-            Back to Login
-          </Button>
-        )}
+          )}
 
-        <div className="border-t pt-4 text-center text-sm">
-          <p className="text-gray-600">
-            Remember your password?{' '}
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </Card>
+          <div className="border-t pt-4 text-center text-sm">
+            <p className="text-gray-600">
+              Remember your password?{' '}
+              <Link to="/login" className="text-blue-600 hover:underline font-medium">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }
