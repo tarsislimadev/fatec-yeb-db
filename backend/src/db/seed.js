@@ -8,15 +8,15 @@ async function seed() {
 
     // Create test user
     const userId = uuidv4();
-    const hashedPassword = await bcrypt.hash('Password123!', 10);
+    const hashedPassword = await bcrypt.hash(process.env.TEST_USER_PASSWORD, 10);
 
     await db.query(
       `INSERT INTO app_users (id, email, display_name, password_hash, status, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, NOW(), NOW())`,
-      [userId, 'test@example.com', 'Test User', hashedPassword, 'active']
+      [userId, process.env.TEST_USER_EMAIL, 'Test User', hashedPassword, 'active']
     );
 
-    console.log('✅ Created test user (test@example.com / Password123!)');
+    console.log(`✅ Created test user (${process.env.TEST_USER_EMAIL} / ${process.env.TEST_USER_PASSWORD})`);
 
     // Create test phones
     const phones = [
@@ -67,9 +67,9 @@ async function seed() {
       const consents = ['marketing', 'transactional'];
       for (const consent of consents) {
         await db.query(
-          `INSERT INTO phone_consents (id, phone_id, consent_type, status, created_at)
-           VALUES ($1, $2, $3, $4, NOW())`,
-          [uuidv4(), phoneId, consent, 'unknown']
+          `INSERT INTO phone_consents (id, phone_id, consent_type, status, created_by, created_at)
+           VALUES ($1, $2, $3, $4, $5, NOW())`,
+          [uuidv4(), phoneId, consent, 'unknown', userId]
         );
       }
 

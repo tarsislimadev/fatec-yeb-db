@@ -37,6 +37,8 @@ services:
       JWT_SECRET: your-secret-key-change-in-production-min-32-chars
       FRONTEND_URL: http://localhost:3000
       PORT: 3000
+      TEST_USER_EMAIL: test@example.com
+      TEST_USER_PASSWORD: Password123!
     ports:
       - "3000:3000"
     depends_on:
