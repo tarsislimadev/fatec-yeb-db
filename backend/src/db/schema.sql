@@ -5,6 +5,65 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- ============ AUTHENTICATION TABLES ============
+
+-- app_users
+CREATE TABLE IF NOT EXISTS app_users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255),
+  display_name VARCHAR(255),
+  status VARCHAR(50) DEFAULT 'active' CHECK (status IN ('active', 'locked', 'invited')),
+  failed_login_attempts INT DEFAULT 0,
+  locked_until TIMESTAMP WITH TIME ZONE,
+  last_login_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_app_users_email ON app_users(email);
+CREATE INDEX IF NOT EXISTS idx_app_users_status ON app_users(status);
+
+-- auth_identities
+CREATE TABLE IF NOT EXISTS auth_identities (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+  provider VARCHAR(50) NOT NULL CHECK (provider IN ('local', 'google', 'microsoft')),
+  provider_subject VARCHAR(255) NOT NULL,
+  email_at_provider VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_identities_provider_subject ON auth_identities(provider, provider_subject);
+CREATE INDEX IF NOT EXISTS idx_auth_identities_user_id ON auth_identities(user_id);
+
+-- password_reset_tokens
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+  token_hash VARCHAR(255) NOT NULL UNIQUE,
+  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  used_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_expires_at ON password_reset_tokens(expires_at);
+
 -- ============ CORE TABLES ============
 
 -- phones - canonical phone registry
@@ -82,65 +141,6 @@ CREATE TABLE IF NOT EXISTS departments (
 CREATE INDEX IF NOT EXISTS idx_departments_business_id ON departments(business_id);
 CREATE INDEX IF NOT EXISTS idx_departments_name ON departments(name);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_departments_business_name ON departments(business_id, name);
-
--- ============ AUTHENTICATION TABLES ============
-
--- app_users
-CREATE TABLE IF NOT EXISTS app_users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash VARCHAR(255),
-  display_name VARCHAR(255),
-  status VARCHAR(50) DEFAULT 'active' CHECK (status IN ('active', 'locked', 'invited')),
-  failed_login_attempts INT DEFAULT 0,
-  locked_until TIMESTAMP WITH TIME ZONE,
-  last_login_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id),
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-  deleted_by UUID REFERENCES app_users(id)
-);
-
-CREATE UNIQUE INDEX IF NOT EXISTS idx_app_users_email ON app_users(email);
-CREATE INDEX IF NOT EXISTS idx_app_users_status ON app_users(status);
-
--- auth_identities
-CREATE TABLE IF NOT EXISTS auth_identities (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
-  provider VARCHAR(50) NOT NULL CHECK (provider IN ('local', 'google', 'microsoft')),
-  provider_subject VARCHAR(255) NOT NULL,
-  email_at_provider VARCHAR(255),
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id),
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-  deleted_by UUID REFERENCES app_users(id)
-);
-
-CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_identities_provider_subject ON auth_identities(provider, provider_subject);
-CREATE INDEX IF NOT EXISTS idx_auth_identities_user_id ON auth_identities(user_id);
-
--- password_reset_tokens
-CREATE TABLE IF NOT EXISTS password_reset_tokens (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
-  token_hash VARCHAR(255) NOT NULL UNIQUE,
-  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  used_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id),
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-  deleted_by UUID REFERENCES app_users(id)
-);
-
-CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
-CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_expires_at ON password_reset_tokens(expires_at);
 
 -- ============ RELATION TABLES ============
 
