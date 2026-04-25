@@ -23,6 +23,6 @@ flowchart LR
   controllers -->|SQL Query| postgres
   postgres -->|Result Set| api
   api -->|JSON Response| frontend
-  api -.->|Cache (Optional)| redis
+  api -.-> redis
   controllers --- tables
 ```
