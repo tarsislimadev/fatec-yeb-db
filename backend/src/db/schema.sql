@@ -20,8 +20,11 @@ CREATE TABLE IF NOT EXISTS phones (
   verified_at TIMESTAMP WITH TIME ZONE,
   last_seen_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_phones_e164_number ON phones(e164_number);
@@ -36,8 +39,11 @@ CREATE TABLE IF NOT EXISTS people (
   role_title VARCHAR(255),
   email VARCHAR(255),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_people_email ON people(email);
@@ -50,8 +56,11 @@ CREATE TABLE IF NOT EXISTS businesses (
   legal_name VARCHAR(255) NOT NULL,
   trade_name VARCHAR(255),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_businesses_cnpj ON businesses(cnpj);
@@ -63,8 +72,11 @@ CREATE TABLE IF NOT EXISTS departments (
   business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_departments_business_id ON departments(business_id);
@@ -84,8 +96,11 @@ CREATE TABLE IF NOT EXISTS app_users (
   locked_until TIMESTAMP WITH TIME ZONE,
   last_login_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_app_users_email ON app_users(email);
@@ -99,7 +114,11 @@ CREATE TABLE IF NOT EXISTS auth_identities (
   provider_subject VARCHAR(255) NOT NULL,
   email_at_provider VARCHAR(255),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_identities_provider_subject ON auth_identities(provider, provider_subject);
@@ -113,7 +132,11 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
   used_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
@@ -132,8 +155,11 @@ CREATE TABLE IF NOT EXISTS phone_owners (
   start_date DATE,
   end_date DATE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_phone_owners_phone_id ON phone_owners(phone_id);
@@ -147,8 +173,11 @@ CREATE TABLE IF NOT EXISTS phone_channels (
   channel_type VARCHAR(50) NOT NULL CHECK (channel_type IN ('call', 'whatsapp', 'telegram', 'sms')),
   is_enabled BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_phone_channels_phone_id ON phone_channels(phone_id);
@@ -163,7 +192,11 @@ CREATE TABLE IF NOT EXISTS phone_sources (
   collector VARCHAR(50) CHECK (collector IN ('manual', 'import', 'crawler', 'enrichment')),
   collected_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_phone_sources_phone_id ON phone_sources(phone_id);
@@ -177,8 +210,11 @@ CREATE TABLE IF NOT EXISTS phone_consents (
   status VARCHAR(50) DEFAULT 'unknown' CHECK (status IN ('granted', 'revoked', 'unknown')),
   recorded_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_phone_consents_phone_id ON phone_consents(phone_id);
@@ -193,7 +229,11 @@ CREATE TABLE IF NOT EXISTS contact_attempts (
   outcome VARCHAR(50) CHECK (outcome IN ('answered', 'no_answer', 'wrong_number', 'opted_out', 'failed')),
   notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_contact_attempts_phone_id ON contact_attempts(phone_id);
