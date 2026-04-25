@@ -6,6 +6,7 @@ import { migrate } from './db/migrate.js';
 import { errorHandlingMiddleware, notFoundHandler } from './middleware/index.js';
 import authRoutes from './routes/auth.js';
 import phoneRoutes from './routes/phones.js';
+import peopleRoutes from './routes/people.js';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.get('/health', (req, res) => {
 // API v1 routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/phones', phoneRoutes);
+app.use('/api/v1/people', peopleRoutes);
 
 // ============ ERROR HANDLING ============
 
