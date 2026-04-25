@@ -14,10 +14,6 @@ export function DashboardPage() {
         <a className="text-blue-600 hover:text-blue-800" href={'/people'}>
           View People List
         </a>
-        <br />
-        <a className="text-blue-600 hover:text-blue-800" href={'/businesses'}>
-          View Business List
-        </a>
       </main>
     </div>
   );
