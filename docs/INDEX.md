@@ -54,6 +54,19 @@
 | [phase-summary-roadmap.md](phase-summary-roadmap.md) | Full roadmap (Phases 1-5), tech stack, getting started | All |
 | [INDEX.md](INDEX.md) | This file - document map & navigation | All |
 
+### Architecture Diagrams
+
+| Mermaid Source | SVG Output |
+|----------------|-----------|
+| [dataflow-overall-architecture.md](dataflow-overall-architecture.md) | [dataflow-overall-architecture.svg](dataflow-overall-architecture.svg) |
+| [dataflow-authentication.md](dataflow-authentication.md) | [dataflow-authentication.svg](dataflow-authentication.svg) |
+| [dataflow-phone-management.md](dataflow-phone-management.md) | [dataflow-phone-management.svg](dataflow-phone-management.svg) |
+| [dataflow-request-response.md](dataflow-request-response.md) | [dataflow-request-response.svg](dataflow-request-response.svg) |
+| [dataflow-database-schema.md](dataflow-database-schema.md) | [dataflow-database-schema.svg](dataflow-database-schema.svg) |
+| [endpoints-backend-map.md](endpoints-backend-map.md) | [endpoints-backend-map.svg](endpoints-backend-map.svg) |
+| [pages-frontend-map.md](pages-frontend-map.md) | [pages-frontend-map.svg](pages-frontend-map.svg) |
+| [tables-database-map.md](tables-database-map.md) | [tables-database-map.svg](tables-database-map.svg) |
+
 ---
 
 ## 🗂️ File Organization
