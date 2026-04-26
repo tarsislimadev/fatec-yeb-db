@@ -8,28 +8,26 @@ import { Header } from '../components/Header';
 export function PhonesPage() {
   const navigate = useNavigate();
   const { phones, setPhones, isLoading, setLoading, error, setError } = usePhoneStore();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('');
+  const [filter, setFilter] = useState({ search: '', status: '' });
+  const [pagination, setPagination] = useState({ page: 1, per_page: 10, total_pages: 1 });
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({ e164_number: '', raw_number: '', type: 'mobile' });
   const [formError, setFormError] = useState('');
 
   useEffect(() => {
     fetchPhones();
-  }, [currentPage, search, status]);
+  }, [pagination.page, filter]);
 
   async function fetchPhones() {
     setLoading(true);
     try {
       const filters = {};
-      if (search) filters.search = search;
-      if (status) filters.status = status;
+      if (filter.search) filters.search = filter.search;
+      if (filter.status) filters.status = filter.status;
 
-      const data = await getPhones(currentPage, 20, filters);
+      const data = await getPhones(pagination.page, pagination.per_page, filters);
       setPhones(data.phones);
-      setTotalPages(data.meta.total_pages);
+      setPagination({ ...pagination, total_pages: data.meta.total_pages });
       setError(null);
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Failed to load phones');
@@ -74,18 +72,17 @@ export function PhonesPage() {
             <input
               type="text"
               placeholder="Search phone numbers..."
-              value={search}
+              value={filter.search}
               onChange={(e) => {
-                setSearch(e.target.value);
-                setCurrentPage(1);
+                setFilter({ ...filter, search: e.target.value });
               }}
               className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
             />
             <select
-              value={status}
+              value={filter.status}
               onChange={(e) => {
-                setStatus(e.target.value);
-                setCurrentPage(1);
+                setFilter({ ...filter, status: e.target.value });
+                setPagination({ ...pagination, page: 1 });
               }}
               className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
             >
@@ -173,21 +170,21 @@ export function PhonesPage() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {pagination.total_pages > 1 && (
               <div className="flex justify-center gap-2 mt-6">
                 <Button
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
+                  onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+                  disabled={pagination.page === 1}
                   variant="secondary"
                 >
                   Previous
                 </Button>
                 <span className="px-4 py-2">
-                  Page {currentPage} of {totalPages}
+                  Page {pagination.page} of {pagination.total_pages}
                 </span>
                 <Button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
+                  onClick={() => setPagination({ ...pagination, page: Math.min(pagination.total_pages, pagination.page + 1) })}
+                  disabled={pagination.page === pagination.total_pages}
                   variant="secondary"
                 >
                   Next
