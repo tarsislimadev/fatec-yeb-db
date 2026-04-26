@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPhoneDetail, updatePhone, deletePhone, addPhoneOwner, removePhoneOwner } from '../services/api';
+import { getPhoneDetail, updatePhone, deletePhone, addPhoneOwner, removePhoneOwner, getPeople } from '../services/api';
 import { Button, Card, Loading, Alert, Input } from '../components/common';
 import { Header } from '../components/Header'
 import { getQueryParam } from '../services/window';
@@ -9,6 +9,7 @@ export function PhoneDetailPage() {
   const id = getQueryParam('id');
   const navigate = useNavigate();
   const [phone, setPhone] = useState(null);
+  const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('details');
@@ -19,6 +20,19 @@ export function PhoneDetailPage() {
     relation_label: '',
     confidence_score: 100,
   });
+
+  useEffect(() => {
+    fetchPeople();
+  }, []);
+
+  const fetchPeople = async () => {
+    try {
+      const { data } = await getPeople(1, 10000); // Fetch all people for owner selection
+      setPeople(data.people);
+    } catch (err) {
+      setError(err.response?.data?.error?.message || 'Failed to load people');
+    }
+  };
 
   useEffect(() => {
     fetchPhone();
@@ -91,8 +105,8 @@ export function PhoneDetailPage() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 font-medium capitalize ${activeTab === tab
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-blue-600 text-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
                 }`}
             >
               {tab}
@@ -143,29 +157,32 @@ export function PhoneDetailPage() {
         {/* Owners Tab */}
         {activeTab === 'owners' && (
           <div>
-            <Button onClick={() => setShowOwnerForm(!showOwnerForm)} className="mb-4">
-              {showOwnerForm ? 'Cancel' : 'Add Owner'}
-            </Button>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Owners</h2>
+              <Button onClick={() => setShowOwnerForm(!showOwnerForm)} className="mb-4">
+                {showOwnerForm ? 'Cancel' : 'Add New Owner'}
+              </Button>
+            </div>
 
             {showOwnerForm && (
               <Card className="mb-4">
                 <form onSubmit={handleAddOwner}>
-                  <select
-                    value={newOwner.owner_type}
-                    onChange={(e) => setNewOwner({ ...newOwner, owner_type: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded mb-3"
-                  >
-                    <option value="person">Person</option>
-                    <option value="business">Business</option>
-                    <option value="department">Department</option>
-                  </select>
-
-                  <Input
-                    label="Owner ID (UUID)"
-                    value={newOwner.owner_id}
-                    onChange={(val) => setNewOwner({ ...newOwner, owner_id: val })}
-                    placeholder="UUID of the owner"
-                  />
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium mb-1">Person</label>
+                    <select
+                      onChange={(e) => setNewOwner({ ...newOwner, owner_type: 'person', owner_id: e.target.value, })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded"
+                    >
+                      <option value="">Select a person</option>
+                      {(people || []).map((person) => (
+                        <option
+                          key={person.id}
+                          value={person.id}
+                          label={`${person.full_name || person.name || 'Unnamed'} (${person.id})`}
+                        />
+                      ))}
+                    </select>
+                  </div>
 
                   <Input
                     label="Relation Label"
@@ -191,8 +208,13 @@ export function PhoneDetailPage() {
                 {phone.owners.map((owner) => (
                   <Card key={owner.id} className="flex justify-between items-start">
                     <div>
-                      <p className="font-medium capitalize">{owner.owner_type}</p>
-                      <p className="text-sm text-gray-600">{owner.owner_id}</p>
+                      <p className="text-sm mt-1">
+                        <span className="font-medium">Type: </span>
+                        <span className="capitalize"></span>{owner.owner_type}
+                      </p>
+                      <p className="text-sm mt-1">
+                        <span className="font-medium">ID:</span> <a href={`/people/item?id=${owner.owner_id}`} target="_blank" rel="noopener noreferrer">{owner.owner_id}</a>
+                      </p>
                       {owner.relation_label && (
                         <p className="text-sm mt-1">
                           <span className="font-medium">Label:</span> {owner.relation_label}
