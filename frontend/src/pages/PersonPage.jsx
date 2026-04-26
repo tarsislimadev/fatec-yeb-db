@@ -11,7 +11,7 @@ export function PersonPage() {
 
   React.useEffect(() => {
     async function fetchPerson() {
-      const { data } = await getPersonDetail(id);
+      const data = await getPersonDetail(id);
       setPerson(data.person);
     }
     fetchPerson();
