@@ -4,4 +4,6 @@
 
 - https://portal.telnyx.com/#/home
 
-- 
+- https://developers.kommo.com/docs/voip
+
+- https://www.vonage.com/communications-apis/voice/
