@@ -28,7 +28,6 @@ export function PhonesPage() {
       if (status) filters.status = status;
 
       const data = await getPhones(currentPage, 20, filters);
-      alert(data != null ? 'Phones loaded successfully!' : 'No data received');
       setPhones(data.phones);
       setTotalPages(data.meta.total_pages);
       setError(null);

@@ -12,11 +12,9 @@ export function CreatePersonPage() {
   const createNewPerson = async (personData) => {
     try {
       await createPerson(personData);
-      alert(`Person created`);
       navigate(`/people`);
     } catch (error) {
       console.error('Error creating person:', error);
-      alert('Failed to create person. Please try again.');
     }
   };
 

@@ -64,7 +64,7 @@ export function Alert({ type = 'error', message, onClose }) {
         <p>{message}</p>
         {onClose && (
           <button onClick={onClose} className="font-bold">
-            ×
+            x
           </button>
         )}
       </div>
