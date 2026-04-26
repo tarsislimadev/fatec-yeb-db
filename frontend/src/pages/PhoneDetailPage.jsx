@@ -261,6 +261,17 @@ export function PhoneDetailPage() {
                   <Button
                     variant={channel.is_enabled ? 'secondary' : 'primary'}
                     className="text-sm px-3 py-1"
+                    onClick={async () => {
+                      try {
+                        await updatePhone(id, {
+                          channel_id: channel.id,
+                          is_enabled: !channel.is_enabled,
+                        });
+                        await fetchPhone();
+                      } catch (err) {
+                        setError(err.response?.data?.error?.message || 'Failed to update channel');
+                      }
+                    }}
                   >
                     {channel.is_enabled ? 'Disable' : 'Enable'}
                   </Button>

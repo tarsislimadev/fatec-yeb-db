@@ -177,11 +177,93 @@ export async function getPhone(req, res) {
   }
 }
 
+// === GET PHONE CHANNEL DETAIL ===
+export async function getPhoneChannel(req, res) {
+  try {
+    const { id } = req.params;
+
+    const channelResult = await db.query(
+      `SELECT id, phone_id, channel_type, is_enabled FROM phone_channels WHERE id = $1`,
+      [id]
+    );
+
+    if (channelResult.rows.length === 0) {
+      return sendError(res, 'NOT_FOUND', 'Phone channel not found', {}, 404);
+    }
+
+    return successResponse(res, channelResult.rows[0]);
+  } catch (err) {
+    console.error('Get phone channel error:', err);
+    return sendError(res, 'INTERNAL_ERROR', 'Failed to get phone channel', {}, 500);
+  }
+}
+
+export async function updatePhoneChannel(req, res) {
+  try {
+    const { id } = req.params;
+    const { is_enabled } = req.body;
+
+    if (is_enabled === undefined) {
+      return sendError(res, 'VALIDATION_ERROR', 'is_enabled field is required');
+    }
+
+    const channelResult = await db.query(
+      `UPDATE phone_channels SET is_enabled = $1 WHERE id = $2 RETURNING *`,
+      [is_enabled, id]
+    );
+
+    if (channelResult.rows.length === 0) {
+      return sendError(res, 'NOT_FOUND', 'Phone channel not found', {}, 404);
+    }
+
+    return successResponse(res, channelResult.rows[0]);
+  } catch (err) {
+    console.error('Update phone channel error:', err);
+    return sendError(res, 'INTERNAL_ERROR', 'Failed to update phone channel', {}, 500);
+  }
+}
+
+// === UPDATE PHONE CONSENT ===
+export async function updatePhoneConsent(req, res) {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['granted', 'denied', 'unknown'].includes(status)) {
+      return sendError(res, 'VALIDATION_ERROR', 'Invalid consent status');
+    }
+
+    const consentResult = await db.query(
+      `UPDATE phone_consents SET status = $1 WHERE id = $2 RETURNING *`,
+      [status, id]
+    );
+
+    if (consentResult.rows.length === 0) {
+      return sendError(res, 'NOT_FOUND', 'Phone consent not found', {}, 404);
+    }
+
+    return successResponse(res, consentResult.rows[0]);
+  } catch (err) {
+    console.error('Update phone consent error:', err);
+    return sendError(res, 'INTERNAL_ERROR', 'Failed to update phone consent', {}, 500);
+  }
+}
+
 // ============ UPDATE PHONE ============
 export async function updatePhone(req, res) {
   try {
     const { id } = req.params;
     const { type, status, is_primary } = req.body;
+
+    // Update channel if channel_id is provided
+    if (req.body.channel_id) {
+      return updatePhoneChannel(req, res);
+    }
+
+    // Update consent if consent_id is provided
+    if (req.body.consent_id) {
+      return updatePhoneConsent(req, res);
+    }
 
     // Check if phone exists
     const phoneResult = await db.query('SELECT id FROM phones WHERE id = $1', [id]);
