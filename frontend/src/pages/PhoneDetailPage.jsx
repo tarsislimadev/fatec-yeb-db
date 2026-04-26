@@ -245,6 +245,10 @@ export function PhoneDetailPage() {
         {/* Channels Tab */}
         {activeTab === 'channels' && (
           <div className="grid gap-3">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Channels</h2>
+            </div>
+
             {phone.channels && phone.channels.length > 0 ? (
               phone.channels.map((channel) => (
                 <Card key={channel.id} className="flex justify-between items-center">
@@ -273,6 +277,10 @@ export function PhoneDetailPage() {
         {/* Consents Tab */}
         {activeTab === 'consents' && (
           <div className="grid gap-3">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Consents</h2>
+            </div>
+
             {phone.consents && phone.consents.length > 0 ? (
               phone.consents.map((consent) => (
                 <Card key={consent.id} className="flex justify-between items-center">
