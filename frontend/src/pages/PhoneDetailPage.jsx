@@ -100,7 +100,7 @@ export function PhoneDetailPage() {
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b">
-          {['details', 'owners', 'channels', 'consents'].map((tab) => (
+          {['details', 'owners'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -241,84 +241,8 @@ export function PhoneDetailPage() {
             )}
           </div>
         )}
-
-        {/* Channels Tab */}
-        {activeTab === 'channels' && (
-          <div className="grid gap-3">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Channels</h2>
-            </div>
-
-            {phone.channels && phone.channels.length > 0 ? (
-              phone.channels.map((channel) => (
-                <Card key={channel.id} className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium capitalize">{channel.channel_type}</p>
-                    <p className="text-sm text-gray-600">
-                      Status: {channel.is_enabled ? 'Enabled' : 'Disabled'}
-                    </p>
-                  </div>
-                  <Button
-                    variant={channel.is_enabled ? 'secondary' : 'primary'}
-                    className="text-sm px-3 py-1"
-                    onClick={async () => {
-                      try {
-                        await updatePhone(id, {
-                          channel_id: channel.id,
-                          is_enabled: !channel.is_enabled,
-                        });
-                        await fetchPhone();
-                      } catch (err) {
-                        setError(err.response?.data?.error?.message || 'Failed to update channel');
-                      }
-                    }}
-                  >
-                    {channel.is_enabled ? 'Disable' : 'Enable'}
-                  </Button>
-                </Card>
-              ))
-            ) : (
-              <Card className="text-center py-8">
-                <p className="text-gray-500">No channels</p>
-              </Card>
-            )}
-          </div>
-        )}
-
-        {/* Consents Tab */}
-        {activeTab === 'consents' && (
-          <div className="grid gap-3">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Consents</h2>
-            </div>
-
-            {phone.consents && phone.consents.length > 0 ? (
-              phone.consents.map((consent) => (
-                <Card key={consent.id} className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium capitalize">{consent.consent_type}</p>
-                    <p className="text-sm text-gray-600">
-                      Status: {consent.status}
-                    </p>
-                  </div>
-                  <select
-                    value={consent.status}
-                    className="px-3 py-2 border border-gray-300 rounded text-sm"
-                  >
-                    <option value="granted">Granted</option>
-                    <option value="revoked">Revoked</option>
-                    <option value="unknown">Unknown</option>
-                  </select>
-                </Card>
-              ))
-            ) : (
-              <Card className="text-center py-8">
-                <p className="text-gray-500">No consents</p>
-              </Card>
-            )}
-          </div>
-        )}
       </main>
     </div>
   );
 }
+

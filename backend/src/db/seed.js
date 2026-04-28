@@ -75,28 +75,6 @@ async function seed() {
         [phoneId, phone.e164, phone.raw, phone.type, phone.countryCode, phone.nationalNumber, 'active']
       );
 
-      // Create default channels
-      const channels = ['sms']; // , 'whatsapp', 'telegram', 'call'
-      for (const channel of channels) {
-        const channelId = await db.query(
-          `INSERT INTO phone_channels (id, phone_id, channel_type, is_enabled, created_at)
-           VALUES ($1, $2, $3, $4, NOW()) returning id`,
-          [uuidv4(), phoneId, channel, true]
-        );
-
-        console.log(`✅ Created channel: ${channel} with ID ${channelId.rows[0].id} for phone: ${phone.e164} - ${phoneResult.rows[0].id}`);
-      }
-
-      // Create default consents
-      const consents = ['marketing', 'transactional'];
-      for (const consent of consents) {
-        await db.query(
-          `INSERT INTO phone_consents (id, phone_id, consent_type, status, created_by, created_at)
-           VALUES ($1, $2, $3, $4, $5, NOW())`,
-          [uuidv4(), phoneId, consent, 'unknown', userId]
-        );
-      }
-
       console.log(`✅ Created phone: ${phone.e164}`);
     }
 

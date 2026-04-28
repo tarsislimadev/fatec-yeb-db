@@ -166,23 +166,6 @@ CREATE INDEX IF NOT EXISTS idx_phone_owners_phone_id ON phone_owners(phone_id);
 CREATE INDEX IF NOT EXISTS idx_phone_owners_owner_type_id ON phone_owners(owner_type, owner_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_owners_composite ON phone_owners(phone_id, owner_type, owner_id) WHERE end_date IS NULL;
 
--- phone_channels
-CREATE TABLE IF NOT EXISTS phone_channels (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  phone_id UUID NOT NULL REFERENCES phones(id) ON DELETE CASCADE,
-  channel_type VARCHAR(50) NOT NULL CHECK (channel_type IN ('call', 'whatsapp', 'telegram', 'sms')),
-  is_enabled BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id),
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-  deleted_by UUID REFERENCES app_users(id)
-);
-
-CREATE INDEX IF NOT EXISTS idx_phone_channels_phone_id ON phone_channels(phone_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_channels_phone_type ON phone_channels(phone_id, channel_type);
-
 -- phone_sources
 CREATE TABLE IF NOT EXISTS phone_sources (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -201,24 +184,6 @@ CREATE TABLE IF NOT EXISTS phone_sources (
 
 CREATE INDEX IF NOT EXISTS idx_phone_sources_phone_id ON phone_sources(phone_id);
 CREATE INDEX IF NOT EXISTS idx_phone_sources_collector ON phone_sources(collector);
-
--- phone_consents
-CREATE TABLE IF NOT EXISTS phone_consents (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  phone_id UUID NOT NULL REFERENCES phones(id) ON DELETE CASCADE,
-  consent_type VARCHAR(50) NOT NULL CHECK (consent_type IN ('marketing', 'transactional')),
-  status VARCHAR(50) DEFAULT 'unknown' CHECK (status IN ('granted', 'revoked', 'unknown')),
-  recorded_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id),
-  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-  deleted_by UUID REFERENCES app_users(id)
-);
-
-CREATE INDEX IF NOT EXISTS idx_phone_consents_phone_id ON phone_consents(phone_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_consents_phone_type ON phone_consents(phone_id, consent_type);
 
 -- contact_attempts
 CREATE TABLE IF NOT EXISTS contact_attempts (
