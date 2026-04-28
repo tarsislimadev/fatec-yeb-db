@@ -105,8 +105,6 @@ describe('Phone List API - Integration Tests', () => {
       expect(response.status).toBe(201);
       expect(response.body.data).toHaveProperty('id');
       expect(response.body.data.e164_number).toBe('+5511999887766');
-      expect(response.body.data.channels).toBeInstanceOf(Array);
-      expect(response.body.data.consents).toBeInstanceOf(Array);
       testPhoneId = response.body.data.id;
     });
 

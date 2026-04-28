@@ -144,24 +144,24 @@ CREATE INDEX idx_password_reset_tokens_expires_at ON password_reset_tokens(expir
 
 ## Relation Tables
 
-### 8. phone_owners
-Links phones to people, businesses, or departments with relation metadata.
+### 9. phone_sources
+Provenance tracking for each phone.
 
 ```sql
-CREATE TABLE phone_owners (
+CREATE TABLE phone_sources (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   phone_id UUID NOT NULL REFERENCES phones(id) ON DELETE CASCADE,
-  owner_type VARCHAR(50) NOT NULL CHECK (owner_type IN ('person', 'business', 'department')),
-  owner_id UUID NOT NULL,
-  relation_label VARCHAR(100),
-  confidence_score SMALLINT DEFAULT 100 CHECK (confidence_score BETWEEN 0 AND 100),
-  start_date DATE,
-  end_date DATE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  source_name VARCHAR(255) NOT NULL,
+  source_url VARCHAR(1024),
+  collector VARCHAR(50) CHECK (collector IN ('manual', 'import', 'crawler', 'enrichment')),
+  collected_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes
+CREATE INDEX idx_phone_sources_phone_id ON phone_sources(phone_id);
+CREATE INDEX idx_phone_sources_collector ON phone_sources(collector);
+```
 CREATE INDEX idx_phone_owners_phone_id ON phone_owners(phone_id);
 CREATE INDEX idx_phone_owners_owner_type_id ON phone_owners(owner_type, owner_id);
 CREATE UNIQUE INDEX idx_phone_owners_composite 
@@ -207,24 +207,24 @@ CREATE INDEX idx_phone_sources_phone_id ON phone_sources(phone_id);
 CREATE INDEX idx_phone_sources_collector ON phone_sources(collector);
 ```
 
-### 11. phone_consents
-Consent and suppression state management.
+### 11. contact_attempts
+Interaction history and outcomes.
 
 ```sql
-CREATE TABLE phone_consents (
+CREATE TABLE contact_attempts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   phone_id UUID NOT NULL REFERENCES phones(id) ON DELETE CASCADE,
-  consent_type VARCHAR(50) NOT NULL CHECK (consent_type IN ('marketing', 'transactional')),
-  status VARCHAR(50) DEFAULT 'unknown' CHECK (status IN ('granted', 'revoked', 'unknown')),
-  recorded_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  channel_type VARCHAR(50) NOT NULL CHECK (channel_type IN ('call', 'whatsapp', 'telegram', 'sms')),
+  attempted_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  outcome VARCHAR(50) CHECK (outcome IN ('answered', 'no_answer', 'wrong_number', 'opted_out', 'failed')),
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes
-CREATE INDEX idx_phone_consents_phone_id ON phone_consents(phone_id);
-CREATE UNIQUE INDEX idx_phone_consents_phone_type 
-  ON phone_consents(phone_id, consent_type);
+CREATE INDEX idx_contact_attempts_phone_id ON contact_attempts(phone_id);
+CREATE INDEX idx_contact_attempts_attempted_at ON contact_attempts(phone_id, attempted_at DESC);
+CREATE INDEX idx_contact_attempts_outcome ON contact_attempts(outcome);
 ```
 
 ### 12. contact_attempts
@@ -261,8 +261,7 @@ All foreign key relationships use `ON DELETE CASCADE` to maintain referential in
 - `auth_identities(provider, provider_subject)` - prevents duplicate OAuth identities
 - `departments(business_id, name)` - prevents duplicate department names per business
 - `phone_owners(phone_id, owner_type, owner_id)` - prevents duplicate active relations
-- `phone_channels(phone_id, channel_type)` - prevents duplicate channels per phone
-- `phone_consents(phone_id, consent_type)` - prevents duplicate consent types per phone
+-- `phone_sources(phone_id, collector)` - tracks provenance per phone
 
 ### Timestamps
 - All tables include `created_at` and `updated_at` (except `password_reset_tokens` and `phone_sources` which don't need `updated_at`)
@@ -280,8 +279,6 @@ All enum-like fields use `CHECK` constraints to enforce valid values at the data
 - auth_identities(provider, provider_subject)
 - departments(business_id, name)
 - phone_owners(phone_id, owner_type, owner_id) - conditional
-- phone_channels(phone_id, channel_type)
-- phone_consents(phone_id, consent_type)
 - password_reset_tokens.token_hash
 
 **Standard Indexes:**
@@ -293,9 +290,7 @@ All enum-like fields use `CHECK` constraints to enforce valid values at the data
 - auth_identities(user_id)
 - password_reset_tokens(user_id, expires_at)
 - phone_owners(phone_id, owner_type+owner_id)
-- phone_channels(phone_id)
 - phone_sources(phone_id, collector)
-- phone_consents(phone_id)
 - contact_attempts(phone_id, attempted_at DESC, outcome)
 
 ## Notes for Phase 1 Implementation

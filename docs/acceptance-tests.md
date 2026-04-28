@@ -154,8 +154,8 @@
 #### 2.3 View Phone Details
 **Given:** User on phone list  
 **When:** User clicks on a phone  
-**Then:** Detailed view shows all phone fields, owners, channels, consents  
-**Acceptance:** Complete phone object rendered with relations
+**Then:** Detailed view shows all phone fields and owners  
+**Acceptance:** Complete phone object rendered with relations and sources
 
 **Given:** Phone detail page open  
 **When:** Phone has 3 owners  
@@ -163,9 +163,9 @@
 **Acceptance:** Relations load correctly
 
 **Given:** Phone detail page  
-**When:** Phone has channel types: call, whatsapp, telegram  
-**Then:** All enabled channels shown with toggle controls  
-**Acceptance:** Channels array populated
+**When:** Phone has sources recorded  
+**Then:** Sources display chronologically with collector info  
+**Acceptance:** Sources array populated
 
 ---
 
@@ -287,43 +287,7 @@
 
 ---
 
-### 6. UI/UX Standards
 
-#### 6.1 Navigation & Layout
-**Given:** Logged-in user on any page  
-**When:** Page loads  
-**Then:** Header shows user name, signout button, navigation  
-**Acceptance:** Consistent layout across all pages
-
----
-
-#### 6.2 Form Validation
-**Given:** Any form (signup, phone create, owner add)  
-**When:** User submits invalid data  
-**Then:** Client-side validation shows error inline  
-**Acceptance:** Prevents unnecessary API calls
-
-**Given:** Form with client-side error  
-**When:** User corrects field  
-**Then:** Error clears  
-**Acceptance:** Real-time feedback
-
----
-
-#### 6.3 Loading & Error States
-**Given:** Phone list loading  
-**When:** API request in progress  
-**Then:** Loading spinner shown  
-**Acceptance:** User knows action is in progress
-
-**Given:** API returns 500 error  
-**When:** Page loads  
-**Then:** User sees "Something went wrong" message with request_id  
-**Acceptance:** Error gracefully handled, request_id for support
-
----
-
-#### 6.4 Responsive Design
 **Given:** Phone list on mobile (375px width)  
 **When:** Page loads  
 **Then:** Layout adapts, no horizontal scroll  

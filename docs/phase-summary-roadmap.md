@@ -33,7 +33,7 @@
 
 **Weekly Breakdown:**
 - **Week 1:** Auth infrastructure (signup, signin, password recovery, OAuth)
-- **Week 2:** Phone CRUD + Relations (phones, owners, channels, consents, sources)
+- **Week 2:** Phone CRUD + Relations (phones, owners, sources)
 - **Week 3:** Frontend + Polish (pages, UI, testing, deployment)
 
 **Key Deliverables:**
@@ -235,7 +235,7 @@ SENDGRID_API_KEY=xxx
 - Phone CRUD endpoints
 - Search & filtering
 - Owner relations
-- Channels & consents
+- Sources & metadata
 
 ### Step 6: Frontend & Deploy (Days 12-16)
 - Login/signup pages

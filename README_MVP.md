@@ -103,7 +103,7 @@ npm run dev
 #### Phone Management (12 endpoints)
 - `GET /phones` - List with pagination, search, filtering
 - `POST /phones` - Create with E.164 validation
-- `GET /phones/:id` - Get with owners, channels, consents
+- `GET /phones/:id` - Get with owners and sources
 - `PATCH /phones/:id` - Update type/status
 - `DELETE /phones/:id` - Soft delete
 - `POST /phones/:id/owners` - Add person/business/department owner
@@ -116,7 +116,7 @@ npm run dev
 - **SignupPage** - Account creation with password strength requirements
 - **ForgotPasswordPage** - Request password reset email
 - **PhonesPage** - List phones with pagination, search, filters; create new phone
-- **PhoneDetailPage** - View/edit phone details; manage owners, channels, consents
+- **PhoneDetailPage** - View/edit phone details; manage owners and sources
 - **LogoutPage** - Sign out and redirect to login
 
 ## Database Schema
@@ -130,8 +130,7 @@ phones (primary entity)
 ├── type - mobile/landline/whatsapp
 ├── status - active/inactive
 ├── country_code, national_number - Parsed from libphonenumber
-├── channels[] - SMS, WhatsApp, Telegram, etc (auto-created)
-├── consents[] - Marketing, SMS, etc (auto-created)
+├── sources[] - Provenance metadata (auto-created)
 └── owners[] - Timebound relations to people/businesses/departments
 
 app_users (auth)
@@ -160,7 +159,7 @@ people, businesses, departments (owner types)
 - Automatic phone number parsing (country code, national number, type)
 - Soft deletes (marked inactive, not removed)
 - Composite unique constraints for active relations only
-- Auto-creation of default channels and consents
+- Auto-creation of default sources/metadata
 
 ### API Design
 - Standardized response format with metadata

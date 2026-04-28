@@ -47,7 +47,7 @@ cd backend && npm run migrate && npm run seed
 ### Backend REST API (17 Endpoints)
 - 5 authentication endpoints (signup, signin, logout, password recovery)
 - 7 phone management endpoints (CRUD + relationships)
-- 5 relationship management endpoints (owners, channels, consents)
+- Relationship management endpoints (owners, sources)
 
 **Stack**: Node.js 18+, Express 4.18, PostgreSQL 14+, Redis 6+
 
@@ -265,8 +265,6 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed guides.
 - **phone_owners** - Relationships to people, businesses, departments
 
 ### Metadata Tables
-- **phone_channels** - SMS, WhatsApp, Telegram, Signal
-- **phone_consents** - Marketing, SMS, Call (granted/revoked/unknown)
 - **phone_sources** - Where phone was discovered
 - **contact_attempts** - Call/SMS/email history
 

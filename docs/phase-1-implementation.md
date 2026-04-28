@@ -227,45 +227,13 @@ Phase 1 builds the complete MVP with authentication, phone CRUD, relations manag
 
 ---
 
-#### Task 2.5: Phone Channels Management
-**Scope:**
-- Store available channels (call, whatsapp, telegram, sms)
-- Track is_enabled state
-- Include channels in phone detail response
-
-**Acceptance:**
-- All 4 channel types available per phone
-- Toggle enable/disable works
-- Channels array in phone detail
-- Unique constraint on phone_id + channel_type
-
-**Estimated:** 0.5 days
-
 ---
 
-#### Task 2.6: Phone Consents Management
-**Scope:**
-- Store consent types (marketing, transactional)
-- Track status (granted, revoked, unknown)
-- Record timestamp
-- Include consents in phone detail response
-
-**Acceptance:**
-- Both consent types available per phone
-- Status updates with recorded_at timestamp
-- Consents array in phone detail
-- Unique constraint on phone_id + consent_type
-- History preserved (no hard-delete)
-
-**Estimated:** 0.5 days
-
----
-
-#### Task 2.7: Phone Sources Tracking
+#### Task 2.5: Phone Sources & Metadata
 **Scope:**
 - Store source metadata (name, url, collector, collected_at)
 - Link to phone creation/enrichment events
-- Include in phone detail response
+- Include sources in phone detail response
 
 **Acceptance:**
 - Source tracked on phone create

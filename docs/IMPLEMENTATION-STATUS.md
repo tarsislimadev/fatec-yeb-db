@@ -22,7 +22,7 @@
    - ✅ phones - canonical phone registry
    - ✅ people, businesses, departments - core entities
    - ✅ app_users, auth_identities, password_reset_tokens - auth
-   - ✅ phone_owners, phone_channels, phone_consents, phone_sources, contact_attempts - relations
+   - ✅ phone_owners, phone_sources, contact_attempts - relations
    - ✅ All constraints, indexes, and foreign keys
    - ✅ Notes for future phases
 
@@ -55,8 +55,7 @@
    - ✅ Section 1: Authentication & User Management (14 scenarios)
    - ✅ Section 2: Phone CRUD Operations (10 scenarios)
    - ✅ Section 3: Phone Owner Relations (3 scenarios)
-   - ✅ Section 4: Phone Channels (2 scenarios)
-   - ✅ Section 5: Phone Consents & Suppression (2 scenarios)
+   - ✅ Section 4: Phone Sources (2 scenarios)
    - ✅ Section 6: UI/UX Standards (4 scenarios)
    - ✅ Section 7: Session & Security (3 scenarios)
    - ✅ Section 8: Data Consistency (2 scenarios)
@@ -81,14 +80,12 @@
 - Task 1.7: Microsoft OAuth Integration
 - Task 1.8: Signout Endpoint
 
-**Week 2: Phone CRUD & Relations (7 tasks)**
+**Week 2: Phone CRUD & Relations (6 tasks)**
 - Task 2.1: Phone Normalization
 - Task 2.2: Phone CRUD Endpoints
 - Task 2.3: Phone Search & Filtering
 - Task 2.4: Phone Owner Relations
-- Task 2.5: Phone Channels Management
-- Task 2.6: Phone Consents Management
-- Task 2.7: Phone Sources Tracking
+- Task 2.5: Phone Sources Tracking
 
 **Week 3: Frontend & Polish (13 tasks)**
 - Task 3.1: Frontend Project Setup

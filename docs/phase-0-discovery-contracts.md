@@ -42,9 +42,7 @@
 
 ### Relation Tables
 - **phone_owners** - links phones to people/businesses/departments with labels
-- **phone_channels** - available communication channels (call, SMS, WhatsApp, Telegram)
 - **phone_sources** - provenance tracking for each phone entry
-- **phone_consents** - consent/suppression state management
 - **contact_attempts** - interaction history and outcomes
 
 ## 3. API Contract - Standardized Response Model

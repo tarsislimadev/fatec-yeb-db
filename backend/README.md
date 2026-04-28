@@ -90,7 +90,7 @@ Server runs on port 3000 by default. Health check: `GET /health`
 - Phone validation and E.164 normalization
 - Standardized API responses with error codes
 - Redis token blacklisting on logout
-- Full phone metadata (type, country code, channels, consents)
+ - Full phone metadata (type, country code)
 
 ## Database Schema
 
@@ -101,8 +101,6 @@ Server runs on port 3000 by default. Health check: `GET /health`
 - `phones` - Phone numbers with metadata
 - `people`, `businesses`, `departments` - Owner entities
 - `phone_owners` - Phone-to-owner relationships (timebound)
-- `phone_channels` - Communication channels (SMS, WhatsApp, etc)
-- `phone_consents` - Privacy/marketing consents
 - `phone_sources` - Where the phone was discovered
 - `contact_attempts` - Call/SMS/email history
 

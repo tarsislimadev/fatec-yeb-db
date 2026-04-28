@@ -319,20 +319,7 @@ Authorization: Bearer {access_token}
         "confidence_score": 95
       }
     ],
-    "channels": [
-      {
-        "id": "uuid",
-        "channel_type": "call",
-        "is_enabled": true
-      }
-    ],
-    "consents": [
-      {
-        "id": "uuid",
-        "consent_type": "marketing",
-        "status": "granted"
-      }
-    ]
+    
   }
 }
 ```
@@ -449,15 +436,9 @@ Authorization: Bearer {access_token}
 
 The following are accessible via the detailed phone object:
 
-### Phone Channels
-- `channels` array in GET /phones/{id}
-- Channel types: `call`, `whatsapp`, `telegram`, `sms`
-- Status: `is_enabled` (boolean)
-
-### Phone Consents
-- `consents` array in GET /phones/{id}
-- Consent types: `marketing`, `transactional`
-- Status: `granted`, `revoked`, `unknown`
+### Phone Sources
+- Accessible via detail page (metadata only)
+- Tracks provenance of phone number entry
 
 ### Contact Attempts
 - Accessible via future timeline endpoint (Phase 3)
