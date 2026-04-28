@@ -169,13 +169,97 @@ sudo systemctl restart nginx
 
 ### Option 3: Cloud Deployment
 
+#### Azure Container Apps + Terraform (Recommended for Production)
+
+The recommended production deployment uses:
+- **Infrastructure-as-Code:** Terraform manages all Azure resources
+- **CI/CD:** GitHub Actions builds images, pushes to ACR, and applies Terraform
+- **Managed services:** Azure Database for PostgreSQL (Flexible), Redis, Key Vault, Container Apps
+- **Security:** Managed Identity for ACR access, secrets stored in Key Vault
+
+**Quick Start:**
+See [terraform/QUICKSTART.md](./terraform/QUICKSTART.md) for step-by-step deployment guide.
+
+**Overview:**
+1. Bootstrap Terraform state in Azure Storage (one-time)
+2. Configure GitHub secrets (Azure credentials, database passwords)
+3. Push code to main branch — GitHub Actions automatically:
+   - Builds backend and frontend Docker images
+   - Pushes to Azure Container Registry (ACR)
+   - Provisions/updates Azure resources via Terraform
+   - Runs database migrations
+   - Validates health endpoints
+
+**Initial Setup:**
+```bash
+# 1. Create Terraform state storage
+az group create -n phone-list-tfstate-rg -l eastus
+az storage account create -n phoneliststate$(date +%s) -g phone-list-tfstate-rg --sku Standard_LRS --kind StorageV2
+az storage container create -n tfstate --account-name <storage-name>
+
+# 2. Create service principal for CI/CD
+az ad sp create-for-rbac --name phone-list-deployer --role Contributor
+
+# 3. Add GitHub secrets (see terraform/QUICKSTART.md for details)
+
+# 4. Push code
+git push origin main
+```
+
+**Monitoring & Maintenance:**
+- View logs: `az container app logs -n phone-list-api -g phone-list-rg`
+- Access PostgreSQL: `psql "host=<server>.postgres.database.azure.com user=phone_admin@<server> dbname=phone_list"`
+- View Terraform state: `cd terraform/envs/prod && terraform show`
+
+**Infrastructure Diagram:**
+```
+GitHub (source) 
+  ↓ (push to main)
+GitHub Actions (build images, run terraform)
+  ↓
+Azure Container Registry (images)
+Azure Database for PostgreSQL (data)
+Azure Cache for Redis (cache)
+Azure Key Vault (secrets)
+Azure Container Apps (backend + frontend)
+Azure Log Analytics (logs)
+```
+
+**Rollback:**
+To revert to a previous image:
+```bash
+cd terraform/envs/prod
+terraform apply -var="image_tag=<previous-sha>"
+```
+
+**Scaling:**
+To adjust container resources, edit `terraform/envs/prod/variables.tf`:
+```hcl
+backend_cpu    = "1.0"      # increase CPU
+backend_memory = "2.0Gi"    # increase memory
+backend_min_replicas = 2    # min replicas
+backend_max_replicas = 5    # max replicas
+```
+
+Then run `terraform apply`.
+
+**Cost Optimization:**
+- Container Apps: scale to 0 replicas if inactive (edit scale section in module)
+- PostgreSQL: use B_Standard_B1ms or smaller for dev
+- Redis: use Basic tier for development, Standard for production
+
+For more details, see:
+- [docs/azure.terraform.md](./docs/azure.terraform.md) — architectural overview
+- [terraform/README.md](./terraform/README.md) — Terraform structure
+- [terraform/QUICKSTART.md](./terraform/QUICKSTART.md) — deployment walkthrough
+
 #### Azure App Service + Azure Database for PostgreSQL + Azure Cache for Redis
 
 See [docs/azure-deployment.md](./azure-deployment.md) for detailed Azure setup.
 
 #### AWS Elastic Beanstalk + RDS + ElastiCache
 
-See [docs/aws-deployment.md](./aws-deployment.md) for detailed AWS setup.
+See [docs/aws-deployment.md](./docs/aws-deployment.md) for detailed AWS setup.
 
 ---
 
