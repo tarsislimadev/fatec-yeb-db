@@ -1,36 +1,61 @@
 import React from 'react';
 import { Header } from '../components/Header';
 import { getPeople } from '../services/api';
+import { Button, Card } from '../components/common';
 
 export function PeoplePage() {
   const [people, setPeople] = React.useState([]);
 
-  React.useEffect(async () => {
-    try {
-      const { data } = await getPeople();
-      console.log('Fetched people:', data);
-      setPeople(data.people);
-    } catch (error) {
-      console.error('Error fetching people:', error);
+  React.useEffect(() => {
+    async function fetchPeople() {
+      try {
+        const { data } = await getPeople();
+        console.log('Fetched people:', data);
+        setPeople(data.people);
+      } catch (error) {
+        console.error('Error fetching people:', error);
+      }
     }
+
+    fetchPeople();
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['People', '/people']]} />
 
-      <nav className="max-w-7xl mx-auto px-4 py-4 flex flex items-center justify-end space-x-4">
-        <div></div>
-        <div>
-          <a href="/people/new" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+      <nav className="container-mobile pb-0 pt-4">
+        <div className="flex justify-end">
+          <Button fullWidth className="sm:w-auto" onClick={() => (window.location.href = '/people/new')}>
             Add New Person
-          </a>
+          </Button>
         </div>
       </nav>
 
-      <main className="mx-auto max-w-7xl px-4 py-8">
+      <main className="container-mobile">
         {people.length > 0 ? (
-          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+          <>
+            <div className="grid gap-3 md:hidden">
+              {people.map((person) => (
+                <Card key={person.id} className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{person.full_name}</p>
+                      <p className="text-sm text-slate-500">ID {person.id}</p>
+                    </div>
+                    <a href={`/people/detail?id=${person.id}`} className="touch-target rounded-md px-3 text-sm font-medium text-blue-600 hover:bg-slate-100">
+                      View
+                    </a>
+                  </div>
+                  <div className="space-y-1 text-sm text-slate-600">
+                    <p><span className="font-medium text-slate-700">Role:</span> {person.role_title}</p>
+                    <p><span className="font-medium text-slate-700">Email:</span> {person.email}</p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <div className="hidden overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm md:block">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -75,7 +100,8 @@ export function PeoplePage() {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         ) : (
           <p className="text-gray-600">
             This is the People Page. List of people will be displayed here.

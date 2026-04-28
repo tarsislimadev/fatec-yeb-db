@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getPhoneDetail, updatePhone, deletePhone, addPhoneOwner, removePhoneOwner, getPeople } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { getPhoneDetail, addPhoneOwner, removePhoneOwner, getPeople } from '../services/api';
 import { Button, Card, Loading, Alert, Input } from '../components/common';
 import { Header } from '../components/Header'
 import { getQueryParam } from '../services/window';
@@ -51,17 +51,6 @@ export function PhoneDetailPage() {
     }
   }
 
-  async function handleDeletePhone() {
-    if (!window.confirm('Are you sure you want to delete this phone?')) return;
-
-    try {
-      await deletePhone(id);
-      navigate('/phones');
-    } catch (err) {
-      setError(err.response?.data?.error?.message || 'Failed to delete phone');
-    }
-  }
-
   async function handleAddOwner(e) {
     e.preventDefault();
     try {
@@ -95,16 +84,17 @@ export function PhoneDetailPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['Phones', '/phones'], [phone.e164_number, `/phones/detail?id=${phone.id}`]]} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="container-mobile">
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b">
+        <div className="mb-6 flex flex-wrap gap-2 border-b border-slate-200">
           {['details', 'owners'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 font-medium capitalize ${activeTab === tab
+              type="button"
+              className={`touch-target rounded-t-md px-4 text-sm font-medium capitalize ${activeTab === tab
                 ? 'border-b-2 border-blue-600 text-blue-600'
                 : 'text-gray-600 hover:text-gray-900'
                 }`}
@@ -117,7 +107,7 @@ export function PhoneDetailPage() {
         {/* Details Tab */}
         {activeTab === 'details' && (
           <Card>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <p className="text-gray-600">E.164 Number</p>
                 <p className="font-mono font-bold">{phone.e164_number}</p>
@@ -157,9 +147,9 @@ export function PhoneDetailPage() {
         {/* Owners Tab */}
         {activeTab === 'owners' && (
           <div>
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-bold">Owners</h2>
-              <Button onClick={() => setShowOwnerForm(!showOwnerForm)} className="mb-4">
+              <Button onClick={() => setShowOwnerForm(!showOwnerForm)} className="w-full sm:w-auto">
                 {showOwnerForm ? 'Cancel' : 'Add New Owner'}
               </Button>
             </div>
@@ -171,7 +161,7 @@ export function PhoneDetailPage() {
                     <label className="block text-sm font-medium mb-1">Person</label>
                     <select
                       onChange={(e) => setNewOwner({ ...newOwner, owner_type: 'person', owner_id: e.target.value, })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded"
+                      className="w-full min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Select a person</option>
                       {(people || []).map((person) => (
@@ -206,8 +196,8 @@ export function PhoneDetailPage() {
             {phone.owners && phone.owners.length > 0 ? (
               <div className="grid gap-3">
                 {phone.owners.map((owner) => (
-                  <Card key={owner.id} className="flex justify-between items-start">
-                    <div>
+                  <Card key={owner.id} className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
                       <p className="text-sm mt-1">
                         <span className="font-medium">Type: </span>
                         <span className="capitalize"></span>{owner.owner_type}
@@ -227,7 +217,7 @@ export function PhoneDetailPage() {
                     <Button
                       onClick={() => handleRemoveOwner(owner.id)}
                       variant="danger"
-                      className="text-sm px-3 py-1"
+                      className="w-full text-sm sm:w-auto"
                     >
                       Remove
                     </Button>

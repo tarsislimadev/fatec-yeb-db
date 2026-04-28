@@ -22,15 +22,15 @@ export function CreatePersonPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['People', '/people'], ['New', '/people/new']]} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="container-mobile">
         <Card className="mb-6">
-          <div className="flex gap-4 mb-4">
+          <div className="grid gap-3 lg:grid-cols-[1fr_1fr_1fr_auto]">
             <input
               type="text"
               placeholder="Full Name"
               value={person.full_name}
               onChange={(e) => setPerson({ ...person, full_name: e.target.value })}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <input
@@ -38,7 +38,7 @@ export function CreatePersonPage() {
               placeholder="Role Title"
               value={person.role_title || ''}
               onChange={(e) => setPerson({ ...person, role_title: e.target.value })}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <input
@@ -46,12 +46,12 @@ export function CreatePersonPage() {
               placeholder="Email"
               value={person.email || ''}
               onChange={(e) => setPerson({ ...person, email: e.target.value })}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <button
               onClick={() => createNewPerson(person)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="touch-target rounded-md bg-blue-500 px-4 text-white hover:bg-blue-700"
             >
               Create
             </button>

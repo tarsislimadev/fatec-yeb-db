@@ -6,9 +6,11 @@ export function CreatePhonePage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['Phones', '/phones'], ['New', '/phones/new']]} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <h1>Create Phone</h1>
-        <p>This is the Create Phone Page. You can create phone details here.</p>
+      <main className="container-mobile">
+        <div className="max-w-2xl space-y-3">
+          <h1 className="text-2xl font-bold text-slate-900">Create Phone</h1>
+          <p className="text-slate-600">This is the Create Phone Page. You can create phone details here.</p>
+        </div>
       </main>
     </div>
   );

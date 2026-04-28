@@ -21,29 +21,30 @@ export function PersonPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['People', '/people'], [id, `/people/detail?id=${id}`]]} />
 
-      <nav className="max-w-7xl mx-auto px-4 py-4 flex flex items-center justify-end space-x-4">
-        <div></div>
-        <div>
-          <a href={`/people/edit?id=${id}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <nav className="container-mobile pb-0 pt-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <a href={`/people/edit?id=${id}`} className="touch-target rounded-md bg-blue-500 px-4 text-sm font-bold text-white hover:bg-blue-700">
             Edit
           </a>
-          <a href={`/people/delete?id=${id}`} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+          <a href={`/people/delete?id=${id}`} className="touch-target rounded-md bg-red-500 px-4 text-sm font-bold text-white hover:bg-red-700">
             Delete
           </a>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {person ? (
-          <div className="mb-4">
-            <p><strong>ID:</strong> {person.id}</p>
-            <p><strong>Full Name:</strong> {person.full_name}</p>
-            <p><strong>Role Title:</strong> {person.role_title}</p>
-            <p><strong>Email:</strong> {person.email}</p>
-          </div>
-        ) : (
-          <p>Loading... Details will be displayed here.</p>
-        )}
+      <main className="container-mobile">
+        <div className="max-w-2xl rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-6">
+          {person ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <p><strong>ID:</strong> {person.id}</p>
+              <p><strong>Full Name:</strong> {person.full_name}</p>
+              <p><strong>Role Title:</strong> {person.role_title}</p>
+              <p><strong>Email:</strong> {person.email}</p>
+            </div>
+          ) : (
+            <p>Loading... Details will be displayed here.</p>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -1,9 +1,9 @@
-export function Button({ children, onClick, disabled, className = '', variant = 'primary', ...props }) {
-  const baseStyles = 'px-4 py-2 rounded font-medium transition disabled:opacity-50 disabled:cursor-not-allowed';
+export function Button({ children, onClick, disabled, className = '', variant = 'primary', fullWidth = false, ...props }) {
+  const baseStyles = `inline-flex min-h-[44px] items-center justify-center rounded-md px-4 py-3 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:px-5 sm:py-2.5 ${fullWidth ? 'w-full' : ''}`;
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
+    secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300 active:bg-slate-400',
+    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800',
   };
 
   return (
@@ -20,24 +20,24 @@ export function Button({ children, onClick, disabled, className = '', variant = 
 
 export function Input({ label, type = 'text', value, onChange, placeholder, error, className = '', ...props }) {
   return (
-    <div className="mb-4">
-      {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+    <div className="mb-5 w-full">
+      {label && <label className="mb-2 block text-sm font-medium text-slate-700 sm:text-base">{label}</label>}
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={`w-full px-3 py-2 border rounded ${error ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring ${className}`}
+        className={`w-full min-h-[44px] rounded-md border px-3 py-3 text-base transition focus:outline-none focus:ring-2 focus:ring-blue-500 sm:py-2 sm:text-sm ${error ? 'border-red-500' : 'border-slate-300'} ${className}`}
         {...props}
       />
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
 }
 
 export function Card({ children, className = '' }) {
   return (
-    <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
+    <div className={`rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-6 ${className}`}>
       {children}
     </div>
   );
@@ -45,8 +45,8 @@ export function Card({ children, className = '' }) {
 
 export function Loading() {
   return (
-    <div className="flex items-center justify-center py-8">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <div className="flex items-center justify-center py-12">
+      <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-blue-600"></div>
     </div>
   );
 }
@@ -59,11 +59,11 @@ export function Alert({ type = 'error', message, onClose }) {
   };
 
   return (
-    <div className={`border px-4 py-3 rounded mb-4 ${colors[type]}`}>
-      <div className="flex justify-between items-start">
-        <p>{message}</p>
+    <div className={`mb-4 rounded-lg border px-4 py-3 ${colors[type]}`}>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm sm:text-base">{message}</p>
         {onClose && (
-          <button onClick={onClose} className="font-bold">
+          <button onClick={onClose} type="button" className="touch-target rounded-md font-bold">
             x
           </button>
         )}

@@ -26,10 +26,11 @@ export function UpdatePersonPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['People', '/people'], [personId, `/people/${personId}`], ['Update']]} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <h1>Update Person</h1>
-        <p>This is the Update Person Page. You can update person details here.</p>
-        {person && JSON.stringify({ person })}
+      <main className="container-mobile">
+        <div className="max-w-2xl space-y-3">
+          <h1 className="text-2xl font-bold text-slate-900">Update Person</h1>
+          <p className="text-slate-600">This is the Update Person Page. You can update person details here.</p>
+        </div>
       </main>
     </div>
   );

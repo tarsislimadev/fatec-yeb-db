@@ -6,9 +6,11 @@ export function MyPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['People', '/people'], ['Me', '/people/me']]} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <h1>My Profile</h1>
-        <p>This is your profile page. You can view and update your details here.</p>
+      <main className="container-mobile">
+        <div className="max-w-2xl space-y-3">
+          <h1 className="text-2xl font-bold text-slate-900">My Profile</h1>
+          <p className="text-slate-600">This is your profile page. You can view and update your details here.</p>
+        </div>
       </main>
     </div>
   );

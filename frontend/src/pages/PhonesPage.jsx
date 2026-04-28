@@ -63,12 +63,12 @@ export function PhonesPage() {
     <div className="min-h-screen bg-gray-50">
       <Header items={[['Yeb', '/'], ['Phones', '/phones']]} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="container-mobile">
         {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
         {/* Filters and Create Button */}
         <Card className="mb-6">
-          <div className="flex gap-4 mb-4">
+          <div className="mb-4 grid gap-3 lg:grid-cols-3">
             <input
               type="text"
               placeholder="Search phone numbers..."
@@ -76,7 +76,7 @@ export function PhonesPage() {
               onChange={(e) => {
                 setFilter({ ...filter, search: e.target.value });
               }}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
+              className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:col-span-2"
             />
             <select
               value={filter.status}
@@ -84,13 +84,13 @@ export function PhonesPage() {
                 setFilter({ ...filter, status: e.target.value });
                 setPagination({ ...pagination, page: 1 });
               }}
-              className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
+              className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Status</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-            <Button onClick={() => setShowCreateForm(!showCreateForm)}>
+            <Button fullWidth className="lg:col-span-3" onClick={() => setShowCreateForm(!showCreateForm)}>
               {showCreateForm ? 'Cancel' : 'Add Phone'}
             </Button>
           </div>
@@ -98,25 +98,25 @@ export function PhonesPage() {
           {showCreateForm && (
             <form onSubmit={handleCreatePhone} className="border-t pt-4">
               {formError && <Alert type="error" message={formError} onClose={() => setFormError('')} />}
-              <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="mb-3 grid gap-3 lg:grid-cols-3">
                 <input
                   type="text"
                   placeholder="E.164 Format: +55119876543210"
                   value={formData.e164_number}
                   onChange={(e) => setFormData({ ...formData, e164_number: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 rounded"
+                  className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
                   placeholder="Raw: (11) 98765-43210"
                   value={formData.raw_number}
                   onChange={(e) => setFormData({ ...formData, raw_number: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 rounded"
+                  className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 rounded"
+                  className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="mobile">Mobile</option>
                   <option value="landline">Landline</option>
@@ -171,21 +171,23 @@ export function PhonesPage() {
 
             {/* Pagination */}
             {pagination.total_pages > 1 && (
-              <div className="flex justify-center gap-2 mt-6">
+              <div className="mt-6 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
                 <Button
                   onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
                   disabled={pagination.page === 1}
                   variant="secondary"
+                  className="w-full sm:w-auto"
                 >
                   Previous
                 </Button>
-                <span className="px-4 py-2">
+                <span className="px-4 py-2 text-center text-sm text-slate-600">
                   Page {pagination.page} of {pagination.total_pages}
                 </span>
                 <Button
                   onClick={() => setPagination({ ...pagination, page: Math.min(pagination.total_pages, pagination.page + 1) })}
                   disabled={pagination.page === pagination.total_pages}
                   variant="secondary"
+                  className="w-full sm:w-auto"
                 >
                   Next
                 </Button>
