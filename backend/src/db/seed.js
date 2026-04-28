@@ -69,20 +69,22 @@ async function seed() {
       const phoneId = uuidv4();
 
       // Create phone
-      await db.query(
+      const phoneResult = await db.query(
         `INSERT INTO phones (id, e164_number, raw_number, type, country_code, national_number, status, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())`,
+         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) returning id`,
         [phoneId, phone.e164, phone.raw, phone.type, phone.countryCode, phone.nationalNumber, 'active']
       );
 
       // Create default channels
-      const channels = ['sms', 'whatsapp', 'telegram', 'call'];
+      const channels = ['sms']; // , 'whatsapp', 'telegram', 'call'
       for (const channel of channels) {
-        await db.query(
+        const channelId = await db.query(
           `INSERT INTO phone_channels (id, phone_id, channel_type, is_enabled, created_at)
-           VALUES ($1, $2, $3, $4, NOW())`,
+           VALUES ($1, $2, $3, $4, NOW()) returning id`,
           [uuidv4(), phoneId, channel, true]
         );
+
+        console.log(`✅ Created channel: ${channel} with ID ${channelId.rows[0].id} for phone: ${phone.e164} - ${phoneResult.rows[0].id}`);
       }
 
       // Create default consents
