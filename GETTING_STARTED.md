@@ -1,20 +1,73 @@
-# Phase 1 & 2 Implementation: Getting Started
+# Quick Start Guide - Phase 1 & 2 Implementation 
 
 **Project:** Phone List System MVP + CNPJ Enrichment  
-**Duration:** 4 weeks (compressed from 50+ days)  
-**Team Size:** 2–3 people  
-**Status:** 🚀 Ready to Start Immediately
+**Status:** Phase 1 implementation 95% complete, ready for testing and Phase 2
+
+## 🚀 Quick Start (Choose One)
+
+### Option 1: Docker (Recommended)
+
+```bash
+cd /workspaces/fatec-yeb-db
+docker-compose up
+```
+
+Then seed data:
+```bash
+docker-compose exec backend npm run seed
+```
+
+- **Frontend:** http://localhost
+- **Backend API:** http://localhost:3000/api/v1
+
+### Option 2: Local Development
+
+```bash
+# Terminal 1: Backend
+cd backend && npm install && npm run migrate && npm run seed && npm run dev
+
+# Terminal 2: Frontend
+cd frontend && npm install && npm run dev
+```
 
 ---
 
-## Quick Links
+## 🧪 Test User Flow
 
-📋 **[IMPLEMENTATION_ROADMAP.md](../IMPLEMENTATION_ROADMAP.md)** — Full timeline, all tasks, status tracking
+**Login:** test@example.com / Password123!
 
-**Week 1 Guides:**
-- 🔴 [BE-1.1: Project Setup & Database](./TASK_BE-1.1_GUIDE.md)
-- 🔴 [BE-1.3: JWT & Session Management](./TASK_BE-1.3_GUIDE.md)
-- 🔴 [FE-3.1: Frontend Project Setup](./TASK_FE-3.1_GUIDE.md)
+1. Go to home page → Click "Dashboard" or navigate to /dashboard
+2. Select "Phones" from menu
+3. Click "+ Add Phone" → Create a phone number
+4. Click phone to view details
+5. Add owner relation in "Owners" tab
+6. Remove owner to test deletion
+
+---
+
+## 📊 Phase 1 Status
+
+✅ **COMPLETED:**
+- Authentication (signup, signin, password recovery)
+- Phone CRUD operations
+- Owner relations management
+- Database schema & migrations
+- Login/Signup pages
+- Phone list & detail pages
+- Responsive mobile design
+
+⏳ **TODO (Phase 1.5):**
+- Email service integration
+- Google/Microsoft OAuth
+- Forgot password flow
+- People CRUD UI
+- E2E/unit tests
+
+---
+
+## 🔧 Project Guides
+
+**Related Documentation:**
 
 **Phase 1 Scope:** [phase-1-implementation.md](./phase-1-implementation.md)  
 **Phase 2 Scope:** [phase-2-planning.md](./phase-2-planning.md)
