@@ -8,7 +8,6 @@
 - ✅ Owner relations endpoints
 - ✅ Database migrations and schema
 - ❌ Email service integration (TODO - needed for password reset)
-- ❌ OAuth endpoints (TODO - can be added after Phase 1 MVP)
 - ❌ People CRUD endpoints (routes defined but verify controller)
 
 ### ✅ Frontend (60% Complete)
@@ -39,7 +38,6 @@
 ### ✅ LOGIN PAGE (SessionsNewPage.jsx) - 90% COMPLETE
 **What's needed:**
 - Fix API base URL configuration
-- Add OAuth buttons (can be done later)
 - Add "Forgot Password" link
 - Add error handling improvements
 **Time estimate: 30 min**
@@ -48,7 +46,6 @@
 **What's needed:**
 - Fix Button loading state during signup
 - Add password strength indicator
-- Add OAuth buttons (later)
 - Fix response handling on signup success
 **Time estimate: 30 min**
 
@@ -151,7 +148,7 @@
 - ✅ Created for development
 - ❌ Production values needed
 - ❌ Email service keys (SendGrid)
-- ❌ OAuth keys (Google, Microsoft) - for Phase 1.5
+
 
 ---
 

@@ -58,7 +58,6 @@ cd frontend && npm install && npm run dev
 
 ⏳ **TODO (Phase 1.5):**
 - Email service integration
-- Google/Microsoft OAuth
 - Forgot password flow
 - People CRUD UI
 - E2E/unit tests
@@ -83,9 +82,8 @@ cd frontend && npm install && npm run dev
 **Starting Tasks:**
 1. ✅ **BE-1.1** (1 day): Project setup & database — [Guide](./TASK_BE-1.1_GUIDE.md)
 2. ✅ **BE-1.3** (1 day): JWT & session management — [Guide](./TASK_BE-1.3_GUIDE.md)
-3. **BE-1.7** (1.5 days): Google OAuth
-4. **BE-2.2** (2 days): Phone CRUD endpoints
-5. ... (see [IMPLEMENTATION_ROADMAP.md](../IMPLEMENTATION_ROADMAP.md) for full list)
+3. **BE-2.2** (2 days): Phone CRUD endpoints
+4. ... (see [IMPLEMENTATION_ROADMAP.md](../IMPLEMENTATION_ROADMAP.md) for full list)
 
 ---
 

@@ -47,9 +47,7 @@ docker-compose exec backend npm run seed
 | BE-1.5 | 🔴 Signup/Signin Endpoints | 1 | BE-1.1–1.4 | backend-eng | ⬜ | POST /auth/signup, POST /auth/signin |
 | BE-1.2 | 🟡 Email Service Integration | 1 | BE-1.1 | backend-eng | ⬜ | SendGrid/Mailgun setup, templates |
 | BE-1.6 | 🟡 Password Recovery | 1 | BE-1.2, BE-1.5 | backend-eng | ⬜ | POST /auth/password/forgot, POST /auth/password/reset |
-| BE-1.7 | 🟡 Google OAuth | 1.5 | BE-1.1, BE-1.5 | backend-lead | ⬜ | Google Cloud registration, OAuth flow |
-| BE-1.8 | 🟡 Microsoft OAuth | 1.5 | BE-1.1, BE-1.5 | backend-eng | ⬜ | Azure AD registration, OAuth flow |
-| BE-1.9 | 🟡 Signout & Token Blacklist | 0.5 | BE-1.3 | backend-eng | ⬜ | Redis token blacklist, cleanup job |
+| BE-1.7 | 🟡 Signout & Token Blacklist | 0.5 | BE-1.3 | backend-eng | ⬜ | Redis token blacklist, cleanup job |
 
 #### Frontend Tasks (5 days)
 
@@ -57,15 +55,12 @@ docker-compose exec backend npm run seed
 |-|------|------|----------|-------|--------|-------|
 | FE-3.1 | 🔴 Project Setup | 0.5 | START HERE | frontend-eng | ⬜ | React 18 + Vite + Tailwind + Zustand |
 | FE-3.2 | 🔴 HTTP Client & API | 0.5 | FE-3.1 | frontend-eng | ⬜ | Axios setup, JWT injection, 401 redirect |
-| FE-3.3 | 🟡 Auth Layout Components | 0.5 | FE-3.1 | frontend-eng | ⬜ | Form inputs, buttons, OAuth components |
-| FE-3.4 | 🔴 Login Page | 1 | FE-3.2, FE-3.3 | frontend-eng | ⬜ | Email/password form + OAuth buttons |
-| FE-3.5 | 🟡 Signup Page | 1 | FE-3.2, FE-3.3 | frontend-eng | ⬜ | Signup form + password strength validation |
-| FE-3.6 | 🟡 Forgot Password Flow | 1 | FE-3.2, FE-3.3 | frontend-eng | ⬜ | Email → reset link → new password |
-| FE-3.7 | 🔴 Protected Routes | 0.5 | FE-3.1 | frontend-eng | ⬜ | ProtectedRoute component, token persistence |
+| FE-3.3 | � Login Page | 1 | FE-3.2 | frontend-eng | ⬜ | Email/password form |
+| FE-3.4 | 🟡 Signup Page | 1 | FE-3.2 | frontend-eng | ⬜ | Signup form + password strength validation |
+| FE-3.5 | 🟡 Forgot Password Flow | 1 | FE-3.2 | frontend-eng | ⬜ | Email → reset link → new password |
+| FE-3.6 | 🔴 Protected Routes | 0.5 | FE-3.1 | frontend-eng | ⬜ | ProtectedRoute component, token persistence |
 
 **Week 1 Deliverable:** ✅ Signup/signin working, JWT tokens valid, login page functional, password recovery in progress
-
----
 
 ### Week 2: Phone CRUD (16 days estimated)
 
@@ -86,12 +81,12 @@ docker-compose exec backend npm run seed
 
 | # | Task | Days | Blocker? | Owner | Status | Notes |
 |-|------|------|----------|-------|--------|-------|
-| FE-3.8 | 🔴 Phone List Page | 2 | FE-3.7, FE-3.2 | frontend-lead | ⬜ | Table/list, pagination, search, filters, sort, click to detail |
-| FE-3.9 | 🔴 Phone Detail Page | 2 | FE-3.8, FE-3.2 | frontend-lead | ⬜ | Tabs (info, owners, sources), edit/add/delete buttons |
-| FE-3.10 | 🟡 Create/Edit Form | 1 | FE-3.8, FE-3.2 | frontend-eng | ⬜ | Phone number input, type dropdown, validation |
-| FE-3.11 | 🟡 Owner Management UI | 1 | FE-3.9, FE-3.2 | frontend-eng | ⬜ | Add owner (search), delete, confidence_score, relation_label |
-| FE-3.12 | 🟡 Navigation & Layout | 1 | FE-3.1 | frontend-eng | ⬜ | Header, user menu, signout, responsive nav, a11y |
-| FE-3.13 | 🟡 Error Handling & Loading | 1 | FE-3.1 | frontend-eng | ⬜ | Error boundary, spinners, toast notifications, request ID |
+| FE-3.7 | 🔴 Phone List Page | 2 | FE-3.6, FE-3.2 | frontend-lead | ⬜ | Table/list, pagination, search, filters, sort, click to detail |
+| FE-3.8 | 🔴 Phone Detail Page | 2 | FE-3.7, FE-3.2 | frontend-lead | ⬜ | Tabs (info, owners, sources), edit/add/delete buttons |
+| FE-3.9 | 🟡 Create/Edit Form | 1 | FE-3.7, FE-3.2 | frontend-eng | ⬜ | Phone number input, type dropdown, validation |
+| FE-3.10 | 🟡 Owner Management UI | 1 | FE-3.8, FE-3.2 | frontend-eng | ⬜ | Add owner (search), delete, confidence_score, relation_label |
+| FE-3.11 | 🟡 Navigation & Layout | 1 | FE-3.1 | frontend-eng | ⬜ | Header, user menu, signout, responsive nav, a11y |
+| FE-3.12 | 🟡 Error Handling & Loading | 1 | FE-3.1 | frontend-eng | ⬜ | Error boundary, spinners, toast notifications, request ID |
 
 **Week 2 Deliverable:** ✅ Phone CRUD API complete, phone list & detail pages working, ≥70% API code coverage, all acceptance tests passing
 
@@ -209,7 +204,6 @@ docker-compose exec backend npm run seed
 
 | Risk | Mitigation | Owner |
 |------|-----------|-------|
-| Auth complexity (OAuth + local) | Start with local, OAuth adds later | backend-lead |
 | Database schema changes | Version migrations, seed data | backend-lead |
 | Frontend state management | Zustand (simpler than Redux) | frontend-lead |
 | Provider API downtime | Implement fallback, cache, retry logic | backend-lead |
