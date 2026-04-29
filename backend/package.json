@@ -10,7 +10,10 @@
     "migrate": "node src/db/migrate.js",
     "seed": "node src/db/seed.js",
     "test": "jest --watch",
-    "test:ci": "jest --coverage",
+    "test:unit": "jest --testPathPattern=utils/__tests__",
+    "test:integration": "jest --testPathPattern=__tests__/integration.test.js",
+    "test:ci": "jest --coverage --detectOpenHandles",
+    "test:all": "jest --coverage",
     "lint": "eslint src/"
   },
   "keywords": ["phone", "list", "api"],
