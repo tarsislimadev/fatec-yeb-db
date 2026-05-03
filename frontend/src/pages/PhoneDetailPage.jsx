@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPhoneDetail, addPhoneOwner, removePhoneOwner, getPeople, deletePhone } from '../services/api';
+import { getPhoneDetail, addPhoneOwner, removePhoneOwner, getPeople, updatePhone } from '../services/api';
 import { Button, Card, Loading, Alert, Input } from '../components/common';
 import { Header } from '../components/Header'
 import { getQueryParam } from '../services/window';
@@ -101,15 +101,21 @@ export function PhoneDetailPage() {
     }
   }
 
-  async function handleDeletePhone() {
-    if (!confirm('Are you sure you want to delete this phone? This action cannot be undone.')) {
+  async function handleTogglePhoneStatus() {
+    const nextStatus = phone.status === 'active' ? 'inactive' : 'active';
+    const actionLabel = nextStatus === 'active' ? 'enable' : 'disable';
+
+    if (!confirm(`Are you sure you want to ${actionLabel} this phone?`)) {
       return;
     }
+
     try {
-      await deletePhone(id);
-      navigate('/phones');
+      await updatePhone(id, { status: nextStatus });
+      setSuccess(`Phone ${nextStatus === 'active' ? 'enabled' : 'disabled'} successfully`);
+      setTimeout(() => setSuccess(''), 3000);
+      await fetchPhone();
     } catch (err) {
-      setError(err.response?.data?.error?.message || 'Failed to delete phone');
+      setError(err.response?.data?.error?.message || `Failed to ${actionLabel} phone`);
     }
   }
 
@@ -124,17 +130,18 @@ export function PhoneDetailPage() {
         {error && <Alert type="error" message={error} onClose={() => setError('')} />}
         {success && <Alert type="success" message={success} onClose={() => setSuccess('')} />}
 
-        {/* Header with back button and delete */}
+        {/* Header with back button and status toggle */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">{phone.e164_number}</h1>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={() => navigate('/phones')} variant="secondary" className="w-full sm:w-auto">
-              ← Back to Phones
-            </Button>
-            <Button onClick={handleDeletePhone} variant="danger" className="w-full sm:w-auto">
-              Delete Phone
+            <Button
+              onClick={handleTogglePhoneStatus}
+              variant={phone.status === 'active' ? 'danger' : 'primary'}
+              className="w-full sm:w-auto"
+            >
+              {phone.status === 'active' ? 'Disable Phone' : 'Enable Phone'}
             </Button>
           </div>
         </div>
