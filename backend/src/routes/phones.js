@@ -1,6 +1,7 @@
 import express from 'express';
 import { listPhones, createPhone, getPhone, updatePhone, deletePhone } from '../controllers/phoneController.js';
 import { addPhoneOwner, removePhoneOwner, updatePhoneOwner } from '../controllers/ownerController.js';
+import { enrichPhone } from '../controllers/enrichmentController.js';
 import { authMiddleware } from '../middleware/index.js';
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.delete('/:id/owners/:ownerRelationId', removePhoneOwner);
 
 // PATCH /api/v1/phones/:id/owners/:ownerRelationId - Update owner relation
 router.patch('/:id/owners/:ownerRelationId', updatePhoneOwner);
+
+// POST /api/v1/phones/:id/enrich - Create an enrichment job for a phone
+router.post('/:id/enrich', enrichPhone);
 
 export default router;

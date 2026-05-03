@@ -206,3 +206,55 @@ CREATE TABLE IF NOT EXISTS contact_attempts (
 CREATE INDEX IF NOT EXISTS idx_contact_attempts_phone_id ON contact_attempts(phone_id);
 CREATE INDEX IF NOT EXISTS idx_contact_attempts_attempted_at ON contact_attempts(phone_id, attempted_at DESC);
 CREATE INDEX IF NOT EXISTS idx_contact_attempts_outcome ON contact_attempts(outcome);
+
+-- ============ ENRICHMENT (PHASE 2) TABLES ============
+
+-- enrichment_jobs
+CREATE TABLE IF NOT EXISTS enrichment_jobs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  type VARCHAR(50) NOT NULL CHECK (type IN ('single', 'batch')),
+  status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
+  total_items INT DEFAULT 0,
+  processed_items INT DEFAULT 0,
+  failed_items INT DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_jobs_status ON enrichment_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_enrichment_jobs_created_at ON enrichment_jobs(created_at DESC);
+
+-- enrichment_job_items
+CREATE TABLE IF NOT EXISTS enrichment_job_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  job_id UUID NOT NULL REFERENCES enrichment_jobs(id) ON DELETE CASCADE,
+  phone_id UUID NOT NULL REFERENCES phones(id),
+  cnpj VARCHAR(18),
+  status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
+  result_id UUID,
+  error_message TEXT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_job_items_job_id ON enrichment_job_items(job_id);
+CREATE INDEX IF NOT EXISTS idx_enrichment_job_items_phone_id ON enrichment_job_items(phone_id);
+
+-- enrichment_results
+CREATE TABLE IF NOT EXISTS enrichment_results (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  phone_id UUID NOT NULL REFERENCES phones(id),
+  cnpj VARCHAR(18),
+  provider VARCHAR(50) NOT NULL,
+  legal_name VARCHAR(255),
+  trade_name VARCHAR(255),
+  status VARCHAR(50),
+  address JSONB,
+  raw_response JSONB,
+  cached BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_enrichment_results_phone_id ON enrichment_results(phone_id);
+CREATE INDEX IF NOT EXISTS idx_enrichment_results_cnpj ON enrichment_results(cnpj);
+

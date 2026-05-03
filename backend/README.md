@@ -67,6 +67,7 @@ Server runs on port 3000 by default. Health check: `GET /health`
 - `GET /api/v1/phones/:id` - Get phone with relations
 - `PATCH /api/v1/phones/:id` - Update phone
 - `DELETE /api/v1/phones/:id` - Delete phone
+- `POST /api/v1/phones/:id/enrich` - Trigger CNPJ enrichment job for a phone
 
 ### Phone Owners
 - `POST /api/v1/phones/:id/owners` - Add owner
