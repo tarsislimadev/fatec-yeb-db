@@ -44,24 +44,18 @@ async function seed() {
     const phones = [
       {
         e164: '+5511987654321',
-        raw: '(11) 98765-4321',
         type: 'mobile',
         countryCode: 'BR',
-        nationalNumber: '11987654321',
       },
       {
         e164: '+551133334444',
-        raw: '(11) 3333-4444',
         type: 'landline',
         countryCode: 'BR',
-        nationalNumber: '1133334444',
       },
       {
         e164: '+5521999887766',
-        raw: '(21) 99988-7766',
         type: 'whatsapp',
         countryCode: 'BR',
-        nationalNumber: '21999887766',
       },
     ];
 
@@ -70,9 +64,9 @@ async function seed() {
 
       // Create phone
       const phoneResult = await db.query(
-        `INSERT INTO phones (id, e164_number, raw_number, type, country_code, national_number, status, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) returning id`,
-        [phoneId, phone.e164, phone.raw, phone.type, phone.countryCode, phone.nationalNumber, 'active']
+        `INSERT INTO phones (id, e164_number, type, country_code, status, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) returning id`,
+        [phoneId, phone.e164, phone.type, phone.countryCode, 'active']
       );
 
       console.log(`✅ Created phone: ${phone.e164}`);

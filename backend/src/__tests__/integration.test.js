@@ -124,8 +124,7 @@ describe('Phone List API - Full Integration Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           e164_number: '+5511999887766',
-          raw_number: '(11) 99988-7766',
-          phone_type: 'mobile',
+          type: 'mobile',
         });
 
       expect(response.status).toBe(201);
@@ -269,8 +268,7 @@ describe('Phone List API - Full Integration Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           e164_number: `+551${Date.now() % 1000000000}`,
-          raw_number: `(11) ${Date.now() % 1000000000}`,
-          phone_type: 'mobile',
+          type: 'mobile',
         });
       phoneId = phoneResponse.body.data?.id;
 

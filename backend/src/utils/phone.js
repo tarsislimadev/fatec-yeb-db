@@ -3,6 +3,13 @@ import { parsePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
 // Validate and normalize phone number
 export function validateAndNormalizePhone(phoneNumber, countryCode = 'BR') {
   try {
+    if (!/^\+[1-9]\d{1,14}$/.test(phoneNumber)) {
+      return {
+        valid: false,
+        error: 'Phone number must be in E.164 format',
+      };
+    }
+
     const parsed = parsePhoneNumber(phoneNumber, countryCode);
     
     if (!parsed || !isValidPhoneNumber(phoneNumber, countryCode)) {
@@ -15,9 +22,7 @@ export function validateAndNormalizePhone(phoneNumber, countryCode = 'BR') {
     return {
       valid: true,
       e164_number: parsed.format('E.164'),
-      raw_number: phoneNumber,
       country_code: parsed.country,
-      national_number: parsed.formatNational(),
       type: parsed.getType() || 'unknown',
     };
   } catch (err) {

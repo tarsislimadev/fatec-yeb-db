@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { usePhoneStore } from '../store';
 import { getPhones, createPhone } from '../services/api';
 import { Button, Card, Loading, Alert } from '../components/common';
 import { Header } from '../components/Header';
 
 export function PhonesPage() {
-  const navigate = useNavigate();
   const { phones, setPhones, isLoading, setLoading, error, setError } = usePhoneStore();
   const [filter, setFilter] = useState({ search: '', status: '' });
   const [pagination, setPagination] = useState({ page: 1, per_page: 10, total_pages: 1 });
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [formData, setFormData] = useState({ e164_number: '', raw_number: '', type: 'mobile' });
+  const [formData, setFormData] = useState({ e164_number: '', type: 'mobile' });
   const [formError, setFormError] = useState('');
 
   useEffect(() => {
@@ -40,18 +38,17 @@ export function PhonesPage() {
     e.preventDefault();
     setFormError('');
 
-    if (!formData.e164_number && !formData.raw_number) {
+    if (!formData.e164_number) {
       setFormError('Phone number is required');
       return;
     }
 
     try {
       await createPhone({
-        e164_number: formData.e164_number || formData.raw_number,
-        raw_number: formData.raw_number,
+        e164_number: formData.e164_number,
         type: formData.type,
       });
-      setFormData({ e164_number: '', raw_number: '', type: 'mobile' });
+      setFormData({ e164_number: '', type: 'mobile' });
       setShowCreateForm(false);
       await fetchPhones();
     } catch (err) {
@@ -98,19 +95,12 @@ export function PhonesPage() {
           {showCreateForm && (
             <form onSubmit={handleCreatePhone} className="border-t pt-4">
               {formError && <Alert type="error" message={formError} onClose={() => setFormError('')} />}
-              <div className="mb-3 grid gap-3 lg:grid-cols-3">
+              <div className="mb-3 grid gap-3 lg:grid-cols-2">
                 <input
                   type="text"
                   placeholder="E.164 Format: +55119876543210"
                   value={formData.e164_number}
                   onChange={(e) => setFormData({ ...formData, e164_number: e.target.value })}
-                  className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Raw: (11) 98765-43210"
-                  value={formData.raw_number}
-                  onChange={(e) => setFormData({ ...formData, raw_number: e.target.value })}
                   className="min-h-[44px] rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
@@ -147,7 +137,6 @@ export function PhonesPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-mono font-bold text-lg">{phone.e164_number}</p>
-                        <p className="text-gray-600">{phone.raw_number}</p>
                         <div className="flex gap-2 mt-2">
                           <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
                             {phone.type}

@@ -30,7 +30,7 @@ export async function listPhones(req, res) {
     }
 
     if (search) {
-      query += ` AND (e164_number ILIKE $${paramCount} OR raw_number ILIKE $${paramCount})`;
+      query += ` AND e164_number ILIKE $${paramCount}`;
       params.push(`%${search}%`);
       paramCount++;
     }
@@ -65,7 +65,7 @@ export async function listPhones(req, res) {
 // ============ CREATE PHONE ============
 export async function createPhone(req, res) {
   try {
-    const { e164_number, raw_number, type, country_code } = req.body;
+    const { e164_number, type, country_code } = req.body;
     const idempotencyKey = req.headers['idempotency-key'];
 
     if (!e164_number) {
@@ -83,7 +83,7 @@ export async function createPhone(req, res) {
     }
 
     // Normalize phone
-    const normalized = validateAndNormalizePhone(raw_number || e164_number, country_code || 'BR');
+    const normalized = validateAndNormalizePhone(e164_number, country_code || 'BR');
     if (!normalized.valid) {
       return sendError(res, 'VALIDATION_ERROR', normalized.error);
     }
@@ -91,15 +91,13 @@ export async function createPhone(req, res) {
     const phoneId = uuidv4();
     const result = await db.query(
       `INSERT INTO phones (
-        id, e164_number, raw_number, country_code, national_number, type, status
-      ) VALUES ($1, $2, $3, $4, $5, $6, 'active')
+        id, e164_number, country_code, type, status
+      ) VALUES ($1, $2, $3, $4, 'active')
       RETURNING *`,
       [
         phoneId,
         normalized.e164_number,
-        normalized.raw_number,
         normalized.country_code,
-        normalized.national_number,
         type || normalized.type,
       ]
     );

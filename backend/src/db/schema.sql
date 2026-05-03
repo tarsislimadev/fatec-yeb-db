@@ -70,9 +70,7 @@ CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_expires_at ON password_rese
 CREATE TABLE IF NOT EXISTS phones (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   e164_number VARCHAR(15) UNIQUE NOT NULL,
-  raw_number VARCHAR(255) NOT NULL,
   country_code VARCHAR(2),
-  national_number VARCHAR(15),
   type VARCHAR(50) DEFAULT 'unknown' CHECK (type IN ('mobile', 'landline', 'whatsapp', 'unknown')),
   status VARCHAR(50) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'invalid', 'blocked')),
   is_primary BOOLEAN DEFAULT FALSE,
@@ -90,6 +88,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_phones_e164_number ON phones(e164_number);
 CREATE INDEX IF NOT EXISTS idx_phones_status ON phones(status);
 CREATE INDEX IF NOT EXISTS idx_phones_created_at ON phones(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_phones_last_seen_at ON phones(last_seen_at DESC);
+
+-- Keep existing databases aligned with E.164-only schema
+ALTER TABLE phones DROP COLUMN IF EXISTS raw_number;
+ALTER TABLE phones DROP COLUMN IF EXISTS national_number;
 
 -- people
 CREATE TABLE IF NOT EXISTS people (

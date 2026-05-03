@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPhoneDetail, addPhoneOwner, removePhoneOwner, getPeople, deletePhone, updatePhone } from '../services/api';
+import { getPhoneDetail, addPhoneOwner, removePhoneOwner, getPeople, deletePhone } from '../services/api';
 import { Button, Card, Loading, Alert, Input } from '../components/common';
 import { Header } from '../components/Header'
 import { getQueryParam } from '../services/window';
@@ -128,7 +128,6 @@ export function PhoneDetailPage() {
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">{phone.e164_number}</h1>
-            <p className="text-gray-600">{phone.raw_number}</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <Button onClick={() => navigate('/phones')} variant="secondary" className="w-full sm:w-auto">
@@ -165,10 +164,6 @@ export function PhoneDetailPage() {
                 <p className="text-sm text-gray-600">E.164 Number</p>
                 <p className="font-mono font-bold text-lg mt-2">{phone.e164_number}</p>
               </div>
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Raw Number</p>
-                <p className="font-mono mt-2">{phone.raw_number}</p>
-              </div>
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600">Type</p>
                 <p className="capitalize font-semibold mt-2">{phone.type}</p>
@@ -180,10 +175,6 @@ export function PhoneDetailPage() {
               <div className="bg-orange-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600">Country Code</p>
                 <p className="font-semibold mt-2">{phone.country_code}</p>
-              </div>
-              <div className="bg-orange-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">National Number</p>
-                <p className="font-mono mt-2">{phone.national_number}</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600">Created</p>
