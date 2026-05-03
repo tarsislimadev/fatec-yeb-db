@@ -429,7 +429,7 @@ After Phase 1 testing completes:
 2. **Log Issues** - Create GitHub issues for any bugs found
 3. **Fix Critical Bugs** - Resolve before production release
 4. **Get Sign-Off** - Stakeholder approval for production deployment
-5. **Deploy to Production** (Optional Azure deployment guide: [AZURE_DEPLOYMENT_CHECKLIST.md](/AZURE_DEPLOYMENT_CHECKLIST.md))
+5. **Deploy to Production** (Follow [DEPLOYMENT.md](/DEPLOYMENT.md))
 6. **Begin Phase 2** - Start CNPJ enrichment feature development
 
 ---

@@ -391,7 +391,6 @@ docker-compose up
 - SSL with Certbot
 
 ### Cloud (Ready for)
-- Azure App Service + Azure Database + Azure Cache
 - AWS Elastic Beanstalk + RDS + ElastiCache
 - GCP App Engine + Cloud SQL + Cloud Cache
 - Heroku with Procfile

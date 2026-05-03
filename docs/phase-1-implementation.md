@@ -121,7 +121,7 @@ Phase 1 builds the complete MVP with authentication, phone CRUD, relations manag
 
 #### Task 1.7: Microsoft OAuth Integration
 **Scope:**
-- Register app with Azure AD
+- Register app with Microsoft Entra ID
 - Implement GET /auth/oauth/microsoft/start
 - Implement GET /auth/oauth/microsoft/callback
 - Link existing users by email

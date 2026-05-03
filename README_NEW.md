@@ -248,7 +248,6 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for:
 - Monitoring & logging
 
 ### Cloud Platforms
-- Azure App Service + Azure Database + Azure Cache
 - AWS Elastic Beanstalk + RDS + ElastiCache
 - GCP App Engine + Cloud SQL + Cloud Cache
 - Heroku with Procfile

@@ -181,8 +181,8 @@ docs/
 ### Infrastructure
 - **Container:** Docker
 - **CI/CD:** GitHub Actions
-- **Hosting:** AWS / Azure / GCP
-- **Secrets:** Environment variables + Key Vault
+- **Hosting:** AWS / GCP
+- **Secrets:** Environment variables + secrets manager
 - **Monitoring:** CloudWatch / DataDog / New Relic
 
 ---

@@ -700,8 +700,7 @@ npm run test:e2e:debug
    ```
 
 2. **Production Deployment**
-   - See [AZURE_DEPLOYMENT_CHECKLIST.md](../AZURE_DEPLOYMENT_CHECKLIST.md)
-   - Or follow [DEPLOYMENT.md](../DEPLOYMENT.md)
+  - Follow [DEPLOYMENT.md](../DEPLOYMENT.md)
 
 ---
 
