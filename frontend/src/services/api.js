@@ -96,6 +96,29 @@ export async function updatePhone(phoneId, updates) {
   return response.data.data;
 }
 
+export async function updatePhoneConsent(phoneId, updates) {
+  const response = await api.patch(`/phones/${phoneId}/consent`, updates);
+  return response.data.data;
+}
+
+export async function createContactAttempt(phoneId, attemptData) {
+  const response = await api.post(`/phones/${phoneId}/contact-attempts`, attemptData);
+  return response.data.data;
+}
+
+export async function getPhoneTimeline(phoneId) {
+  const response = await api.get(`/phones/${phoneId}/timeline`);
+  return response.data.data;
+}
+
+export async function getOutreachReport(filters = {}) {
+  const params = new URLSearchParams(filters);
+  const response = await api.get(`/reports/outreach?${params}`, {
+    responseType: filters.format === 'csv' ? 'text' : 'json',
+  });
+  return response.data;
+}
+
 export async function deletePhone(phoneId) {
   return await api.delete(`/phones/${phoneId}`);
 }
