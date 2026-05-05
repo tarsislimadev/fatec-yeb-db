@@ -77,15 +77,15 @@ export async function updatePhoneConsent(req, res) {
       return sendError(res, 'VALIDATION_ERROR', 'No consent fields to update');
     }
 
-    if (updates.marketing_consent && !VALID_CONSENT_VALUES.includes(updates.marketing_consent)) {
+    if ('marketing_consent' in updates && !VALID_CONSENT_VALUES.includes(updates.marketing_consent)) {
       return sendError(res, 'VALIDATION_ERROR', 'Invalid marketing_consent value');
     }
 
-    if (updates.transactional_consent && !VALID_CONSENT_VALUES.includes(updates.transactional_consent)) {
+    if ('transactional_consent' in updates && !VALID_CONSENT_VALUES.includes(updates.transactional_consent)) {
       return sendError(res, 'VALIDATION_ERROR', 'Invalid transactional_consent value');
     }
 
-    if (updates.suppression_status && !VALID_SUPPRESSION_VALUES.includes(updates.suppression_status)) {
+    if ('suppression_status' in updates && !VALID_SUPPRESSION_VALUES.includes(updates.suppression_status)) {
       return sendError(res, 'VALIDATION_ERROR', 'Invalid suppression_status value');
     }
 
