@@ -25,7 +25,7 @@ jobs:
           ssh-keyscan -H "${{ secrets.AWS_SSH_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Deploy to AWS Lightsail
-        run: ssh -i ~/fatec-yeb-db.pem "${{ secrets.AWS_SSH_USER }}@${{ secrets.AWS_SSH_HOST }}" 'cd ~/fatec-yeb-db/ && git checkout && bash ./env/docker.down.sh && bash ./env/docker.up.sh && bash ./env/npm.migrate.sh'
+        run: ssh -i ~/fatec-yeb-db.pem "${{ secrets.AWS_SSH_USER }}@${{ secrets.AWS_SSH_HOST }}" 'cd ~/fatec-yeb-db/ && git reset --hard && bash ./env/docker.down.sh && bash ./env/docker.up.sh && bash ./env/npm.migrate.sh'
         env:
           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
           AWS_SSH_USER: ${{ secrets.AWS_SSH_USER }}
