@@ -143,6 +143,22 @@
 - ✅ Acceptance criteria checklist
 - ✅ Phase 2 exit criteria
 
+## 📝 Phase 3 Planning
+
+### Document Created: [phase-3-planning.md](phase-3-planning.md)
+
+**Planned Scope:**
+- Standardized contact attempt outcomes and audit events
+- Suppression and consent enforcement
+- Timeline API and phone detail timeline UI
+- Export/reporting endpoint for outreach history
+
+**Summary:**
+- ✅ 7 planned tasks across 2 weeks
+- ✅ Audit log and consent history included
+- ✅ Timeline aggregation and export flow defined
+- ✅ Success criteria and exit criteria documented
+
 ---
 
 ## ✅ COMPLETED: Comprehensive Roadmap

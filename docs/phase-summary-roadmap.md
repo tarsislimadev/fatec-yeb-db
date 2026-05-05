@@ -76,6 +76,7 @@
 ### Phase 3: Outreach & Timeline (Future)
 **Duration:** 2 weeks  
 **Status:** Conceptual  
+**Document:** [phase-3-planning.md](phase-3-planning.md)
 
 **Planned Features:**
 - Standardized contact attempt outcomes

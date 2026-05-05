@@ -45,6 +45,15 @@
 | | • Job pipeline & job status tracking | Backend | |
 | | • Batch enrichment & caching | Backend | |
 
+### Phase 3: Outreach & Timeline (Conceptual)
+
+| Document | Purpose | Audience | Lines |
+|----------|---------|----------|-------|
+| [phase-3-planning.md](phase-3-planning.md) | Outreach compliance, timeline, and export plan | Backend, Frontend, QA | |
+| | • Consent and suppression enforcement | Backend | |
+| | • Timeline API and UI | Backend, Frontend | |
+| | • Export/reporting and audit logging | Backend, QA | |
+
 ### Reference & Navigation
 
 | Document | Purpose | Audience |
@@ -96,6 +105,8 @@ docs/
 │
 ├── Phase 2: Planned 🎯
 │   ├── phase-2-planning.md
+├── Phase 3: Conceptual 📝
+│   ├── phase-3-planning.md
 │
 └── Reference
     └── phase-summary-roadmap.md
