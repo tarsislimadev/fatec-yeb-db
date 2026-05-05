@@ -16,6 +16,12 @@ jobs:
       - name: Create SSH key
         run: echo "${{ secrets.AWS_SSH_KEY }}" > ~/fatec-yeb-db.pem
 
+      - name: Set permissions for SSH key
+        run: chmod 400 ~/fatec-yeb-db.pem
+
+      - name: Add host to known_hosts
+        run: ssh-keyscan -H "${{ secrets.AWS_SSH_HOST }}" >> ~/.ssh/known_hosts
+
       - name: Deploy to AWS Lightsail
         run: ssh -i ~/fatec-yeb-db.pem "${{ secrets.AWS_SSH_USER }}@${{ secrets.AWS_SSH_HOST }}" 'cd ~/fatec-yeb-db/ && bash ./env/docker.down.sh && bash ./env/docker.up.sh && bash ./env/npm.migrate.sh && bash ./env/npm.seed.sh'
         env:
