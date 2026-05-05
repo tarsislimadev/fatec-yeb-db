@@ -200,8 +200,14 @@ export function PhoneDetailPage() {
           <div>
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-bold">Owners & Relations</h2>
-              <Button onClick={() => setShowOwnerForm(!showOwnerForm)} className="w-full sm:w-auto">
-                {showOwnerForm ? '✕ Cancel' : '+ Add Owner'}
+              <Button
+                onClick={() => setShowOwnerForm(!showOwnerForm)}
+                className={`w-full sm:w-auto text-white ${showOwnerForm
+                  ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
+                  : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+                  }`}
+              >
+                {showOwnerForm ? 'Cancel' : 'Add Owner'}
               </Button>
             </div>
 
