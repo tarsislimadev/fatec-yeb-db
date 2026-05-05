@@ -346,4 +346,74 @@ describe('Phone List API - Full Integration Tests', () => {
       expect(response.status).toBe(404);
     });
   });
+
+  describe('8. Phase 3 - Outreach & Timeline', () => {
+    let outreachPhoneId;
+
+    beforeAll(async () => {
+      const signinResponse = await request(app)
+        .post('/api/v1/auth/signin')
+        .send(existingUser);
+
+      authToken = signinResponse.body.data.access_token;
+
+      const phoneResponse = await request(app)
+        .post('/api/v1/phones')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          e164_number: `+55119${String(Date.now()).slice(-8)}`,
+          type: 'mobile',
+        });
+
+      outreachPhoneId = phoneResponse.body.data.id;
+    });
+
+    test('PATCH /phones/:id/consent - Should update consent state', async () => {
+      const response = await request(app)
+        .patch(`/api/v1/phones/${outreachPhoneId}/consent`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          marketing_consent: 'granted',
+          transactional_consent: 'unknown',
+          suppression_status: 'none',
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.marketing_consent).toBe('granted');
+    });
+
+    test('POST /phones/:id/contact-attempts - Should create contact attempt', async () => {
+      const response = await request(app)
+        .post(`/api/v1/phones/${outreachPhoneId}/contact-attempts`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          channel_type: 'call',
+          outcome: 'no_answer',
+          attempted_at: new Date().toISOString(),
+          notes: 'Initial outreach attempt',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.data.phone_id).toBe(outreachPhoneId);
+    });
+
+    test('GET /phones/:id/timeline - Should return timeline events', async () => {
+      const response = await request(app)
+        .get(`/api/v1/phones/${outreachPhoneId}/timeline`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.items).toBeInstanceOf(Array);
+      expect(response.body.data.items.length).toBeGreaterThan(0);
+    });
+
+    test('GET /reports/outreach - Should export outreach report', async () => {
+      const response = await request(app)
+        .get(`/api/v1/reports/outreach?phone_id=${outreachPhoneId}&format=csv`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.text).toContain('phone_id');
+    });
+  });
 });

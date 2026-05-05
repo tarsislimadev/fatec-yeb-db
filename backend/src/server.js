@@ -7,6 +7,7 @@ import { errorHandlingMiddleware, notFoundHandler } from './middleware/index.js'
 import authRoutes from './routes/auth.js';
 import phoneRoutes from './routes/phones.js';
 import peopleRoutes from './routes/people.js';
+import outreachRoutes from './routes/outreach.js';
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.get('/health', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/phones', phoneRoutes);
 app.use('/api/v1/people', peopleRoutes);
+app.use('/api/v1', outreachRoutes);
 
 // ============ ERROR HANDLING ============
 

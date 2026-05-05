@@ -207,6 +207,29 @@ CREATE INDEX IF NOT EXISTS idx_contact_attempts_phone_id ON contact_attempts(pho
 CREATE INDEX IF NOT EXISTS idx_contact_attempts_attempted_at ON contact_attempts(phone_id, attempted_at DESC);
 CREATE INDEX IF NOT EXISTS idx_contact_attempts_outcome ON contact_attempts(outcome);
 
+-- Phase 3: outreach compliance fields
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS marketing_consent VARCHAR(20) DEFAULT 'unknown' CHECK (marketing_consent IN ('granted', 'revoked', 'unknown'));
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS transactional_consent VARCHAR(20) DEFAULT 'unknown' CHECK (transactional_consent IN ('granted', 'revoked', 'unknown'));
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS suppression_status VARCHAR(50) DEFAULT 'none' CHECK (suppression_status IN ('none', 'manual', 'consent_revoked', 'opted_out'));
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS suppression_reason TEXT;
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS consent_recorded_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS suppression_updated_at TIMESTAMP WITH TIME ZONE;
+
+-- Phase 3: compliance audit log
+CREATE TABLE IF NOT EXISTS audit_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  phone_id UUID REFERENCES phones(id) ON DELETE CASCADE,
+  entity_type VARCHAR(50) NOT NULL,
+  action VARCHAR(100) NOT NULL,
+  details JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_log_phone_id ON audit_log(phone_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_entity_type ON audit_log(entity_type);
+CREATE INDEX IF NOT EXISTS idx_audit_log_created_at ON audit_log(created_at DESC);
+
 -- ============ ENRICHMENT (PHASE 2) TABLES ============
 
 -- enrichment_jobs
