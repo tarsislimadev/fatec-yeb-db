@@ -1,0 +1,27 @@
+name: Publish to AWS Lightsail
+
+on:
+  schedule:
+    - cron: '0 20 * * *' # Runs daily at 8 PM UTC
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create SSH key
+        run: echo "${{ secrets.AWS_SSH_KEY }}" > ~/fatec-yeb-db.pem
+
+      - name: Deploy to AWS Lightsail
+        run: ssh -i ~/fatec-yeb-db.pem "${{ secrets.AWS_SSH_USER }}@${{ secrets.AWS_SSH_HOST }}" 'cd ~/fatec-yeb-db/ && bash ./env/docker.down.sh && bash ./env/docker.up.sh && bash ./env/npm.migrate.sh && bash ./env/npm.seed.sh'
+        env:
+          AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          AWS_SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          AWS_SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+
+      - name: Remove SSH key
+        run: rm ~/fatec-yeb-db.pem
