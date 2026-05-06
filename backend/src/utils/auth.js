@@ -4,10 +4,22 @@ import crypto from 'crypto';
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 const JWT_EXPIRY = process.env.JWT_EXPIRY || '1h';
 
+// Validate password strength
+// Requirements: min 9 chars, uppercase, lowercase, number, special char
+export function isValidPassword(password) {
+  if (!password || typeof password !== 'string') return false;
+  if (password.length < 9) return false;
+  if (!/[A-Z]/.test(password)) return false;
+  if (!/[a-z]/.test(password)) return false;
+  if (!/[0-9]/.test(password)) return false;
+  if (!/[!@#$%^&*]/.test(password)) return false;
+  return true;
+}
+
 // Generate JWT token
-export function generateToken(userId, email) {
+export function generateToken(payload) {
   return jwt.sign(
-    { userId, email },
+    payload,
     JWT_SECRET,
     { expiresIn: JWT_EXPIRY }
   );
@@ -18,7 +30,7 @@ export function verifyToken(token) {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return null;
+    throw err;
   }
 }
 

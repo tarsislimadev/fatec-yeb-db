@@ -10,13 +10,13 @@ export function successResponse(res, data, meta = null, statusCode = 200) {
 }
 
 // Format error response
-export function errorResponse(res, code, message, details = {}, statusCode = 400) {
+export function errorResponse(res, code, message, details = {}, statusCode = 400, requestId = null) {
   const errorResponse = {
     error: {
       code,
       message,
       details,
-      request_id: uuidv4(),
+      request_id: requestId || res.locals?.requestId || uuidv4(),
       timestamp: new Date().toISOString(),
     },
   };
@@ -36,9 +36,9 @@ export const ERROR_CODES = {
 };
 
 // Helper to send error with standard format
-export function sendError(res, errorType, message, details = {}) {
+export function sendError(res, errorType, message, details = {}, statusCodeOverride = null, requestId = null) {
   const error = ERROR_CODES[errorType] || ERROR_CODES.INTERNAL_ERROR;
-  return errorResponse(res, error.code, message, details, error.status);
+  return errorResponse(res, error.code, message, details, statusCodeOverride || error.status, requestId);
 }
 
 // Format pagination metadata

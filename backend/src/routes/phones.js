@@ -3,6 +3,7 @@ import { listPhones, createPhone, getPhone, updatePhone, deletePhone } from '../
 import { addPhoneOwner, removePhoneOwner, updatePhoneOwner } from '../controllers/ownerController.js';
 import { enrichPhone } from '../controllers/enrichmentController.js';
 import { authMiddleware } from '../middleware/index.js';
+import { writeRateLimiter } from '../middleware/production.js';
 
 const router = express.Router();
 
@@ -13,27 +14,27 @@ router.use(authMiddleware);
 router.get('/', listPhones);
 
 // POST /api/v1/phones - Create phone
-router.post('/', createPhone);
+router.post('/', writeRateLimiter, createPhone);
 
 // GET /api/v1/phones/:id - Get phone detail
 router.get('/:id', getPhone);
 
 // PATCH /api/v1/phones/:id - Update phone
-router.patch('/:id', updatePhone);
+router.patch('/:id', writeRateLimiter, updatePhone);
 
 // DELETE /api/v1/phones/:id - Delete phone (soft delete)
-router.delete('/:id', deletePhone);
+router.delete('/:id', writeRateLimiter, deletePhone);
 
 // POST /api/v1/phones/:id/owners - Add owner relation
-router.post('/:id/owners', addPhoneOwner);
+router.post('/:id/owners', writeRateLimiter, addPhoneOwner);
 
 // DELETE /api/v1/phones/:id/owners/:ownerRelationId - Remove owner relation
-router.delete('/:id/owners/:ownerRelationId', removePhoneOwner);
+router.delete('/:id/owners/:ownerRelationId', writeRateLimiter, removePhoneOwner);
 
 // PATCH /api/v1/phones/:id/owners/:ownerRelationId - Update owner relation
-router.patch('/:id/owners/:ownerRelationId', updatePhoneOwner);
+router.patch('/:id/owners/:ownerRelationId', writeRateLimiter, updatePhoneOwner);
 
 // POST /api/v1/phones/:id/enrich - Create an enrichment job for a phone
-router.post('/:id/enrich', enrichPhone);
+router.post('/:id/enrich', writeRateLimiter, enrichPhone);
 
 export default router;

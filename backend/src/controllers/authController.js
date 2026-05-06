@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { db, redis } from '../db/index.js';
 import { generateToken, generateResetToken, hashToken } from '../utils/auth.js';
 import { successResponse, sendError, ERROR_CODES } from '../utils/response.js';
+import { recordAuthFailure } from '../utils/observability.js';
 
 // ============ SIGNUP ============
 export async function signup(req, res) {
@@ -74,6 +75,7 @@ export async function signin(req, res) {
     );
 
     if (userResult.rows.length === 0) {
+      recordAuthFailure({ reason: 'unknown_email', email, ip: req.ip });
       return sendError(res, 'UNAUTHORIZED', 'Invalid credentials');
     }
 
@@ -81,12 +83,14 @@ export async function signin(req, res) {
 
     // Check if account is locked
     if (user.status === 'locked' && user.locked_until && new Date(user.locked_until) > new Date()) {
+      recordAuthFailure({ reason: 'locked_account', email, ip: req.ip });
       return sendError(res, 'FORBIDDEN', 'Account locked. Try again later');
     }
 
     // Verify password
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatch) {
+      recordAuthFailure({ reason: 'wrong_password', email, ip: req.ip });
       // Increment failed attempts
       const newAttempts = user.failed_login_attempts + 1;
       const isLocked = newAttempts >= 5;
@@ -97,6 +101,7 @@ export async function signin(req, res) {
           `UPDATE app_users SET failed_login_attempts = $1, locked_until = $2, status = 'locked' WHERE id = $3`,
           [newAttempts, lockedUntil, user.id]
         );
+        recordAuthFailure({ reason: 'lockout_threshold_reached', email, ip: req.ip });
         return sendError(res, 'FORBIDDEN', 'Account locked after too many attempts');
       } else {
         await db.query(
