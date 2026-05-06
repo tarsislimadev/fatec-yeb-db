@@ -88,13 +88,15 @@
 
 ### Phase 4: Production Readiness (Future)
 **Duration:** 2 weeks  
-**Status:** Conceptual  
+**Status:** Planned in detail  
+**Document:** [phase-4-planning.md](phase-4-planning.md)
 
 **Planned Work:**
 - Security hardening (rate limits, lockout, session policy)
 - Observability (logs, metrics, tracing, alerts)
 - Reliability (retries, dead-letter handling, circuit breakers)
-- Performance tuning
+- Backup, restore, and retention validation
+- Performance testing for filters and enrichment workers
 
 ---
 

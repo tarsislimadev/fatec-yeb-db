@@ -54,6 +54,15 @@
 | | • Timeline API and UI | Backend, Frontend | |
 | | • Export/reporting and audit logging | Backend, QA | |
 
+### Phase 4: Production Readiness (Planned)
+
+| Document | Purpose | Audience | Lines |
+|----------|---------|----------|-------|
+| [phase-4-planning.md](phase-4-planning.md) | Production hardening, observability, and recovery plan | Backend, DevOps, QA | |
+| | • Security hardening and session policy | Backend | |
+| | • Logs, metrics, tracing, and alerts | Backend, DevOps | |
+| | • Backups, restore drills, and performance tests | DevOps, QA | |
+
 ### Reference & Navigation
 
 | Document | Purpose | Audience |
@@ -107,6 +116,8 @@ docs/
 │   ├── phase-2-planning.md
 ├── Phase 3: Conceptual 📝
 │   ├── phase-3-planning.md
+├── Phase 4: Planned 🔒
+│   ├── phase-4-planning.md
 │
 └── Reference
     └── phase-summary-roadmap.md

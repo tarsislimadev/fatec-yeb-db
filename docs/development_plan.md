@@ -71,12 +71,13 @@
 
 ## Phase 4, Production Readiness
 
-1. Security hardening: lockout, rate limits, session policy.
-2. Observability: logs, metrics, tracing, alerts.
-3. Reliability: retries, dead-letter handling, circuit breakers.
-4. Data protection: backup, restore, retention policy.
-5. Performance tests for list filters and enrichment workers.
-6. Exit criteria: go-live checklist fully passed.
+1. See [phase-4-planning.md](phase-4-planning.md) for the detailed 2-week plan.
+2. Security hardening: lockout, rate limits, session policy.
+3. Observability: logs, metrics, tracing, alerts.
+4. Reliability: retries, dead-letter handling, circuit breakers.
+5. Data protection: backup, restore, retention policy.
+6. Performance tests for list filters and enrichment workers.
+7. Exit criteria: go-live checklist fully passed.
 
 ## Phase 5, Automated Voice Calls
 
