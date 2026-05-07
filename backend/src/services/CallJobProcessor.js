@@ -103,7 +103,7 @@ export class CallJobProcessor extends EventEmitter {
    */
   async processJob(job) {
     const { campaignId, prospectId, phoneId, phoneNumber } = job.data;
-    const callId = null;
+    let callId = null;
 
     try {
       console.log(`[CallJobProcessor] Processing job ${job.id} for ${phoneNumber}`);
@@ -113,11 +113,12 @@ export class CallJobProcessor extends EventEmitter {
         `INSERT INTO calls (campaign_id, prospect_id, phone_id, phone_number, status, scheduled_at, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, NOW())
          RETURNING id, phone_number, status`,
-        [campaignId, prospectId, phoneId, phoneNumber, 'pending']
+        [campaignId, prospectId, phoneId, phoneNumber, 'pending', new Date()]
       );
 
       const call = callResult.rows[0];
       const currentCallId = call.id;
+      callId = currentCallId;
 
       // 2. Check compliance (suppression + consent)
       const compliance = await this.checkCompliance(phoneId);

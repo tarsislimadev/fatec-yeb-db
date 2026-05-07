@@ -17,16 +17,16 @@ router.use(authMiddleware);
 // GET /api/v1/calls - List calls
 router.get('/', listCalls);
 
-// GET /api/v1/calls/:id - Get call detail
-router.get('/:id', getCallDetail);
-
-// POST /api/v1/calls/:id/retry - Retry a failed call
-router.post('/:id/retry', writeRateLimiter, retryCall);
-
 // POST /api/v1/calls/bulk-retry - Retry multiple failed calls
 router.post('/bulk-retry', writeRateLimiter, bulkRetryCalls);
 
 // GET /api/v1/calls/dashboard/metrics - Get call center dashboard
 router.get('/dashboard/metrics', getDashboard);
+
+// GET /api/v1/calls/:id - Get call detail
+router.get('/:id', getCallDetail);
+
+// POST /api/v1/calls/:id/retry - Retry a failed call
+router.post('/:id/retry', writeRateLimiter, retryCall);
 
 export default router;

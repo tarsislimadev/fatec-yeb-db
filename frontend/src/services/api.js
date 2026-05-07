@@ -237,7 +237,10 @@ export async function getCampaigns(page = 1, pageSize = 20, filters = {}) {
     ...filters,
   });
   const response = await api.get(`/campaigns?${params}`);
-  return response.data.data;
+  return {
+    campaigns: response.data.data || [],
+    meta: response.data.meta || null,
+  };
 }
 
 export async function createCampaign(campaignData) {
@@ -288,7 +291,10 @@ export async function getCalls(page = 1, pageSize = 20, filters = {}) {
     ...filters,
   });
   const response = await api.get(`/calls?${params}`);
-  return response.data.data;
+  return {
+    calls: response.data.data || [],
+    meta: response.data.meta || null,
+  };
 }
 
 export async function getCallDetail(callId) {
@@ -309,7 +315,17 @@ export async function bulkRetryCalls(callIds) {
 export async function getCallDashboard(filters = {}) {
   const params = new URLSearchParams(filters);
   const response = await api.get(`/calls/dashboard/metrics?${params}`);
-  return response.data.data;
+  const payload = response.data.data || {};
+  const metricCore = payload.metrics || {};
+
+  return {
+    ...metricCore,
+    avg_duration_seconds: metricCore.avg_duration ?? 0,
+    flagged_transcripts_count: payload.flagged_transcripts ?? 0,
+    opt_outs_today: payload.opt_outs_today ?? 0,
+    active_campaigns: payload.active_campaigns || [],
+    recent_calls: payload.recent_calls || [],
+  };
 }
 
 // ============ TRANSCRIPT ENDPOINTS (PHASE 5) ============

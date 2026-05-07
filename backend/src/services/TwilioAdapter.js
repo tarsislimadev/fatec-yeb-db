@@ -125,14 +125,7 @@ export class TwilioAdapter extends TelephonyProvider {
    */
   validateWebhookSignature(url, params, signature) {
     try {
-      const cryptoUtil = twilio.jwt;
-      // Twilio validation util method
-      const calculated = cryptoUtil.webhookSignature(
-        this.config.authToken,
-        url,
-        params
-      );
-      return calculated === signature;
+      return twilio.validateRequest(this.config.authToken, signature, url, params);
     } catch (error) {
       console.error('[Twilio] Webhook signature validation error:', error.message);
       return false;

@@ -224,6 +224,8 @@ export async function startCampaign(req, res) {
       return sendError(res, 'CONFLICT', 'Can only start draft campaigns', {}, 409);
     }
 
+    await db.query('BEGIN');
+
     // Update campaign status
     const result = await db.query(
       `UPDATE call_campaigns
@@ -233,10 +235,43 @@ export async function startCampaign(req, res) {
       [userId, id, userId]
     );
 
+    const startedCampaign = result.rows[0];
+
+    // Materialize pending calls for each campaign prospect using active person-owned phones.
+    await db.query(
+      `INSERT INTO calls (campaign_id, prospect_id, phone_id, phone_number, status, scheduled_at, created_at, created_by, updated_at, updated_by)
+       SELECT $1,
+              po.owner_id AS prospect_id,
+              p.id AS phone_id,
+              p.e164_number AS phone_number,
+              'pending' AS status,
+              NOW() AS scheduled_at,
+              NOW() AS created_at,
+              $2 AS created_by,
+              NOW() AS updated_at,
+              $2 AS updated_by
+       FROM phone_owners po
+       JOIN phones p ON p.id = po.phone_id
+       WHERE po.owner_type = 'person'
+         AND po.end_date IS NULL
+         AND p.deleted_at IS NULL
+         AND po.owner_id = ANY($3::uuid[])
+         AND NOT EXISTS (
+           SELECT 1 FROM calls c
+           WHERE c.campaign_id = $1
+             AND c.phone_id = p.id
+             AND c.deleted_at IS NULL
+         )`,
+      [id, userId, startedCampaign.prospect_ids || []]
+    );
+
+    await db.query('COMMIT');
+
     console.log(`[CampaignController] Started campaign ${id}`);
 
-    return successResponse(res, result.rows[0]);
+    return successResponse(res, startedCampaign);
   } catch (err) {
+    await db.query('ROLLBACK').catch(() => {});
     console.error('Start campaign error:', err);
     return sendError(res, 'INTERNAL_ERROR', 'Failed to start campaign', {}, 500);
   }

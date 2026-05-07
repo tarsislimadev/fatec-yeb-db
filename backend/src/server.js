@@ -52,6 +52,9 @@ app.use(cors({
 // JSON parser
 app.use(express.json());
 
+// URL encoded parser (required for provider webhooks such as Twilio)
+app.use(express.urlencoded({ extended: false }));
+
 // ============ ROUTES ============
 
 // Health check

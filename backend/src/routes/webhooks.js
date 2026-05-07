@@ -27,7 +27,8 @@ router.post('/calls/events', async (req, res) => {
     const xTwilioSignature = req.headers['x-twilio-signature'] || '';
     
     // Get full request URL with query parameters
-    const requestUrl = `${process.env.WEBHOOK_URL || 'http://localhost:3000'}${req.originalUrl}`;
+    const webhookBaseUrl = process.env.WEBHOOK_BASE_URL || 'http://localhost:3000';
+    const requestUrl = `${webhookBaseUrl}${req.originalUrl}`;
 
     if (!webhookHandler || !twilioAdapter) {
       console.error('[WebhookRoute] Services not initialized');
