@@ -14,6 +14,13 @@ import { PhonesPage } from './pages/PhonesPage';
 import { CreatePhonePage } from './pages/CreatePhonePage';
 import { PhoneDetailPage } from './pages/PhoneDetailPage';
 import { SessionsDestroyPage } from './pages/SessionsDestroyPage';
+import { CampaignsPage } from './pages/CampaignsPage';
+import { CreateCampaignPage } from './pages/CreateCampaignPage';
+import { CampaignDetailPage } from './pages/CampaignDetailPage';
+import { CallCenterDashboardPage } from './pages/CallCenterDashboardPage';
+import { CallsPage } from './pages/CallsPage';
+import { CallDetailPage } from './pages/CallDetailPage';
+import { TranscriptsPage } from './pages/TranscriptsPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
@@ -43,6 +50,13 @@ function App() {
         <Route path="/people/update" element={<ProtectedRoute> <UpdatePersonPage /> </ProtectedRoute>} />
         <Route path="/people/delete" element={<ProtectedRoute> <DeletePersonPage /> </ProtectedRoute>} />
 
+        <Route path="/campaigns" element={<ProtectedRoute><CampaignsPage /></ProtectedRoute>} />
+        <Route path="/campaigns/new" element={<ProtectedRoute><CreateCampaignPage /></ProtectedRoute>} />
+        <Route path="/campaigns/detail" element={<ProtectedRoute><CampaignDetailPage /></ProtectedRoute>} />
+        <Route path="/calls/dashboard" element={<ProtectedRoute><CallCenterDashboardPage /></ProtectedRoute>} />
+        <Route path="/calls" element={<ProtectedRoute><CallsPage /></ProtectedRoute>} />
+        <Route path="/calls/detail" element={<ProtectedRoute><CallDetailPage /></ProtectedRoute>} />
+        <Route path="/transcripts" element={<ProtectedRoute><TranscriptsPage /></ProtectedRoute>} />
         <Route path="/profile" element={<Navigate to="/people/me" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

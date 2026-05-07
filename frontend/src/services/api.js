@@ -227,3 +227,119 @@ export async function updateDepartment(departmentId, updates) {
 export async function deleteDepartment(departmentId) {
   return await api.delete(`/departments/${departmentId}`);
 }
+
+// ============ CAMPAIGN ENDPOINTS (PHASE 5) ============
+
+export async function getCampaigns(page = 1, pageSize = 20, filters = {}) {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    ...filters,
+  });
+  const response = await api.get(`/campaigns?${params}`);
+  return response.data.data;
+}
+
+export async function createCampaign(campaignData) {
+  const response = await api.post('/campaigns', campaignData);
+  return response.data.data;
+}
+
+export async function getCampaignDetail(campaignId) {
+  const response = await api.get(`/campaigns/${campaignId}`);
+  return response.data.data;
+}
+
+export async function updateCampaign(campaignId, updates) {
+  const response = await api.patch(`/campaigns/${campaignId}`, updates);
+  return response.data.data;
+}
+
+export async function startCampaign(campaignId) {
+  const response = await api.post(`/campaigns/${campaignId}/start`);
+  return response.data.data;
+}
+
+export async function pauseCampaign(campaignId) {
+  const response = await api.post(`/campaigns/${campaignId}/pause`);
+  return response.data.data;
+}
+
+export async function resumeCampaign(campaignId) {
+  const response = await api.post(`/campaigns/${campaignId}/resume`);
+  return response.data.data;
+}
+
+export async function stopCampaign(campaignId) {
+  const response = await api.post(`/campaigns/${campaignId}/stop`);
+  return response.data.data;
+}
+
+export async function deleteCampaign(campaignId) {
+  return await api.delete(`/campaigns/${campaignId}`);
+}
+
+// ============ CALL ENDPOINTS (PHASE 5) ============
+
+export async function getCalls(page = 1, pageSize = 20, filters = {}) {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    ...filters,
+  });
+  const response = await api.get(`/calls?${params}`);
+  return response.data.data;
+}
+
+export async function getCallDetail(callId) {
+  const response = await api.get(`/calls/${callId}`);
+  return response.data.data;
+}
+
+export async function retryCall(callId) {
+  const response = await api.post(`/calls/${callId}/retry`);
+  return response.data.data;
+}
+
+export async function bulkRetryCalls(callIds) {
+  const response = await api.post(`/calls/bulk-retry`, { call_ids: callIds });
+  return response.data.data;
+}
+
+export async function getCallDashboard(filters = {}) {
+  const params = new URLSearchParams(filters);
+  const response = await api.get(`/calls/dashboard/metrics?${params}`);
+  return response.data.data;
+}
+
+// ============ TRANSCRIPT ENDPOINTS (PHASE 5) ============
+
+export async function getFlaggedTranscripts(page = 1, pageSize = 20, filters = {}) {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    ...filters,
+  });
+  const response = await api.get(`/transcripts?${params}`);
+  return response.data.data;
+}
+
+export async function getTranscriptDetail(transcriptId) {
+  const response = await api.get(`/transcripts/${transcriptId}`);
+  return response.data.data;
+}
+
+export async function approveTranscript(transcriptId) {
+  const response = await api.post(`/transcripts/${transcriptId}/approve`);
+  return response.data.data;
+}
+
+export async function rejectTranscript(transcriptId, notes) {
+  const response = await api.post(`/transcripts/${transcriptId}/reject`, { notes });
+  return response.data.data;
+}
+
+export async function confirmOptOut(transcriptId, notes) {
+  const response = await api.post(`/transcripts/${transcriptId}/confirm-opt-out`, { notes });
+  return response.data.data;
+}
