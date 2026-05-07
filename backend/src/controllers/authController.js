@@ -40,7 +40,7 @@ export async function signup(req, res) {
     );
 
     const user = result.rows[0];
-    const token = generateToken(user.id, user.email);
+    const token = generateToken({ id: user.id, email: user.email });
 
     return successResponse(res, {
       id: user.id,
@@ -118,7 +118,7 @@ export async function signin(req, res) {
       [user.id]
     );
 
-    const token = generateToken(user.id, user.email);
+    const token = generateToken({ id: user.id, email: user.email });
 
     return successResponse(res, {
       access_token: token,
