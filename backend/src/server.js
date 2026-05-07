@@ -17,7 +17,14 @@ import authRoutes from './routes/auth.js';
 import phoneRoutes from './routes/phones.js';
 import peopleRoutes from './routes/people.js';
 import outreachRoutes from './routes/outreach.js';
+import campaignRoutes from './routes/campaigns.js';
+import callRoutes from './routes/calls.js';
+import transcriptRoutes from './routes/transcripts.js';
+import webhookRoutes, { setWebhookServices } from './routes/webhooks.js';
 import { emitStructuredLog } from './utils/observability.js';
+import { CallJobProcessor } from './services/CallJobProcessor.js';
+import { WebhookHandler } from './services/WebhookHandler.js';
+import { TwilioAdapter } from './services/TwilioAdapter.js';
 
 dotenv.config();
 
@@ -61,6 +68,10 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/phones', phoneRoutes);
 app.use('/api/v1/people', peopleRoutes);
 app.use('/api/v1', outreachRoutes);
+app.use('/api/v1/campaigns', campaignRoutes);
+app.use('/api/v1/calls', callRoutes);
+app.use('/api/v1/transcripts', transcriptRoutes);
+app.use('/api/v1/webhooks', webhookRoutes);
 
 // ============ ERROR HANDLING ============
 
@@ -111,6 +122,35 @@ async function startServer() {
     // Initialize Redis
     await initRedis();
     console.log('✓ Redis connected');
+
+    // Initialize Phase 5 services (voice calling)
+    try {
+      const twilioConfig = {
+        accountSid: process.env.TWILIO_ACCOUNT_SID,
+        authToken: process.env.TWILIO_AUTH_TOKEN,
+        fromNumber: process.env.TWILIO_FROM_NUMBER,
+      };
+
+      if (twilioConfig.accountSid && twilioConfig.authToken && twilioConfig.fromNumber) {
+        const twilioAdapter = new TwilioAdapter(twilioConfig);
+        const webhookHandler = new WebhookHandler();
+        const callJobProcessor = new CallJobProcessor();
+
+        // Register webhook services
+        setWebhookServices(webhookHandler, twilioAdapter);
+
+        // Initialize job processor (async, but don't block startup)
+        callJobProcessor.initialize(twilioAdapter).catch((err) => {
+          console.error('✗ Failed to initialize call job processor:', err);
+        });
+
+        console.log('✓ Phase 5 voice services initialized');
+      } else {
+        console.log('⚠ Phase 5 voice services disabled (Twilio env vars not configured)');
+      }
+    } catch (err) {
+      console.warn('⚠ Phase 5 services initialization failed:', err.message);
+    }
 
     // Start server
     serverInstance = app.listen(PORT, () => {

@@ -215,6 +215,11 @@ ALTER TABLE phones ADD COLUMN IF NOT EXISTS suppression_reason TEXT;
 ALTER TABLE phones ADD COLUMN IF NOT EXISTS consent_recorded_at TIMESTAMP WITH TIME ZONE;
 ALTER TABLE phones ADD COLUMN IF NOT EXISTS suppression_updated_at TIMESTAMP WITH TIME ZONE;
 
+-- Phase 5: voice channel suppression
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS voice_suppressed_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE phones ADD COLUMN IF NOT EXISTS voice_suppression_reason VARCHAR(100) CHECK (voice_suppression_reason IN ('opted_out_spoken', 'opted_out_consent', 'invalid_number', 'do_not_call_registry', 'manual'));
+
+
 -- Phase 3: compliance audit log
 CREATE TABLE IF NOT EXISTS audit_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -280,4 +285,127 @@ CREATE TABLE IF NOT EXISTS enrichment_results (
 
 CREATE INDEX IF NOT EXISTS idx_enrichment_results_phone_id ON enrichment_results(phone_id);
 CREATE INDEX IF NOT EXISTS idx_enrichment_results_cnpj ON enrichment_results(cnpj);
+
+-- ============ VOICE CALLING (PHASE 5) TABLES ============
+
+-- call_campaigns
+CREATE TABLE IF NOT EXISTS call_campaigns (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  status VARCHAR(50) NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'scheduled', 'running', 'paused', 'completed')),
+  config JSONB DEFAULT '{}' NOT NULL,
+  prospect_ids UUID[] DEFAULT '{}' NOT NULL,
+  started_at TIMESTAMP WITH TIME ZONE,
+  ended_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_call_campaigns_user_id ON call_campaigns(user_id);
+CREATE INDEX IF NOT EXISTS idx_call_campaigns_status ON call_campaigns(status);
+CREATE INDEX IF NOT EXISTS idx_call_campaigns_created_at ON call_campaigns(created_at DESC);
+
+-- calls
+CREATE TABLE IF NOT EXISTS calls (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  campaign_id UUID REFERENCES call_campaigns(id) ON DELETE SET NULL,
+  prospect_id UUID REFERENCES people(id) ON DELETE SET NULL,
+  phone_id UUID NOT NULL REFERENCES phones(id) ON DELETE CASCADE,
+  phone_number VARCHAR(15) NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'dialing', 'in-progress', 'completed', 'failed', 'skipped')),
+  disposition VARCHAR(100),
+  scheduled_at TIMESTAMP WITH TIME ZONE,
+  dialed_at TIMESTAMP WITH TIME ZONE,
+  duration_seconds INT,
+  retry_count INT DEFAULT 0,
+  last_retry_at TIMESTAMP WITH TIME ZONE,
+  next_retry_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id),
+  deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  deleted_by UUID REFERENCES app_users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_calls_campaign_id ON calls(campaign_id);
+CREATE INDEX IF NOT EXISTS idx_calls_phone_id ON calls(phone_id);
+CREATE INDEX IF NOT EXISTS idx_calls_status ON calls(status);
+CREATE INDEX IF NOT EXISTS idx_calls_created_at ON calls(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_calls_dialed_at ON calls(dialed_at DESC);
+
+-- call_sessions
+CREATE TABLE IF NOT EXISTS call_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  call_id UUID NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+  provider_id VARCHAR(255) NOT NULL,
+  provider_name VARCHAR(50) DEFAULT 'twilio',
+  webhook_data JSONB,
+  recording_url VARCHAR(1024),
+  call_duration_seconds INT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_call_sessions_call_id ON call_sessions(call_id);
+CREATE INDEX IF NOT EXISTS idx_call_sessions_provider_id ON call_sessions(provider_id);
+
+-- transcripts
+CREATE TABLE IF NOT EXISTS transcripts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  call_id UUID NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+  raw_text TEXT,
+  processed_text TEXT,
+  confidence_score SMALLINT DEFAULT 0 CHECK (confidence_score BETWEEN 0 AND 100),
+  status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'reviewed', 'approved', 'rejected')),
+  flagged_for_review BOOLEAN DEFAULT FALSE,
+  review_notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at TIMESTAMP WITH TIME ZONE,
+  reviewed_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_transcripts_call_id ON transcripts(call_id);
+CREATE INDEX IF NOT EXISTS idx_transcripts_status ON transcripts(status);
+CREATE INDEX IF NOT EXISTS idx_transcripts_flagged_for_review ON transcripts(flagged_for_review);
+
+-- call_outcomes
+CREATE TABLE IF NOT EXISTS call_outcomes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  call_id UUID NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+  disposition VARCHAR(100),
+  spoken_opt_out_flag BOOLEAN DEFAULT FALSE,
+  opt_out_confidence SMALLINT DEFAULT 0 CHECK (opt_out_confidence BETWEEN 0 AND 100),
+  opt_out_keywords VARCHAR(255)[],
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by UUID REFERENCES app_users(id),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by UUID REFERENCES app_users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_call_outcomes_call_id ON call_outcomes(call_id);
+CREATE INDEX IF NOT EXISTS idx_call_outcomes_spoken_opt_out ON call_outcomes(spoken_opt_out_flag);
+
+-- call_retry_log
+CREATE TABLE IF NOT EXISTS call_retry_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  call_id UUID NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+  attempt_number INT NOT NULL,
+  error_code VARCHAR(50),
+  error_message TEXT,
+  next_retry_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_call_retry_log_call_id ON call_retry_log(call_id);
+CREATE INDEX IF NOT EXISTS idx_call_retry_log_attempt_number ON call_retry_log(call_id, attempt_number);
 
