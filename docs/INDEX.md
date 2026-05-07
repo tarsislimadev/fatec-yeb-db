@@ -66,12 +66,13 @@
 
 ### Phase 5: Automated Voice Calls (Planned)
 
-| Document | Purpose | Audience | Lines |
-|----------|---------|----------|-------|
-| [phase-5-planning.md](phase-5-planning.md) (not yet created) | Voice API integration, call flows, IVR | Backend, DevOps | TBD |
-| | • Voice provider adapters | Backend | |
-| | • Call state management | Backend | |
-| | • IVR script engine | Backend | |
+| Document | Purpose | Audience | Status |
+|----------|---------|----------|--------|
+| [phase-5-planning.md](phase-5-planning.md) | Voice integration, call flows, transcript processing, compliance | Backend, Frontend, DevOps | ✅ Complete |
+| | • Call campaigns and job queue | Backend | 📋 Planned |
+| | • Telephony provider adapter (Twilio) | Backend | 📋 Planned |
+| | • Transcript processing and opt-out detection | Backend | 📋 Planned |
+| | • Call center dashboard and transcript review | Frontend | 📋 Planned |
 
 ### Reference & Navigation
 

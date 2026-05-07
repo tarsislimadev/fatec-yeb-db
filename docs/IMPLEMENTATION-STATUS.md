@@ -328,14 +328,34 @@
 
 ## 📋 Remaining Work
 
-### Phase 5: Automated Voice Calls (Planned)
-**Status:** Not yet started  
-**Scope:**
-- Voice provider adapters
-- Call state management
-- IVR script engine
-- Call recording and analytics
-- Estimated: 3-4 weeks
+### Phase 5: Automated Voice Calls ✅ PLANNING COMPLETE
+**Status:** 📋 Detailed planning ready, awaiting team kickoff  
+**Duration:** 3-4 weeks  
+**Document:** [phase-5-planning.md](phase-5-planning.md)
+
+**Scope (14 Core Tasks):**
+- Database schema for campaigns, calls, sessions, transcripts
+- Telephony provider adapter (Twilio primary, Vonage pattern)
+- Call job processor with queue and retry logic
+- Webhook handler for call events
+- Transcript processing with opt-out detection
+- Campaign CRUD and lifecycle management
+- Call history and status endpoints
+- Compliance enforcement (consent + suppression checks)
+- Frontend campaign management UI
+- Call center dashboard with real-time metrics
+- Call detail and transcript review pages
+- Unit + integration tests (≥75% coverage)
+- API documentation and Postman collection
+- Deployment to staging with smoke tests
+
+**Success Criteria:**
+- All 14 tasks completed
+- ≥75% code coverage for voice layer
+- Call success rate >95%
+- Opt-out detection >90% accurate
+- Go-live checklist approved
+- Estimated: 3-4 weeks (4-5 person-team)
 
 ---
 
@@ -366,6 +386,7 @@
 - Phase 2: phase-2-planning.md
 - Phase 3: phase-3-planning.md
 - Phase 4: phase-4-planning.md
+- Phase 5: phase-5-planning.md
 
 ---
 

@@ -81,13 +81,27 @@
 
 ## Phase 5, Automated Voice Calls
 
-1. Implement call campaigns, call jobs, and call sessions.
-2. Integrate telephony provider through adapter.
-3. Add webhook ingestion and event timeline.
-4. Add transcript processing and identity extraction.
-5. Add confidence thresholds and manual review queue.
-6. Enforce spoken opt-out immediate suppression.
-7. Exit criteria: identified people are linked with confidence and provenance.
+**Duration:** 3-4 weeks  
+**Status:** 📋 Planned  
+**Documentation:** [phase-5-planning.md](phase-5-planning.md)
+
+**Key Features:**
+1. Call campaign management (create, schedule, run, monitor)
+2. Telephony provider integration (Twilio with adapter pattern)
+3. Call job queue with retry and backoff behavior
+4. Webhook ingestion for call events (Twilio callbacks)
+5. Transcript processing with opt-out detection
+6. Spoken opt-out immediate suppression enforcement
+7. Call center dashboard with real-time metrics
+8. Transcript review queue for manual QA
+9. Comprehensive compliance checking (consent, suppression, TCPA)
+
+**Exit criteria:**
+- All 14 core tasks completed
+- ≥75% code coverage for voice layer
+- End-to-end call flow verified on staging
+- Go-live checklist approved
+- Runbook and operation documentation complete
 
 ## Data and Quality Rules
 

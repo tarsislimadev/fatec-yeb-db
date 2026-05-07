@@ -152,16 +152,27 @@
 
 ---
 
-### Phase 5: Automated Voice Calling (Future)
+### Phase 5: Automated Voice Calling 📋 PLANNED
 **Duration:** 3-4 weeks  
-**Status:** Conceptual  
+**Status:** Detailed planning complete  
+**Document:** [phase-5-planning.md](phase-5-planning.md)
 
-**Planned Features:**
-- Call campaigns & call jobs
-- Telephony provider integration
-- Webhook ingestion
-- Transcript processing
-- Spoken opt-out suppression
+**Key Deliverables:**
+- Call campaign management (CRUD, lifecycle)
+- Telephony provider adapter (Twilio + future Vonage)
+- Call job queue with intelligent retry
+- Webhook event ingestion
+- Transcript processing with opt-out detection
+- Call center dashboard + transcript review UI
+- Compliance enforcement (consent, suppression, TCPA)
+- ≥75% code coverage
+
+**Entry Criteria:**
+- Phase 4 complete and production-stable
+- All services running reliably
+- Stakeholder approval for voice channel
+
+**Team Effort:** ~35-42 engineer-days (4-5 person-weeks)
 
 ---
 
