@@ -23,6 +23,7 @@ import transcriptRoutes from './routes/transcripts.js';
 import webhookRoutes, { setWebhookServices } from './routes/webhooks.js';
 import { emitStructuredLog } from './utils/observability.js';
 import { CallJobProcessor } from './services/CallJobProcessor.js';
+import { setCallJobProcessor } from './services/callQueue.js';
 import { WebhookHandler } from './services/WebhookHandler.js';
 import { TwilioAdapter } from './services/TwilioAdapter.js';
 
@@ -143,6 +144,7 @@ async function startServer() {
         setWebhookServices(webhookHandler, twilioAdapter);
 
         // Initialize job processor (async, but don't block startup)
+        setCallJobProcessor(callJobProcessor);
         callJobProcessor.initialize(twilioAdapter).catch((err) => {
           console.error('✗ Failed to initialize call job processor:', err);
         });

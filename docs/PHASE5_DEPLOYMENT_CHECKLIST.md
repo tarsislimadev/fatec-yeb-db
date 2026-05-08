@@ -40,6 +40,7 @@
   ```bash
   npm run migrate
   ```
+- [ ] Confirm the runner applies `src/db/schema.sql` first, then any files in `src/db/migrations/` and records them in `migration_history`
 - [ ] Verify 6 new Phase 5 tables created:
   ```sql
   \dt call_campaigns
@@ -90,6 +91,7 @@
   ```bash
   npm run migrate
   ```
+- [ ] Confirm any new schema changes are added as timestamped files in `backend/src/db/migrations/`
 - [ ] Verify all 6 tables created
 - [ ] Verify columns and indexes exist
 - [ ] Verify foreign keys set correctly

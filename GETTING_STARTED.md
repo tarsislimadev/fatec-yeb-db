@@ -137,7 +137,7 @@ cd /workspaces/fatec-yeb-db/backend
 # 1. Create .env from .env.example
 npm install
 
-# 2. Set up database
+# 2. Set up database (applies schema.sql, then any files in src/db/migrations/)
 npm run migrate
 npm run seed
 

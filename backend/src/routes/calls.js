@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   listCalls,
+  createCall,
   getCallDetail,
   retryCall,
   bulkRetryCalls,
@@ -16,6 +17,9 @@ router.use(authMiddleware);
 
 // GET /api/v1/calls - List calls
 router.get('/', listCalls);
+
+// POST /api/v1/calls - Enqueue an outbound call
+router.post('/', writeRateLimiter, createCall);
 
 // POST /api/v1/calls/bulk-retry - Retry multiple failed calls
 router.post('/bulk-retry', writeRateLimiter, bulkRetryCalls);

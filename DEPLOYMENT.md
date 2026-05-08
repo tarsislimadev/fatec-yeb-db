@@ -87,8 +87,11 @@ npm install --production
 3. **Configure database**
 ```bash
 sudo -u postgres createdb phone_list
-sudo -u postgres psql phone_list < src/db/schema.sql
+cd backend
+npm run migrate
 ```
+
+The migration runner applies `backend/src/db/schema.sql` first, then runs any SQL files in `backend/src/db/migrations/` in order and records them in `migration_history`.
 
 4. **Create systemd service**
 ```bash

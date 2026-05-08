@@ -33,6 +33,10 @@ FRONTEND_URL=http://localhost:5173
 npm run migrate
 ```
 
+This command applies `src/db/schema.sql` first, then runs any timestamped SQL files in `src/db/migrations/` in alphabetical order. Applied files are recorded in the `migration_history` table, so re-running the command is safe.
+
+When you need a schema change, prefer adding a new SQL file under `src/db/migrations/` instead of editing `schema.sql` directly. Keep `schema.sql` for the baseline schema and idempotent bootstrap statements.
+
 5. (Optional) Seed test data:
 ```bash
 npm run seed
@@ -95,7 +99,12 @@ Server runs on port 3000 by default. Health check: `GET /health`
 
 ## Database Schema
 
-12 tables:
+Schema management is split into two layers:
+
+- `src/db/schema.sql` for the base schema and bootstrap objects
+- `src/db/migrations/*.sql` for ordered, timestamped schema updates tracked in `migration_history`
+
+12 base tables:
 - `app_users` - User accounts with auth status
 - `auth_identities` - OAuth provider connections
 - `password_reset_tokens` - Single-use reset tokens

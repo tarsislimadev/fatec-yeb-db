@@ -275,7 +275,8 @@ For now, test manually in the browser. Automated tests coming in Phase 2.
 
 ### Adding a New Table
 
-1. **Update schema.sql**
+1. **Prefer a new migration file** in `backend/src/db/migrations/` for incremental changes
+2. **Update schema.sql** only for baseline/bootstrap objects
 ```sql
 CREATE TABLE new_table (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -285,17 +286,18 @@ CREATE TABLE new_table (
 );
 ```
 
-2. **Run migration**
+3. **Run migration**
 ```bash
 npm run migrate
 ```
 
-3. **Update seed.js if needed**
+4. **Update seed.js if needed**
 
 ### Modifying Existing Table
 
-1. **Update schema.sql** (add ALTER statements if needed)
-2. **Clear and remigrate** (for development only)
+1. **Create a new SQL migration** in `backend/src/db/migrations/` with `ALTER TABLE` statements
+2. **Keep the migration idempotent** with `IF NOT EXISTS` / `ADD COLUMN IF NOT EXISTS` where possible
+3. **Run migrate** (development only: re-running is safe because applied files are tracked in `migration_history`)
 ```bash
 # Backup first!
 npm run migrate

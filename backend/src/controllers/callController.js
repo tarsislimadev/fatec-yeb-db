@@ -1,5 +1,6 @@
 import { db } from '../db/index.js';
 import { successResponse, sendError, getPaginationMeta } from '../utils/response.js';
+import { addCallJob } from '../services/callQueue.js';
 
 // ============ LIST CALLS ============
 export async function listCalls(req, res) {
@@ -52,6 +53,50 @@ export async function listCalls(req, res) {
   } catch (err) {
     console.error('List calls error:', err);
     return sendError(res, 'INTERNAL_ERROR', 'Failed to list calls', {}, 500);
+  }
+}
+
+// ============ CREATE / ENQUEUE CALL ============
+export async function createCall(req, res) {
+  try {
+    const { phone_id, e164_number, prospect_id, campaign_id, scheduled_at } = req.body;
+
+    if (!phone_id && !e164_number) {
+      return sendError(res, 'VALIDATION_ERROR', 'phone_id or e164_number is required');
+    }
+
+    let phoneNumber = e164_number;
+    let phoneId = phone_id;
+
+    if (phoneId) {
+      const phoneResult = await db.query('SELECT id, e164_number FROM phones WHERE id = $1', [phoneId]);
+      if (phoneResult.rows.length === 0) {
+        return sendError(res, 'NOT_FOUND', 'Phone not found', {}, 404);
+      }
+      phoneNumber = phoneResult.rows[0].e164_number;
+    } else if (phoneNumber) {
+      const phoneResult = await db.query('SELECT id, e164_number FROM phones WHERE e164_number = $1', [phoneNumber]);
+      if (phoneResult.rows.length === 0) {
+        return sendError(res, 'NOT_FOUND', 'Phone not registered. Create a phone record first', {}, 404);
+      }
+      phoneId = phoneResult.rows[0].id;
+    }
+
+    // Build job payload
+    const jobPayload = {
+      campaignId: campaign_id || null,
+      prospectId: prospect_id || null,
+      phoneId,
+      phoneNumber,
+      scheduledAt: scheduled_at ? new Date(scheduled_at) : new Date(),
+    };
+
+    const job = await addCallJob(jobPayload);
+
+    return successResponse(res, { queued: true, jobId: job.id }, null, 202);
+  } catch (err) {
+    console.error('Create call error:', err);
+    return sendError(res, 'INTERNAL_ERROR', 'Failed to enqueue call', {}, 500);
   }
 }
 
@@ -336,6 +381,7 @@ export async function getDashboard(req, res) {
 
 export default {
   listCalls,
+  createCall,
   getCallDetail,
   retryCall,
   bulkRetryCalls,

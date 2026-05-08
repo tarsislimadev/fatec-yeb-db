@@ -164,8 +164,9 @@ curl -X DELETE http://localhost:3000/api/v1/phones/PHONE_ID \
 │   ├── src/
 │   │   ├── db/
 │   │   │   ├── index.js          ← Database connection
-│   │   │   ├── schema.sql        ← Database schema
-│   │   │   ├── migrate.js        ← Initialize schema
+│   │   │   ├── schema.sql        ← Base schema/bootstrap
+│   │   │   ├── migrations/       ← Timestamped SQL migrations
+│   │   │   ├── migrate.js        ← Run schema + migrations
 │   │   │   └── seed.js           ← Insert test data
 │   │   ├── controllers/          ← Request handlers
 │   │   ├── middleware/           ← Auth, error handling
@@ -222,7 +223,7 @@ curl -X DELETE http://localhost:3000/api/v1/phones/PHONE_ID \
 
 ```bash
 npm run dev          # Start with hot reload (nodemon)
-npm run migrate      # Initialize database
+npm run migrate      # Apply schema.sql, then run migrations/*.sql
 npm run seed         # Populate test data
 npm test             # Run tests
 npm run lint         # Lint code
@@ -292,7 +293,7 @@ Password: Password123!
 ## Support
 
 - Backend API Docs: See `docs/api-spec.md`
-- Database Schema: See `backend/src/db/schema.sql`
+- Database Schema: See `backend/src/db/schema.sql` and `backend/src/db/migrations/`
 - Issues: Check GitHub issues
 
 Happy coding! 🚀
