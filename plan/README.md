@@ -74,6 +74,33 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - Segurança: criptografia em repouso e em transito, controle de acesso por perfil.
 - Direitos do titular: fluxo para acesso, correcao e exclusao sob solicitacao.
 
+## Pipeline de atualizacao incremental
+- Entrada: arquivos novos, deltas por CNPJ e eventos de reprocessamento.
+- Reprocessamento controlado: revalidar apenas registros com sinais de desatualizacao.
+- Idempotencia: garantir que reprocessar nao duplica contatos.
+- Agendamento: janelas diarias e reprocessamento semanal de contas P1.
+
+## Metricas de qualidade e validacao
+- Completude: % de registros com contato valido e cargo do decisor.
+- Confiabilidade: score por fonte e divergencias resolvidas.
+- Atualizacao: idade media da ultima validacao e % expirados (> 180 dias).
+- Eficiencia: taxa de sucesso por canal e tempo medio de validacao.
+
+## Monitoramento e alertas
+- Falhas de coleta: alertas por taxa de erro, timeout e quedas de fonte.
+- Degradacao de qualidade: quedas de completude/confiabilidade e aumento de divergencias.
+- Operacao: fila de pesquisa primaria, backlog e SLA por prioridade.
+
+## Revisao humana e escalonamento
+- Casos elegiveis: conflitos graves, dados sensiveis ou baixa confianca.
+- SLA: revisar P1 em 48h, P2 em 5 dias.
+- Registro: motivo, decisoes e evidencias anexadas.
+
+## Documentacao operacional
+- Como rodar: configuracao, limites, rotinas e janelas de coleta.
+- Como auditar: trilhas, evidencias e fluxos LGPD.
+- Como ajustar: parametros de score, cadencia e priorizacao.
+
 ## Saidas esperadas da pesquisa primaria
 - Confirmar/atualizar contato principal (nome, cargo, email, telefone).
 - Registrar evidencias de contato e consentimento quando aplicavel.
