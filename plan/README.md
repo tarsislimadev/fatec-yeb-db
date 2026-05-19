@@ -22,7 +22,7 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [ ] Criar pipeline de atualizacao incremental e reprocessamento controlado. (pendente)
 - [x] Definir criterios de faltantes e gatilhos para iniciar pesquisa primaria. (done)
 - [x] Definir prioridade de contato e janela de horario para pesquisa primaria. (done)
-- [ ] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar. (pendente)
+- [x] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar. (done)
 - [x] Implementar captura de consentimento e registro de evidencia de contato. (done)
 - [ ] Implementar controles e conformidade LGPD (consentimento, auditoria, minimizacao). (em andamento)
 - [ ] Definir metricas de qualidade e validacao dos dados (completude, confiabilidade, atualizacao). (pendente)
@@ -50,6 +50,20 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - Ordem de tentativas (por empresa): telefone fixo -> telefone movel/WhatsApp -> email.
 - Cadencia por contato: ate 3 tentativas em 7 dias (D1, D3, D7), com pausa minima de 24h.
 - Escalonamento: se P1 falhar em 7 dias, abrir tarefa manual; se P2/P3 falhar, reavaliar em 30 dias.
+
+## Fluxo de entrevista da IA (pesquisa primaria)
+- Abertura: identificar empresa, motivo do contato e confirmar permissao para prosseguir.
+- Validacao do CNPJ e razao social: confirmar dados basicos e atualizacoes recentes.
+- Identificacao do contato principal: confirmar nome e cargo/funcao.
+- Coleta de contato: confirmar telefone, email e canal preferido.
+- Janela e prioridade: confirmar melhor horario e urgencia.
+- Consentimento: registrar aceite para uso de dados e contato futuro.
+- Encerramento: confirmar resumo e proximo passo.
+
+## Campos a coletar
+- Empresa: cnpj, razao_social, nome_fantasia, status_cnpj, data_validacao, fonte_primaria.
+- Contato principal: nome, cargo, email, telefone, canal_preferido.
+- Operacional: consentimento, evidencia_contato, janela_preferida, prioridade.
 
 ## Saidas esperadas da pesquisa primaria
 - Confirmar/atualizar contato principal (nome, cargo, email, telefone).
