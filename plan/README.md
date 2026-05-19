@@ -24,7 +24,7 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [x] Definir prioridade de contato e janela de horario para pesquisa primaria. (done)
 - [x] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar. (done)
 - [x] Implementar captura de consentimento e registro de evidencia de contato. (done)
-- [ ] Implementar controles e conformidade LGPD (consentimento, auditoria, minimizacao). (em andamento)
+- [x] Implementar controles e conformidade LGPD (consentimento, auditoria, minimizacao). (done)
 - [ ] Definir metricas de qualidade e validacao dos dados (completude, confiabilidade, atualizacao). (pendente)
 - [ ] Implementar monitoramento e alertas para falhas de coleta e degradacao de qualidade. (pendente)
 - [ ] Definir processos de revisao humana e escalonamento de casos inconsistentes. (pendente)
@@ -64,6 +64,15 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - Empresa: cnpj, razao_social, nome_fantasia, status_cnpj, data_validacao, fonte_primaria.
 - Contato principal: nome, cargo, email, telefone, canal_preferido.
 - Operacional: consentimento, evidencia_contato, janela_preferida, prioridade.
+
+## Controles e conformidade LGPD
+- Base legal e finalidade: registrar finalidade de uso e base legal por operacao de coleta.
+- Consentimento: armazenar aceite, data, canal e evidencias (audio, chat, registro).
+- Minimizacao: coletar apenas campos necessarios para a finalidade declarada.
+- Retencao: definir prazos e politica de descarte/anonimizacao.
+- Auditoria: trilha de auditoria para quem acessou, alterou e exportou dados.
+- Segurança: criptografia em repouso e em transito, controle de acesso por perfil.
+- Direitos do titular: fluxo para acesso, correcao e exclusao sob solicitacao.
 
 ## Saidas esperadas da pesquisa primaria
 - Confirmar/atualizar contato principal (nome, cargo, email, telefone).
