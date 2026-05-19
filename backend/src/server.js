@@ -21,6 +21,7 @@ import campaignRoutes from './routes/campaigns.js';
 import callRoutes from './routes/calls.js';
 import transcriptRoutes from './routes/transcripts.js';
 import webhookRoutes, { setWebhookServices } from './routes/webhooks.js';
+import cnpjRoutes from './routes/cnpj.js';
 import { emitStructuredLog } from './utils/observability.js';
 import { CallJobProcessor } from './services/CallJobProcessor.js';
 import { setCallJobProcessor } from './services/callQueue.js';
@@ -76,6 +77,7 @@ app.use('/api/v1/campaigns', campaignRoutes);
 app.use('/api/v1/calls', callRoutes);
 app.use('/api/v1/transcripts', transcriptRoutes);
 app.use('/api/v1/webhooks', webhookRoutes);
+app.use('/api/v1/cnpj', cnpjRoutes);
 
 // ============ ERROR HANDLING ============
 

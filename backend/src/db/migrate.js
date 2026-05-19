@@ -52,10 +52,21 @@ export async function migrate() {
       }
     }
 
+    await verifyRequiredTables(['public.people_businesses']);
+
     console.log('✅ Database migration completed successfully!');
   } catch (error) {
     console.error('❌ Migration failed:', error.message);
     throw error;
+  }
+}
+
+async function verifyRequiredTables(tables) {
+  for (const tableName of tables) {
+    const result = await db.query('SELECT to_regclass($1) as table_name', [tableName]);
+    if (!result.rows[0]?.table_name) {
+      throw new Error(`Required table missing after migrations: ${tableName}`);
+    }
   }
 }
 
