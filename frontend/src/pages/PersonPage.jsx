@@ -35,7 +35,7 @@ export function PersonPage() {
       <main className="container-mobile">
         <div className="max-w-2xl rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-6">
           {person ? (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-1">
               <p><strong>ID:</strong> {person.id}</p>
               <p><strong>Full Name:</strong> {person.full_name}</p>
               <p><strong>Role Title:</strong> {person.role_title}</p>

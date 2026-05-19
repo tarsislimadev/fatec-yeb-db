@@ -33,7 +33,7 @@ export function CreatePhonePage() {
 
       <main className="container-mobile">
         <Card className="mb-6">
-          <div className="grid gap-3 lg:grid-cols-[1fr_1fr_1fr_auto]">
+          <div className="grid gap-3 lg:grid-cols-1">
             <input
               type="text"
               placeholder="Phone (E.164 or raw)"

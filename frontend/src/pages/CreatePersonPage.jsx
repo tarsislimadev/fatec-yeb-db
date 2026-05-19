@@ -6,6 +6,7 @@ import { createPerson } from '../services/api';
 
 export function CreatePersonPage() {
   const [person, setPerson] = React.useState({ full_name: '', role_title: '', email: '', document: '' });
+  const [fieldErrors, setFieldErrors] = React.useState({});
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const navigate = useNavigate();
@@ -13,6 +14,20 @@ export function CreatePersonPage() {
   const createNewPerson = async (personData) => {
     try {
       setErrorMessage('');
+      setFieldErrors({});
+
+      const nextErrors = {};
+      if (!personData.full_name.trim()) {
+        nextErrors.full_name = 'Full name is required';
+      }
+      if (!personData.email.trim()) {
+        nextErrors.email = 'Email is required';
+      }
+
+      if (Object.keys(nextErrors).length > 0) {
+        setFieldErrors(nextErrors);
+        return;
+      }
 
       const payload = {
         full_name: personData.full_name.trim(),
@@ -35,38 +50,52 @@ export function CreatePersonPage() {
 
       <main className="container-mobile">
         <Card className="mb-6">
-          <div className="grid gap-3 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]">
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={person.full_name}
-              onChange={(e) => setPerson({ ...person, full_name: e.target.value })}
-              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="grid gap-3 lg:grid-cols-1">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Full Name</label>
+              <input
+                type="text"
+                value={person.full_name}
+                onChange={(e) => setPerson({ ...person, full_name: e.target.value })}
+                className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {fieldErrors.full_name ? (
+                <p className="text-xs text-red-600">{fieldErrors.full_name}</p>
+              ) : null}
+            </div>
 
-            <input
-              type="text"
-              placeholder="Role Title"
-              value={person.role_title || ''}
-              onChange={(e) => setPerson({ ...person, role_title: e.target.value })}
-              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Role Title</label>
+              <input
+                type="text"
+                value={person.role_title || ''}
+                onChange={(e) => setPerson({ ...person, role_title: e.target.value })}
+                className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-            <input
-              type="email"
-              placeholder="Email"
-              value={person.email || ''}
-              onChange={(e) => setPerson({ ...person, email: e.target.value })}
-              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Email</label>
+              <input
+                type="email"
+                value={person.email || ''}
+                onChange={(e) => setPerson({ ...person, email: e.target.value })}
+                className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {fieldErrors.email ? (
+                <p className="text-xs text-red-600">{fieldErrors.email}</p>
+              ) : null}
+            </div>
 
-            <input
-              type="text"
-              placeholder="Document (CPF/CNPJ)"
-              value={person.document || ''}
-              onChange={(e) => setPerson({ ...person, document: e.target.value })}
-              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Document (CPF/CNPJ)</label>
+              <input
+                type="text"
+                value={person.document || ''}
+                onChange={(e) => setPerson({ ...person, document: e.target.value })}
+                className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
             <button
               onClick={() => createNewPerson(person)}

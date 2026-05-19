@@ -293,7 +293,7 @@ export function PhoneDetailPage() {
         {activeTab === 'details' && (
           <div className="grid gap-6 xl:grid-cols-2">
             <Card>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-lg bg-blue-50 p-4">
                   <p className="text-sm text-gray-600">E.164 Number</p>
                   <p className="mt-2 font-mono text-lg font-bold">{phone.e164_number}</p>
