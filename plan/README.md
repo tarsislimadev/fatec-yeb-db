@@ -16,7 +16,7 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [x] Mapear e consolidar fontes secundarias e o fluxo de enriquecimento por CNPJ (Brasil API, CNPJA). (done)
 - [x] Definir contratos de integracao das APIs (campos, limites, erros, cache e politicas de retry). (done)
 - [x] Definir e documentar o modelo de dados para empresas, pessoas e contatos. (done)
-- [ ] Definir chaves unicas, normalizacao e estrategia de deduplicacao de registros. (em andamento)
+- [x] Definir chaves unicas, normalizacao e estrategia de deduplicacao de registros. (done)
 - [x] Implementar a ingestao do banco inicial com validacoes basicas e saneamento de dados. (done)
 - [x] Implementar a rotina de enriquecimento secundario com rastreio de fonte e data de coleta. (done)
 - [ ] Criar pipeline de atualizacao incremental e reprocessamento controlado. (pendente)
@@ -29,3 +29,11 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [ ] Implementar monitoramento e alertas para falhas de coleta e degradacao de qualidade. (pendente)
 - [ ] Definir processos de revisao humana e escalonamento de casos inconsistentes. (pendente)
 - [ ] Documentar operacao, configuracao e limites do sistema para uso interno. (em andamento)
+
+## Chaves unicas e deduplicacao
+- Empresas: chave natural `cnpj` (normalizado para 14 digitos). `razao_social` e `nome_fantasia` sao atributos, nao chaves.
+- Pessoas: chave primaria `id`. Chave composta candidata para dedupe: `cpf` (quando existir) + `nome` normalizado + `data_nascimento` (quando existir). Sem `cpf`, usar `nome` normalizado + `data_nascimento` + `telefone` como heuristica.
+- Telefones: normalizar para E.164 e deduplicar por `phone_number` + `country_code`.
+- Emails (quando existirem): normalizar (lowercase) e deduplicar por `email`.
+- Normalizacao de texto: trim, lowercase, remover acentos e pontuacao para campos de comparacao.
+- Estrategia: dedupe deterministico por chaves naturais e regras de normalizacao; em seguida, dedupe probabilistico com score simples (nome + data + contato) para sugerir merges manuais.

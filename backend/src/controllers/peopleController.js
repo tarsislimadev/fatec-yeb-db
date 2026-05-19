@@ -1,6 +1,7 @@
 import { db } from '../db/index.js';
 import { successResponse, sendError } from '../utils/response.js';
 import { v4 as uuidv4 } from 'uuid';
+import { normalizeDocument, normalizeEmail, normalizeName } from '../utils/normalize.js';
 
 // ============ LIST PEOPLE ============
 export async function listPeople(req, res) {
@@ -16,24 +17,69 @@ export async function listPeople(req, res) {
 // ============ CREATE PEOPLE ============
 export async function createPerson(req, res) {
   try {
-    const { full_name, role_title, email } = req.body;
+    const { full_name, role_title, email, document } = req.body;
 
     // Validate input
     if (!full_name || !email) {
       return sendError(res, 'VALIDATION_ERROR', 'Full name and email are required');
     }
 
+    const normalizedName = normalizeName(full_name);
+    const normalizedEmail = normalizeEmail(email);
+    const normalizedDocument = normalizeDocument(document || '');
+
+    if (!normalizedName) {
+      return sendError(res, 'VALIDATION_ERROR', 'Full name is required');
+    }
+
+    if (!normalizedEmail) {
+      return sendError(res, 'VALIDATION_ERROR', 'Email is required');
+    }
+
     // Check for duplicate email
-    const existingResult = await db.query('SELECT id FROM people WHERE email = $1 AND deleted_at IS NULL', [email]);
+    const existingResult = await db.query(
+      'SELECT id FROM people WHERE email_normalized = $1 AND deleted_at IS NULL',
+      [normalizedEmail]
+    );
     if (existingResult.rows.length > 0) {
       return sendError(res, 'CONFLICT', 'Email already exists', {}, 409);
+    }
+
+    if (normalizedDocument) {
+      const documentResult = await db.query(
+        'SELECT id FROM people WHERE document_normalized = $1 AND deleted_at IS NULL',
+        [normalizedDocument]
+      );
+
+      if (documentResult.rows.length > 0) {
+        return sendError(res, 'CONFLICT', 'Document already exists', {}, 409);
+      }
     }
 
     // Create person
     const personId = uuidv4();
     const result = await db.query(
-      'INSERT INTO people (id, full_name, role_title, email) VALUES ($1, $2, $3, $4) RETURNING id, full_name, role_title, email',
-      [personId, full_name, role_title, email]
+      `INSERT INTO people (
+        id,
+        full_name,
+        full_name_normalized,
+        role_title,
+        email,
+        email_normalized,
+        document,
+        document_normalized
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING id, full_name, role_title, email`,
+      [
+        personId,
+        full_name,
+        normalizedName,
+        role_title,
+        email,
+        normalizedEmail,
+        document || null,
+        normalizedDocument,
+      ]
     );
 
     return successResponse(res, { person: result.rows[0] }, 201);
@@ -67,11 +113,11 @@ export async function getPerson(req, res) {
 export async function updatePerson(req, res) {
   try {
     const { id } = req.params;
-    const { full_name, role_title, email } = req.body;
+    const { full_name, role_title, email, document } = req.body;
 
     // Validate input
-    if (!full_name && !email) {
-      return sendError(res, 'VALIDATION_ERROR', 'At least one of full_name or email must be provided');
+    if (!full_name && !email && !role_title && !document) {
+      return sendError(res, 'VALIDATION_ERROR', 'At least one field must be provided');
     }
 
     // Check if person exists
@@ -81,10 +127,34 @@ export async function updatePerson(req, res) {
     }
 
     // Check for duplicate email if email is being updated
+    let normalizedEmail = null;
     if (email) {
-      const emailResult = await db.query('SELECT id FROM people WHERE email = $1 AND id != $2 AND deleted_at IS NULL', [email, id]);
+      normalizedEmail = normalizeEmail(email);
+      if (!normalizedEmail) {
+        return sendError(res, 'VALIDATION_ERROR', 'Email is required');
+      }
+
+      const emailResult = await db.query(
+        'SELECT id FROM people WHERE email_normalized = $1 AND id != $2 AND deleted_at IS NULL',
+        [normalizedEmail, id]
+      );
       if (emailResult.rows.length > 0) {
         return sendError(res, 'CONFLICT', 'Email already exists', {}, 409);
+      }
+    }
+
+    let normalizedDocument = null;
+    if (document !== undefined) {
+      normalizedDocument = normalizeDocument(document || '');
+      if (normalizedDocument) {
+        const documentResult = await db.query(
+          'SELECT id FROM people WHERE document_normalized = $1 AND id != $2 AND deleted_at IS NULL',
+          [normalizedDocument, id]
+        );
+
+        if (documentResult.rows.length > 0) {
+          return sendError(res, 'CONFLICT', 'Document already exists', {}, 409);
+        }
       }
     }
 
@@ -94,8 +164,15 @@ export async function updatePerson(req, res) {
     let idx = 1;
 
     if (full_name) {
+      const normalizedName = normalizeName(full_name);
+      if (!normalizedName) {
+        return sendError(res, 'VALIDATION_ERROR', 'Full name is required');
+      }
+
       fields.push(`full_name = $${idx++}`);
       values.push(full_name);
+      fields.push(`full_name_normalized = $${idx++}`);
+      values.push(normalizedName);
     }
     if (role_title) {
       fields.push(`role_title = $${idx++}`);
@@ -104,6 +181,14 @@ export async function updatePerson(req, res) {
     if (email) {
       fields.push(`email = $${idx++}`);
       values.push(email);
+      fields.push(`email_normalized = $${idx++}`);
+      values.push(normalizedEmail);
+    }
+    if (document !== undefined) {
+      fields.push(`document = $${idx++}`);
+      values.push(document || null);
+      fields.push(`document_normalized = $${idx++}`);
+      values.push(normalizedDocument);
     }
     values.push(id); // For WHERE clause
 

@@ -5,16 +5,27 @@ import { Card } from '../components/common';
 import { createPerson } from '../services/api';
 
 export function CreatePersonPage() {
-  const [person, setPerson] = React.useState({ full_name: '', role_title: '', email: '' });
+  const [person, setPerson] = React.useState({ full_name: '', role_title: '', email: '', document: '' });
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const navigate = useNavigate();
 
   const createNewPerson = async (personData) => {
     try {
-      await createPerson(personData);
+      setErrorMessage('');
+
+      const payload = {
+        full_name: personData.full_name.trim(),
+        role_title: personData.role_title?.trim() || null,
+        email: personData.email.trim().toLowerCase(),
+        document: personData.document?.trim() || null,
+      };
+
+      await createPerson(payload);
       navigate(`/people`);
     } catch (error) {
       console.error('Error creating person:', error);
+      setErrorMessage(error.response?.data?.error?.message || 'Failed to create person');
     }
   };
 
@@ -24,7 +35,7 @@ export function CreatePersonPage() {
 
       <main className="container-mobile">
         <Card className="mb-6">
-          <div className="grid gap-3 lg:grid-cols-[1fr_1fr_1fr_auto]">
+          <div className="grid gap-3 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]">
             <input
               type="text"
               placeholder="Full Name"
@@ -49,6 +60,14 @@ export function CreatePersonPage() {
               className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
+            <input
+              type="text"
+              placeholder="Document (CPF/CNPJ)"
+              value={person.document || ''}
+              onChange={(e) => setPerson({ ...person, document: e.target.value })}
+              className="min-h-[44px] w-full rounded-md border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
             <button
               onClick={() => createNewPerson(person)}
               className="touch-target rounded-md bg-blue-500 px-4 text-white hover:bg-blue-700"
@@ -56,6 +75,9 @@ export function CreatePersonPage() {
               Create
             </button>
           </div>
+          {errorMessage ? (
+            <p className="text-sm text-red-600">{errorMessage}</p>
+          ) : null}
         </Card>
       </main>
     </div>

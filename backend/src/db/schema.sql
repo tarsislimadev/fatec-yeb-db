@@ -97,8 +97,12 @@ ALTER TABLE phones DROP COLUMN IF EXISTS national_number;
 CREATE TABLE IF NOT EXISTS people (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   full_name VARCHAR(255) NOT NULL,
+  full_name_normalized VARCHAR(255),
   role_title VARCHAR(255),
   email VARCHAR(255),
+  email_normalized VARCHAR(255),
+  document VARCHAR(20),
+  document_normalized VARCHAR(20),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by UUID REFERENCES app_users(id),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -108,12 +112,15 @@ CREATE TABLE IF NOT EXISTS people (
 );
 
 CREATE INDEX IF NOT EXISTS idx_people_email ON people(email);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_people_email_normalized_unique ON people(email_normalized) WHERE email_normalized IS NOT NULL AND deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_people_full_name ON people(full_name);
+CREATE INDEX IF NOT EXISTS idx_people_full_name_normalized ON people(full_name_normalized);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_people_document_normalized_unique ON people(document_normalized) WHERE document_normalized IS NOT NULL AND deleted_at IS NULL;
 
 -- businesses
 CREATE TABLE IF NOT EXISTS businesses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  cnpj VARCHAR(18),
+  cnpj VARCHAR(14) CONSTRAINT businesses_cnpj_length CHECK (cnpj IS NULL OR length(cnpj) = 14),
   legal_name VARCHAR(255) NOT NULL,
   trade_name VARCHAR(255),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -124,7 +131,7 @@ CREATE TABLE IF NOT EXISTS businesses (
   deleted_by UUID REFERENCES app_users(id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_businesses_cnpj ON businesses(cnpj);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_businesses_cnpj_unique ON businesses(cnpj) WHERE cnpj IS NOT NULL AND deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_businesses_legal_name ON businesses(legal_name);
 
 -- departments

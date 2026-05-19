@@ -72,20 +72,20 @@ export async function createPhone(req, res) {
       return sendError(res, 'VALIDATION_ERROR', 'Phone number (e164_number) is required');
     }
 
-    // Check for existing phone
-    const existing = await db.query(
-      'SELECT id FROM phones WHERE e164_number = $1',
-      [e164_number]
-    );
-
-    if (existing.rows.length > 0) {
-      return sendError(res, 'CONFLICT', 'Phone number already exists', { e164_number }, 409);
-    }
-
     // Normalize phone
     const normalized = validateAndNormalizePhone(e164_number, country_code || 'BR');
     if (!normalized.valid) {
       return sendError(res, 'VALIDATION_ERROR', normalized.error);
+    }
+
+    // Check for existing phone
+    const existing = await db.query(
+      'SELECT id FROM phones WHERE e164_number = $1',
+      [normalized.e164_number]
+    );
+
+    if (existing.rows.length > 0) {
+      return sendError(res, 'CONFLICT', 'Phone number already exists', { e164_number: normalized.e164_number }, 409);
     }
 
     const phoneId = uuidv4();

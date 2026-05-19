@@ -1,5 +1,6 @@
 import { db } from '../db/index.js';
 import { validateAndNormalizePhone } from '../utils/phone.js';
+import { normalizeCnpj, normalizeDocument, normalizeEmail, normalizeName } from '../utils/normalize.js';
 import { BrasilApiCnpjAdapter } from './BrasilApiCnpjAdapter.js';
 import { CnpjaOpenAdapter } from './CnpjaOpenAdapter.js';
 
@@ -100,7 +101,10 @@ export class CnpjImportService {
 }
 
 async function upsertBusiness(client, payload, requestedBy) {
-  const cnpj = payload.cnpj;
+  const cnpj = normalizeCnpj(payload.cnpj);
+  if (!cnpj) {
+    throw new Error('Invalid CNPJ payload');
+  }
   const legalName = payload.legalName || payload.tradeName || `CNPJ ${cnpj}`;
   const tradeName = payload.tradeName || null;
 
@@ -138,17 +142,32 @@ async function upsertPeople(client, people, businessId, requestedBy) {
   const ids = [];
 
   for (const person of people) {
-    if (!person?.fullName) {
+    const normalizedName = normalizeName(person?.fullName);
+    if (!normalizedName) {
       continue;
     }
 
     const email = person.email || null;
+    const normalizedEmail = normalizeEmail(email);
+    const document = person.document || null;
+    const normalizedDocument = normalizeDocument(document);
     let personId = null;
 
-    if (email) {
+    if (normalizedDocument) {
       const existing = await client.query(
-        'SELECT id FROM people WHERE email = $1 AND deleted_at IS NULL',
-        [email]
+        'SELECT id FROM people WHERE document_normalized = $1 AND deleted_at IS NULL',
+        [normalizedDocument]
+      );
+
+      if (existing.rows.length > 0) {
+        personId = existing.rows[0].id;
+      }
+    }
+
+    if (!personId && normalizedEmail) {
+      const existing = await client.query(
+        'SELECT id FROM people WHERE email_normalized = $1 AND deleted_at IS NULL',
+        [normalizedEmail]
       );
 
       if (existing.rows.length > 0) {
@@ -158,13 +177,57 @@ async function upsertPeople(client, people, businessId, requestedBy) {
 
     if (!personId) {
       const insertResult = await client.query(
-        `INSERT INTO people (full_name, role_title, email, created_by, updated_by)
-         VALUES ($1, $2, $3, $4, $4)
+        `INSERT INTO people (
+           full_name,
+           full_name_normalized,
+           role_title,
+           email,
+           email_normalized,
+           document,
+           document_normalized,
+           created_by,
+           updated_by
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
          RETURNING id`,
-        [person.fullName, person.roleTitle || null, email, requestedBy]
+        [
+          person.fullName,
+          normalizedName,
+          person.roleTitle || null,
+          email,
+          normalizedEmail,
+          document,
+          normalizedDocument,
+          requestedBy,
+        ]
       );
 
       personId = insertResult.rows[0].id;
+    } else {
+      await client.query(
+        `UPDATE people
+         SET full_name = COALESCE($2, full_name),
+             full_name_normalized = COALESCE($3, full_name_normalized),
+             role_title = COALESCE($4, role_title),
+             email = COALESCE($5, email),
+             email_normalized = COALESCE($6, email_normalized),
+             document = COALESCE($7, document),
+             document_normalized = COALESCE($8, document_normalized),
+             updated_at = CURRENT_TIMESTAMP,
+             updated_by = $9
+         WHERE id = $1`,
+        [
+          personId,
+          person.fullName,
+          normalizedName,
+          person.roleTitle || null,
+          email,
+          normalizedEmail,
+          document,
+          normalizedDocument,
+          requestedBy,
+        ]
+      );
     }
 
     await ensurePeopleBusinessLink(client, personId, businessId, person.roleTitle, requestedBy);
