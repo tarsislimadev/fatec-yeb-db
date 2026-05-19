@@ -21,7 +21,7 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [x] Implementar a rotina de enriquecimento secundario com rastreio de fonte e data de coleta. (done)
 - [ ] Criar pipeline de atualizacao incremental e reprocessamento controlado. (pendente)
 - [x] Definir criterios de faltantes e gatilhos para iniciar pesquisa primaria. (done)
-- [ ] Definir prioridade de contato e janela de horario para pesquisa primaria. (pendente)
+- [x] Definir prioridade de contato e janela de horario para pesquisa primaria. (done)
 - [ ] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar. (pendente)
 - [x] Implementar captura de consentimento e registro de evidencia de contato. (done)
 - [ ] Implementar controles e conformidade LGPD (consentimento, auditoria, minimizacao). (em andamento)
@@ -42,6 +42,14 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - P1: contas estrategicas com faltantes criticos ou conflito de fontes.
 - P2: faltantes relevantes com baixa confianca e data de coleta antiga.
 - P3: apenas enriquecimento leve (ex.: confirmar cargo/telefone).
+
+## Prioridade de contato e janela de horario
+- Janela padrao (dias uteis): 09:00-12:00 e 14:00-18:00 no fuso da empresa.
+- Janela alternativa (sabado): 09:00-12:00 apenas para contas P1 e com consentimento.
+- Evitar contato: domingos e feriados locais.
+- Ordem de tentativas (por empresa): telefone fixo -> telefone movel/WhatsApp -> email.
+- Cadencia por contato: ate 3 tentativas em 7 dias (D1, D3, D7), com pausa minima de 24h.
+- Escalonamento: se P1 falhar em 7 dias, abrir tarefa manual; se P2/P3 falhar, reavaliar em 30 dias.
 
 ## Saidas esperadas da pesquisa primaria
 - Confirmar/atualizar contato principal (nome, cargo, email, telefone).
