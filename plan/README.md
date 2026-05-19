@@ -20,7 +20,7 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [x] Implementar a ingestao do banco inicial com validacoes basicas e saneamento de dados. (done)
 - [x] Implementar a rotina de enriquecimento secundario com rastreio de fonte e data de coleta. (done)
 - [ ] Criar pipeline de atualizacao incremental e reprocessamento controlado. (pendente)
-- [ ] Definir criterios de faltantes e gatilhos para iniciar pesquisa primaria. (pendente)
+- [x] Definir criterios de faltantes e gatilhos para iniciar pesquisa primaria. (done)
 - [ ] Definir prioridade de contato e janela de horario para pesquisa primaria. (pendente)
 - [ ] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar. (pendente)
 - [x] Implementar captura de consentimento e registro de evidencia de contato. (done)
@@ -29,6 +29,24 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - [ ] Implementar monitoramento e alertas para falhas de coleta e degradacao de qualidade. (pendente)
 - [ ] Definir processos de revisao humana e escalonamento de casos inconsistentes. (pendente)
 - [ ] Documentar operacao, configuracao e limites do sistema para uso interno. (em andamento)
+
+## Criterios de faltantes e gatilhos (pesquisa primaria)
+- Faltantes criticos (iniciar pesquisa primaria): ausencia de pelo menos 1 contato valido (telefone E.164 ou email) OU ausencia de cargo/funcao do decisor.
+- Faltantes relevantes (iniciar pesquisa primaria se SLA permite): ausencia de nome do contato principal OU dados desatualizados (ultima confirmacao > 180 dias).
+- Conflito de fontes (iniciar pesquisa primaria): divergencia entre fontes secundarias sobre razao social, nome fantasia ou telefone principal.
+- Suspeita de invalidez (iniciar pesquisa primaria): telefone invalido, email com bounce, CNPJ inativo/baixado ou razao social divergente da base oficial.
+- Limite de fontes (iniciar pesquisa primaria): nenhuma fonte secundaria confiavel encontrada OU score de confianca abaixo do minimo configurado.
+- Gatilho operacional: conta prioritaria, campanha ativa ou janela de contato dentro do horario permitido.
+
+## Regras de priorizacao
+- P1: contas estrategicas com faltantes criticos ou conflito de fontes.
+- P2: faltantes relevantes com baixa confianca e data de coleta antiga.
+- P3: apenas enriquecimento leve (ex.: confirmar cargo/telefone).
+
+## Saidas esperadas da pesquisa primaria
+- Confirmar/atualizar contato principal (nome, cargo, email, telefone).
+- Registrar evidencias de contato e consentimento quando aplicavel.
+- Atualizar data de validacao e fonte primaria utilizada.
 
 ## Chaves unicas e deduplicacao
 - Empresas: chave natural `cnpj` (normalizado para 14 digitos). `razao_social` e `nome_fantasia` sao atributos, nao chaves.
