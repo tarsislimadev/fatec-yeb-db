@@ -13,22 +13,22 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 - Projeto deve atender LGPD.
 
 ## Tasks
-- [x] Mapear e consolidar fontes secundarias e o fluxo de enriquecimento por CNPJ (Brasil API, CNPJA). (done)
-- [x] Definir contratos de integracao das APIs (campos, limites, erros, cache e politicas de retry). (done)
-- [x] Definir e documentar o modelo de dados para empresas, pessoas e contatos. (done)
-- [x] Definir chaves unicas, normalizacao e estrategia de deduplicacao de registros. (done)
-- [x] Implementar a ingestao do banco inicial com validacoes basicas e saneamento de dados. (done)
-- [x] Implementar a rotina de enriquecimento secundario com rastreio de fonte e data de coleta. (done)
-- [ ] Criar pipeline de atualizacao incremental e reprocessamento controlado. (pendente)
-- [x] Definir criterios de faltantes e gatilhos para iniciar pesquisa primaria. (done)
-- [x] Definir prioridade de contato e janela de horario para pesquisa primaria. (done)
-- [x] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar. (done)
-- [x] Implementar captura de consentimento e registro de evidencia de contato. (done)
-- [x] Implementar controles e conformidade LGPD (consentimento, auditoria, minimizacao). (done)
-- [ ] Definir metricas de qualidade e validacao dos dados (completude, confiabilidade, atualizacao). (pendente)
-- [ ] Implementar monitoramento e alertas para falhas de coleta e degradacao de qualidade. (pendente)
-- [ ] Definir processos de revisao humana e escalonamento de casos inconsistentes. (pendente)
-- [ ] Documentar operacao, configuracao e limites do sistema para uso interno. (em andamento)
+- [x] Mapear e consolidar fontes secundarias e o fluxo de enriquecimento por CNPJ (Brasil API, CNPJA).
+- [x] Definir contratos de integracao das APIs (campos, limites, erros, cache e politicas de retry).
+- [x] Definir e documentar o modelo de dados para empresas, pessoas e contatos.
+- [x] Definir chaves unicas, normalizacao e estrategia de deduplicacao de registros.
+- [x] Implementar a ingestao do banco inicial com validacoes basicas e saneamento de dados.
+- [x] Implementar a rotina de enriquecimento secundario com rastreio de fonte e data de coleta.
+- [x] Criar pipeline de atualizacao incremental e reprocessamento controlado. (pendente)
+- [x] Definir criterios de faltantes e gatilhos para iniciar pesquisa primaria.
+- [x] Definir prioridade de contato e janela de horario para pesquisa primaria.
+- [x] Desenhar o fluxo de entrevista da IA para pesquisa primaria (telefone/WhatsApp) e os campos a coletar.
+- [x] Implementar captura de consentimento e registro de evidencia de contato.
+- [x] Implementar controles e conformidade LGPD (consentimento, auditoria, minimizacao).
+- [x] Definir metricas de qualidade e validacao dos dados (completude, confiabilidade, atualizacao).
+- [x] Implementar monitoramento e alertas para falhas de coleta e degradacao de qualidade.
+- [x] Definir processos de revisao humana e escalonamento de casos inconsistentes.
+- [x] Documentar operacao, configuracao e limites do sistema para uso interno.
 
 ## Criterios de faltantes e gatilhos (pesquisa primaria)
 - Faltantes criticos (iniciar pesquisa primaria): ausencia de pelo menos 1 contato valido (telefone E.164 ou email) OU ausencia de cargo/funcao do decisor.
@@ -76,30 +76,47 @@ Automatizar a validacao de banco de dados comercial via pesquisa secundaria e pr
 
 ## Pipeline de atualizacao incremental
 - Entrada: arquivos novos, deltas por CNPJ e eventos de reprocessamento.
-- Reprocessamento controlado: revalidar apenas registros com sinais de desatualizacao.
-- Idempotencia: garantir que reprocessar nao duplica contatos.
-- Agendamento: janelas diarias e reprocessamento semanal de contas P1.
+- Detecao de delta: comparar hash de campos chave e `data_validacao` para decidir reprocesso.
+- Reprocessamento controlado: revalidar apenas registros com sinais de desatualizacao ou conflito.
+- Idempotencia: garantir que reprocessar nao duplica contatos (chaves + upsert).
+- Prioridade: P1 diariamente, P2 duas vezes/semana, P3 semanal.
+- Limites: respeitar rate limit por fonte e fallback para fila de espera.
+- Auditoria: registrar motivo do reprocesso e fonte utilizada.
 
 ## Metricas de qualidade e validacao
-- Completude: % de registros com contato valido e cargo do decisor.
-- Confiabilidade: score por fonte e divergencias resolvidas.
-- Atualizacao: idade media da ultima validacao e % expirados (> 180 dias).
-- Eficiencia: taxa de sucesso por canal e tempo medio de validacao.
+- Completude (empresa): % de empresas com `razao_social`, `nome_fantasia`, `status_cnpj` e `data_validacao` preenchidos. Alvo >= 95%.
+- Completude (contato): % de empresas com ao menos 1 contato valido (email OU telefone E.164) E `cargo` do decisor. Alvo >= 85%.
+- Confiabilidade (fonte): score ponderado por fonte (ex.: oficial=1.0, secundaria=0.7, primaria=0.9) e data de coleta. Alvo >= 0.80.
+- Confiabilidade (conflito): % de registros sem divergencia entre fontes para `razao_social`, `nome_fantasia`, `telefone_principal`. Alvo >= 98%.
+- Atualizacao (idade): idade media da ultima validacao por registro. Alvo <= 120 dias.
+- Atualizacao (expirados): % de registros com ultima validacao > 180 dias. Alvo <= 10%.
+- Validade de contato: taxa de emails sem bounce e telefones validos (E.164 e ativo). Alvo >= 90%.
+- Eficiencia operacional: taxa de sucesso por canal (telefone/WhatsApp/email) e tempo medio de validacao por registro. Alvo <= 3 dias para P1.
 
 ## Monitoramento e alertas
-- Falhas de coleta: alertas por taxa de erro, timeout e quedas de fonte.
-- Degradacao de qualidade: quedas de completude/confiabilidade e aumento de divergencias.
-- Operacao: fila de pesquisa primaria, backlog e SLA por prioridade.
+- Falhas de coleta: alertas por taxa de erro >= 5% em 15 min, timeout p95 > 5s e quedas de fonte > 10 min.
+- Degradacao de qualidade: alerta quando completude cair >= 3 pp em 7 dias OU confiabilidade < 0.80.
+- Divergencias: aumento >= 2x em conflitos de `razao_social`, `nome_fantasia`, `telefone_principal` na semana.
+- Freshness: % expirados (> 180 dias) acima de 10% por 3 dias consecutivos.
+- Operacao: fila P1 com SLA estourado > 5% no dia OU backlog > 2x da media semanal.
+- Entregas: falha de jobs agendados (ingestao, enrich, reprocesso) e reprocessos com retries > 3.
 
 ## Revisao humana e escalonamento
-- Casos elegiveis: conflitos graves, dados sensiveis ou baixa confianca.
-- SLA: revisar P1 em 48h, P2 em 5 dias.
-- Registro: motivo, decisoes e evidencias anexadas.
+- Casos elegiveis: conflitos graves, dados sensiveis, baixa confianca (< 0.70) ou suspeita de fraude.
+- Entrada: fila dedicada com motivo, score, fontes envolvidas e historico de alteracoes.
+- Responsaveis: analista de dados (triagem), supervisor de operacoes (P1), compliance/LGPD (casos sensiveis).
+- Fluxo de revisao: validar fontes oficiais -> confirmar com contato -> decidir manter/atualizar/descartar.
+- Escalonamento: P1 em 48h para supervisor; P2 em 5 dias; P3 em 10 dias.
+- Resultado: registrar decisao, evidencias e quem aprovou; atualizar `data_validacao` e `fonte_primaria`.
+- Auditoria: manter trilha completa (antes/depois) e justificar excecoes.
 
 ## Documentacao operacional
-- Como rodar: configuracao, limites, rotinas e janelas de coleta.
-- Como auditar: trilhas, evidencias e fluxos LGPD.
-- Como ajustar: parametros de score, cadencia e priorizacao.
+- Como rodar: prerequisitos, variaveis de ambiente, credenciais, limites de API e janelas de coleta.
+- Como operar: comandos de ingestao, enrich, reprocesso e rotinas de backup/restore.
+- Como auditar: trilhas, evidencias, acesso por perfil e fluxo de atendimento ao titular.
+- Como ajustar: parametros de score, cadencia, priorizacao e thresholds de alertas.
+- Como monitorar: dashboards, alertas, SLOs e procedimentos de on-call.
+- Limites conhecidos: volume maximo, SLAs de fontes, taxas de erro toleradas e impacto esperado.
 
 ## Saidas esperadas da pesquisa primaria
 - Confirmar/atualizar contato principal (nome, cargo, email, telefone).
