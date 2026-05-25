@@ -7,11 +7,11 @@ CREATE TABLE IF NOT EXISTS people_businesses (
   business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
   role_title VARCHAR(255),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
+  created_by UUID,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id),
+  updated_by UUID,
   deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-  deleted_by UUID REFERENCES app_users(id)
+  deleted_by UUID
 );
 
 CREATE INDEX IF NOT EXISTS idx_people_businesses_person_id ON people_businesses(person_id);

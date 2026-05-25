@@ -11,17 +11,17 @@ CREATE TABLE IF NOT EXISTS review_queue (
   sources JSONB,
   status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_review', 'escalated', 'resolved', 'dismissed')),
   required_role VARCHAR(50) NOT NULL DEFAULT 'data_analyst' CHECK (required_role IN ('data_analyst', 'operations_supervisor', 'compliance')),
-  assigned_to UUID REFERENCES app_users(id),
+  assigned_to UUID,
   due_at TIMESTAMP WITH TIME ZONE,
   resolution_status VARCHAR(50) CHECK (resolution_status IN ('kept', 'updated', 'discarded', 'escalated')),
   resolution_notes TEXT,
   resolution_evidence JSONB,
   resolved_at TIMESTAMP WITH TIME ZONE,
-  resolved_by UUID REFERENCES app_users(id),
+  resolved_by UUID,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
+  created_by UUID,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id)
+  updated_by UUID
 );
 
 CREATE INDEX IF NOT EXISTS idx_review_queue_status ON review_queue(status);
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS review_events (
   review_id UUID NOT NULL REFERENCES review_queue(id) ON DELETE CASCADE,
   event_type VARCHAR(50) NOT NULL CHECK (event_type IN ('created', 'assigned', 'status_changed', 'note', 'resolution', 'updated')),
   event_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  actor_id UUID REFERENCES app_users(id),
+  actor_id UUID,
   details JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 

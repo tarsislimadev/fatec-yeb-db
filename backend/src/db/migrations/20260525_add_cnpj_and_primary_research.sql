@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS cnpj_import_jobs (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   started_at TIMESTAMP WITH TIME ZONE,
   completed_at TIMESTAMP WITH TIME ZONE,
-  created_by UUID REFERENCES app_users(id)
+  created_by UUID
 );
 
 CREATE INDEX IF NOT EXISTS idx_cnpj_import_jobs_status ON cnpj_import_jobs(status);
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS cnpj_reprocess_jobs (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   started_at TIMESTAMP WITH TIME ZONE,
   completed_at TIMESTAMP WITH TIME ZONE,
-  created_by UUID REFERENCES app_users(id)
+  created_by UUID
 );
 
 CREATE INDEX IF NOT EXISTS idx_cnpj_reprocess_jobs_status ON cnpj_reprocess_jobs(status);
@@ -96,11 +96,11 @@ CREATE TABLE IF NOT EXISTS primary_research_tasks (
   consent_status VARCHAR(20) DEFAULT 'unknown' CHECK (consent_status IN ('granted', 'revoked', 'unknown')),
   consent_evidence JSONB,
   escalation_review_id UUID REFERENCES review_queue(id),
-  assigned_to UUID REFERENCES app_users(id),
+  assigned_to UUID,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id),
+  created_by UUID,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_by UUID REFERENCES app_users(id)
+  updated_by UUID
 );
 
 CREATE INDEX IF NOT EXISTS idx_primary_research_tasks_status ON primary_research_tasks(status);
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS primary_research_attempts (
   attempted_at TIMESTAMP WITH TIME ZONE NOT NULL,
   notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by UUID REFERENCES app_users(id)
+  created_by UUID
 );
 
 CREATE INDEX IF NOT EXISTS idx_primary_research_attempts_task_id ON primary_research_attempts(task_id);
