@@ -19,6 +19,8 @@ import peopleRoutes from './routes/people.js';
 import outreachRoutes from './routes/outreach.js';
 import cnpjRoutes from './routes/cnpj.js';
 import reviewRoutes from './routes/reviews.js';
+import primaryResearchRoutes from './routes/primaryResearch.js';
+import qualityRoutes from './routes/quality.js';
 import { emitStructuredLog } from './utils/observability.js';
 
 dotenv.config();
@@ -68,6 +70,8 @@ app.use('/api/v1/people', peopleRoutes);
 app.use('/api/v1', outreachRoutes);
 app.use('/api/v1/cnpj', cnpjRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/primary-research', primaryResearchRoutes);
+app.use('/api/v1/quality', qualityRoutes);
 
 // ============ ERROR HANDLING ============
 

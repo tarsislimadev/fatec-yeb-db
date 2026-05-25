@@ -14,6 +14,18 @@ export function DashboardPage() {
           <a className="touch-target justify-start rounded-xl bg-white px-4 py-4 text-base font-medium text-blue-600 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:text-blue-800" href="/people">
             People
           </a>
+          <a className="touch-target justify-start rounded-xl bg-white px-4 py-4 text-base font-medium text-blue-600 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:text-blue-800" href="/cnpj">
+            CNPJ
+          </a>
+          <a className="touch-target justify-start rounded-xl bg-white px-4 py-4 text-base font-medium text-blue-600 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:text-blue-800" href="/primary-research">
+            Primary Research
+          </a>
+          <a className="touch-target justify-start rounded-xl bg-white px-4 py-4 text-base font-medium text-blue-600 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:text-blue-800" href="/reviews">
+            Review Queue
+          </a>
+          <a className="touch-target justify-start rounded-xl bg-white px-4 py-4 text-base font-medium text-blue-600 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:text-blue-800" href="/quality">
+            Quality
+          </a>
         </div>
       </main>
     </div>

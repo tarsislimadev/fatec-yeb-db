@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { DashboardPage } from './pages/DashboardPage';
+import { CnpjPage } from './pages/CnpjPage';
 import { PeoplePage } from './pages/PeoplePage';
 import { PersonPage } from './pages/PersonPage';
 import { MyPage } from './pages/MyPage';
@@ -15,6 +16,11 @@ import { CreatePhonePage } from './pages/CreatePhonePage';
 import { PhoneDetailPage } from './pages/PhoneDetailPage';
 import { SessionsDestroyPage } from './pages/SessionsDestroyPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ReviewQueuePage } from './pages/ReviewQueuePage';
+import { ReviewDetailPage } from './pages/ReviewDetailPage';
+import { PrimaryResearchPage } from './pages/PrimaryResearchPage';
+import { PrimaryResearchDetailPage } from './pages/PrimaryResearchDetailPage';
+import { QualityPage } from './pages/QualityPage';
 
 function App() {
   return (
@@ -36,12 +42,22 @@ function App() {
         <Route path="/phones/new" element={<ProtectedRoute> <CreatePhonePage /> </ProtectedRoute>} exact />
         <Route path="/phones/detail" element={<ProtectedRoute> <PhoneDetailPage /> </ProtectedRoute>} />
 
+        <Route path="/cnpj" element={<ProtectedRoute> <CnpjPage /> </ProtectedRoute>} />
+
         <Route path="/people" element={<ProtectedRoute> <PeoplePage /> </ProtectedRoute>} />
         <Route path="/people/me" element={<ProtectedRoute> <MyPage /> </ProtectedRoute>} exact />
         <Route path="/people/new" element={<ProtectedRoute> <CreatePersonPage /> </ProtectedRoute>} exact />
         <Route path="/people/detail" element={<ProtectedRoute> <PersonPage /> </ProtectedRoute>} />
         <Route path="/people/update" element={<ProtectedRoute> <UpdatePersonPage /> </ProtectedRoute>} />
         <Route path="/people/delete" element={<ProtectedRoute> <DeletePersonPage /> </ProtectedRoute>} />
+
+        <Route path="/reviews" element={<ProtectedRoute> <ReviewQueuePage /> </ProtectedRoute>} />
+        <Route path="/reviews/detail" element={<ProtectedRoute> <ReviewDetailPage /> </ProtectedRoute>} />
+
+        <Route path="/primary-research" element={<ProtectedRoute> <PrimaryResearchPage /> </ProtectedRoute>} />
+        <Route path="/primary-research/detail" element={<ProtectedRoute> <PrimaryResearchDetailPage /> </ProtectedRoute>} />
+
+        <Route path="/quality" element={<ProtectedRoute> <QualityPage /> </ProtectedRoute>} />
 
         <Route path="/profile" element={<Navigate to="/people/me" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />

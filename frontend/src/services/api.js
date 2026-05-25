@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+// const API_BASE = 'https://zany-space-dollop-466475gv9v7f7g56-3000.app.github.dev/api/v1';
+
 const API_BASE = '/api/v1';
 
 export const api = axios.create({
@@ -10,18 +12,21 @@ export const api = axios.create({
 });
 
 // Add token to requests
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((req) => {
   const token = localStorage.getItem('token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    req.headers.Authorization = `Bearer ${token}`;
   }
-  return config;
+  return req;
 });
 
 // Handle 401 errors
 api.interceptors.response.use(
-  (response) => response,
+  (res) => res,
   (error) => {
+    if (error.response?.data?.error) {
+      console.error('API error:', error.response.data.error);
+    }
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';
@@ -170,6 +175,111 @@ export async function updatePhoneOwner(phoneId, ownerRelationId, updates) {
   return response.data.data;
 }
 
+// ============ CNPJ ENDPOINTS ============
+
+export async function lookupCnpj(cnpj, options = {}) {
+  const response = await api.post('/cnpj/lookup', {
+    cnpj,
+    provider_order: options.provider_order || null,
+    force_refresh: options.force_refresh || false,
+  });
+  return response.data.data;
+}
+
+export async function importCnpjs(cnpjs, providerOrder = null) {
+  const response = await api.post('/cnpj/import', {
+    cnpjs,
+    provider_order: providerOrder,
+  });
+  return response.data.data;
+}
+
+export async function getCnpjImportJob(jobId) {
+  const response = await api.get(`/cnpj/import/${jobId}`);
+  return response.data.data;
+}
+
+export async function runCnpjReprocess(priority = 'P2', payload = {}) {
+  const response = await api.post('/cnpj/reprocess', {
+    priority,
+    ...payload,
+  });
+  return response.data.data;
+}
+
+export async function getCnpjReprocessJob(jobId) {
+  const response = await api.get(`/cnpj/reprocess/${jobId}`);
+  return response.data.data;
+}
+
+// ============ REVIEW QUEUE ENDPOINTS ============
+
+export async function getReviewQueue(filters = {}) {
+  const params = new URLSearchParams(filters);
+  const response = await api.get(`/reviews?${params}`);
+  return response.data;
+}
+
+export async function getReviewDetail(reviewId) {
+  const response = await api.get(`/reviews/${reviewId}`);
+  return response.data.data;
+}
+
+export async function createReviewItem(payload) {
+  const response = await api.post('/reviews', payload);
+  return response.data.data;
+}
+
+export async function updateReviewItem(reviewId, payload) {
+  const response = await api.patch(`/reviews/${reviewId}`, payload);
+  return response.data.data;
+}
+
+// ============ PRIMARY RESEARCH ENDPOINTS ============
+
+export async function listPrimaryResearchTasks(filters = {}) {
+  const params = new URLSearchParams(filters);
+  const response = await api.get(`/primary-research/tasks?${params}`);
+  return response.data;
+}
+
+export async function getPrimaryResearchTask(taskId) {
+  const response = await api.get(`/primary-research/tasks/${taskId}`);
+  return response.data.data;
+}
+
+export async function createPrimaryResearchTask(payload) {
+  const response = await api.post('/primary-research/tasks', payload);
+  return response.data.data;
+}
+
+export async function updatePrimaryResearchTask(taskId, payload) {
+  const response = await api.patch(`/primary-research/tasks/${taskId}`, payload);
+  return response.data.data;
+}
+
+export async function createPrimaryResearchAttempt(taskId, payload) {
+  const response = await api.post(`/primary-research/tasks/${taskId}/attempts`, payload);
+  return response.data.data;
+}
+
+export async function scanPrimaryResearchTasks(payload = {}) {
+  const response = await api.post('/primary-research/tasks/scan', payload);
+  return response.data.data;
+}
+
+// ============ QUALITY ENDPOINTS ============
+
+export async function getQualityMetrics() {
+  const response = await api.get('/quality/metrics');
+  return response.data.data;
+}
+
+export async function getQualityAlerts() {
+  const response = await api.get('/quality/alerts');
+  return response.data.data;
+}
+
 // ============ BUSINESS ENDPOINTS ============
 
 export async function getBusinesses(page = 1, pageSize = 20, filters = {}) {
@@ -227,4 +337,3 @@ export async function updateDepartment(departmentId, updates) {
 export async function deleteDepartment(departmentId) {
   return await api.delete(`/departments/${departmentId}`);
 }
-
