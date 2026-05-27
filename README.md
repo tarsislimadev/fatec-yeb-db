@@ -28,8 +28,6 @@ The system integrates the use of automated queries to CNPJ APIs as a method for 
 
 [Scrum Master and Product Owner - Tarsis](https://github.com/tarsislimadev)
 
-[Developer - Emmanuel](https://github.com/emannuelp-boldrin)
-
 ## How to Run the Project
 
 This project uses Docker Compose to orchestrate web UI, API, PostgreSQL, and Redis cache.
