@@ -1,8 +1,6 @@
 name: Publish to AWS Lightsail
 
 on:
-  schedule:
-    - cron: '0 20 * * *' # Runs daily at 8 PM UTC
   workflow_dispatch:
 
 jobs:
