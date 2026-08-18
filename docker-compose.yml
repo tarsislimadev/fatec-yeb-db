@@ -64,6 +64,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  redisinsight:
+    image: redis/redisinsight
+    ports:
+      - "5540:5540"
 
 volumes:
   postgres_data:
