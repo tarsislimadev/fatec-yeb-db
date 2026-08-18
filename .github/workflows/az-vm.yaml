@@ -43,7 +43,7 @@ jobs:
           BRANCH="${DEPLOY_BRANCH:-main}"
 
           if [ ! -d "$REPO_DIR/.git" ]; then
-            git clone https://github.com/${GITHUB_REPOSITORY}.git "$REPO_DIR"
+            git clone https://github.com/tarsislimadev/fatec-yeb-db.git "$REPO_DIR"
           fi
 
           cd "$REPO_DIR"
@@ -51,15 +51,9 @@ jobs:
           git checkout "$BRANCH" || git checkout -b "$BRANCH" origin/"$BRANCH"
           git reset --hard "origin/$BRANCH"
 
-          if docker compose version >/dev/null 2>&1; then
-            docker compose down --remove-orphans --volumes || true
-            docker compose up -d --build
-            docker compose ps
-          else
-            docker-compose down --remove-orphans --volumes || true
-            docker-compose up -d --build
-            docker-compose ps
-          fi
+          docker compose down --remove-orphans --volumes || true
+          docker compose up -d --build
+          docker compose ps
           EOF
 
       - name: Cleanup SSH key
