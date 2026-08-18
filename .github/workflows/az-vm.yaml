@@ -1,0 +1,69 @@
+name: Deploy Docker app to Azure VM
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare SSH key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s' "${{ secrets.AZURE_VM_SSH_KEY }}" > ~/.ssh/fatec-yeb-db
+          chmod 600 ~/.ssh/fatec-yeb-db
+
+      - name: Add Azure VM host to known_hosts
+        shell: bash
+        run: |
+          ssh-keyscan -H "${{ secrets.AZURE_VM_HOST }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy Dockerized app to Azure VM
+        shell: bash
+        env:
+          AZURE_VM_HOST: ${{ secrets.AZURE_VM_HOST }}
+          AZURE_VM_USER: ${{ secrets.AZURE_VM_USER }}
+          DEPLOY_BRANCH: ${{ github.ref_name }}
+        run: |
+          ssh -i ~/.ssh/fatec-yeb-db -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts "${AZURE_VM_USER}@${AZURE_VM_HOST}" bash -s <<'EOF'
+          set -euo pipefail
+
+          REPO_DIR="$HOME/fatec-yeb-db"
+          BRANCH="${DEPLOY_BRANCH:-main}"
+
+          if [ ! -d "$REPO_DIR/.git" ]; then
+            git clone https://github.com/${GITHUB_REPOSITORY}.git "$REPO_DIR"
+          fi
+
+          cd "$REPO_DIR"
+          git fetch --all --prune
+          git checkout "$BRANCH" || git checkout -b "$BRANCH" origin/"$BRANCH"
+          git reset --hard "origin/$BRANCH"
+
+          if docker compose version >/dev/null 2>&1; then
+            docker compose down --remove-orphans --volumes || true
+            docker compose up -d --build
+            docker compose ps
+          else
+            docker-compose down --remove-orphans --volumes || true
+            docker-compose up -d --build
+            docker-compose ps
+          fi
+          EOF
+
+      - name: Cleanup SSH key
+        if: always()
+        shell: bash
+        run: |
+          rm -f ~/.ssh/fatec-yeb-db
